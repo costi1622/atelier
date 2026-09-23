@@ -20,6 +20,8 @@
   --fab:#D9E5EF; --fabS:#7FA3C2; --fab2:#F0DDB4; --fab2S:#C0913A;
   --tape:#8795A3; --yarn:#9C4E7C; --yarnH:#E0A21A; --hook:#6E7C86; --gap:#B9C3CA;
   --metalHi:#D7DEE3; --yarnHi:#C173A0;
+  --s1:4px; --s2:8px; --s3:12px; --s4:18px; --s5:28px; --s6:44px;
+  --c-masina:#2C6A54; --c-mana:#8A5D0A; --c-croset:#9C4E7C; --c-tricot:#2F6690; --c-stiut:#7A4A3A;
   --bgdot:rgba(44,106,84,.16); --bgweave:rgba(31,43,51,.035); --bgglow:rgba(44,106,84,.13); --bgedge:rgba(192,40,63,.14);
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
@@ -40,6 +42,7 @@
   --fab:#2A3B4B; --fabS:#6E93B4; --fab2:#4A3F2A; --fab2S:#C9A15A;
   --tape:#6D7D8C; --yarn:#D38DB7; --yarnH:#F2C14E; --hook:#9AA8B1; --gap:#3A4852;
   --metalHi:#7E8D98; --yarnHi:#E7AFD0;
+  --c-masina:#72B99B; --c-mana:#E0B45A; --c-croset:#D38DB7; --c-tricot:#7FB2DA; --c-stiut:#C79A86;
   --bgdot:rgba(114,185,155,.13); --bgweave:rgba(255,255,255,.03); --bgglow:rgba(114,185,155,.10); --bgedge:rgba(255,111,134,.14);
 }
 *,*::before,*::after{box-sizing:inherit}
@@ -48,36 +51,31 @@ body{margin:0;background:var(--paper);color:var(--ink);
   font:400 calc(17px*var(--fs))/1.55 "Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   -webkit-text-size-adjust:100%}
 h1,h2,h3{font-family:Bitter,Georgia,"Times New Roman",serif;line-height:1.2;margin:0}
-/* fundalul: hârtie de tipar, cu puncte, textură de țesătură și o lumină caldă sus */
-body::before{content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;
+/* fundalul: o singură bandă de hârtie de tipar sub antet, restul curat */
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:230px;z-index:-2;pointer-events:none;
   background-image:
-    radial-gradient(circle at 50% -10%, var(--bgglow), transparent 62%),
-    radial-gradient(circle, var(--bgdot) 1.1px, transparent 1.5px),
-    repeating-linear-gradient(45deg, var(--bgweave) 0 1px, transparent 1px 9px),
-    repeating-linear-gradient(-45deg, var(--bgweave) 0 1px, transparent 1px 9px);
-  background-size:100% 70vh, 24px 24px, auto, auto;
-  background-position:50% 0, 8px 8px, 0 0, 0 0;
-  background-repeat:no-repeat, repeat, repeat, repeat}
-/* o cusătură fină pe marginea paginii, ca pe un tipar */
-body::after{content:'';position:fixed;top:0;bottom:0;left:50%;width:min(680px,100%);transform:translateX(-50%);
-  z-index:-1;pointer-events:none;
-  border-left:1px dashed var(--bgedge);border-right:1px dashed var(--bgedge)}
-@media (max-width:700px){body::after{display:none}}
+    radial-gradient(circle at 50% -20%, var(--bgglow), transparent 70%),
+    radial-gradient(circle, var(--bgdot) 1.1px, transparent 1.5px);
+  background-size:100% 100%, 24px 24px;
+  background-position:50% 0, 8px 8px;
+  background-repeat:no-repeat, repeat;
+  -webkit-mask-image:linear-gradient(180deg,#000 0,#000 55%,transparent 100%);
+  mask-image:linear-gradient(180deg,#000 0,#000 55%,transparent 100%)}
 a{color:var(--mat)}
 button{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--mat);outline-offset:2px;border-radius:4px}
-.wrap{max-width:680px;margin:0 auto;padding:0 18px 48px}
+.wrap{max-width:680px;margin:0 auto;padding:0 var(--s4) var(--s6)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* ---------- home ---------- */
-.mast{padding:30px 0 18px;border-bottom:2px solid var(--ink);margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.mast h1{font-size:calc(44px*var(--fs));font-weight:700;letter-spacing:-.01em}
-.mast p{margin:6px 0 0;color:var(--muted);max-width:32em}
+.mast{padding:var(--s5) 0 var(--s4);border-bottom:2px solid var(--ink);margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.mast h1{font-size:calc(31px*var(--fs));font-weight:700;letter-spacing:-.01em}
+.mast p{margin:var(--s1) 0 0;color:var(--muted);max-width:34em;font-size:calc(15px*var(--fs))}
 .mast-t{flex:1}
 .gear{flex:none;display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;
   border:1.5px solid var(--line);color:var(--ink);text-decoration:none;margin-top:4px}
 .gear svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
-.tape{height:14px;margin-top:16px;border:1.5px solid var(--ink);border-radius:2px;
+.tape{height:12px;margin-top:var(--s3);border:1.5px solid var(--ink);border-radius:2px;
   background:
    repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 8px) 0 100%/100% 5px no-repeat,
    repeating-linear-gradient(90deg,var(--ink) 0 1.5px,transparent 1.5px 40px) 0 100%/100% 9px no-repeat;
@@ -94,7 +92,7 @@ button{font:inherit;color:inherit}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
 .chip{border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:6px 14px;min-height:40px;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
-.sec{margin-top:26px}
+.sec{margin-top:var(--s5)}
 .sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;
   padding-bottom:8px;border-bottom:1px solid var(--line)}
 .sec-h h2{font-size:calc(23px*var(--fs));font-weight:600}
@@ -104,7 +102,9 @@ button{font:inherit;color:inherit}
   text-decoration:none;color:inherit;min-height:52px}
 a.row:hover .row-t{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 .row-t{flex:1;font-weight:600}
-.lvl{font-size:calc(13px*var(--fs));padding:2px 9px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.lvl{display:inline-flex;align-items:center;gap:5px;font-size:calc(12.5px*var(--fs));padding:2px 9px;
+  border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.lvl i{font-style:normal;font-size:8px;letter-spacing:1px;line-height:1}
 .lvl.u{color:var(--mat)} .lvl.m{color:var(--amber)} .lvl.a{color:var(--thread)}
 .marks{display:flex;gap:6px;color:var(--mat)}
 .empty{padding:28px 0;color:var(--muted)}
@@ -118,11 +118,11 @@ a.row:hover .row-t{text-decoration:underline;text-decoration-thickness:1px;text-
 .head h1{font-size:calc(34px*var(--fs));font-weight:700;margin:4px 0 10px}
 .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:calc(15px*var(--fs))}
 .intro{font-size:calc(18px*var(--fs));margin:16px 0 0}
-.need{margin:22px 0 0;padding:14px 16px;background:var(--mat-soft);border-radius:10px}
+.need{margin:var(--s5) 0 0;padding:var(--s3) var(--s4);background:var(--mat-soft);border-radius:10px}
 .need h2{font-size:calc(17px*var(--fs));margin-bottom:6px}
 .need ul{margin:0;padding-left:20px}
-.steps{list-style:none;margin:28px 0 0;padding:0}
-.step{display:grid;grid-template-columns:44px 1fr;gap:4px 12px;margin-bottom:30px}
+.steps{list-style:none;margin:var(--s5) 0 0;padding:0}
+.step{display:grid;grid-template-columns:44px 1fr;gap:var(--s1) var(--s3);margin-bottom:var(--s5)}
 .step-n{font-family:Bitter,Georgia,serif;font-weight:700;font-size:calc(34px*var(--fs));line-height:1;color:var(--mat)}
 .step h3{font-size:calc(19px*var(--fs));font-weight:600;margin:4px 0 6px}
 .step p{margin:0 0 10px}
@@ -133,7 +133,7 @@ a.row:hover .row-t{text-decoration:underline;text-decoration-thickness:1px;text-
 .fig figcaption{border-top:1px solid var(--line);background:var(--panel);padding:6px 10px;font-size:calc(14px*var(--fs));color:var(--muted)}
 .fig figcaption b{font-family:Bitter,Georgia,serif;color:var(--ink);font-weight:600;margin-right:4px}
 @media (min-width:560px){.step{grid-template-columns:56px 1fr}.fig{grid-column:2}}
-.box{margin-top:6px;padding-top:16px;border-top:1px solid var(--line)}
+.box{margin-top:var(--s1);padding-top:var(--s4);border-top:1px solid var(--line)}
 .box h2{font-size:calc(21px*var(--fs));margin-bottom:8px}
 .box ul{margin:0;padding-left:20px}
 .box li{margin-bottom:6px}
@@ -155,7 +155,7 @@ a.row:hover .row-t{text-decoration:underline;text-decoration-thickness:1px;text-
 .leg{list-style:none;padding:0;margin:18px 0 0}
 .leg li{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}
 .leg svg{width:96px;height:48px;background:var(--panel);border:1px solid var(--line);border-radius:4px}
-.set{margin-top:22px}
+.set{margin-top:var(--s5)}
 .set h2{font-size:calc(21px*var(--fs));margin-bottom:10px}
 .set p{margin:0 0 10px;color:var(--muted)}
 .seg{display:flex;gap:8px;flex-wrap:wrap}
@@ -236,55 +236,64 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .ct-g{margin:0 0 12px;color:var(--mat);font-size:calc(17px*var(--fs))}
 .ct-s{margin-bottom:10px}
 
-/* ---------- Acasă ---------- */
-.big-c{display:block;padding:16px 18px;margin:0 0 16px;border:2px solid var(--ink);border-radius:14px;
+/* ---------- cartonașe: două tipuri, atât ---------- */
+.card{display:block;position:relative;padding:var(--s4) var(--s4) var(--s4) var(--s4);margin:0 0 var(--s3);
+  border:1.5px solid var(--line);border-left:4px solid var(--mat);border-radius:12px;background:var(--panel);
+  text-decoration:none;color:var(--ink);overflow:hidden}
+.card b{display:block;font-family:Bitter,Georgia,serif;font-size:calc(20px*var(--fs));line-height:1.25}
+.card span{display:block;color:var(--muted);font-size:calc(14.5px*var(--fs));margin-top:var(--s1)}
+.card i{display:inline-block;margin-top:var(--s2);font-style:normal;font-size:calc(14px*var(--fs));color:var(--mat)}
+.card em{position:absolute;left:0;bottom:0;height:3px;background:var(--mat);display:block}
+.card .ic{position:absolute;right:var(--s4);top:var(--s4);width:26px;height:26px;margin:0;color:var(--mat);opacity:.9}
+.card .ic svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.card.mare{border-left-color:var(--ink);border-width:1.5px 1.5px 1.5px 4px}
+.card.mare b{font-size:calc(24px*var(--fs));margin-top:var(--s1)}
+.big-k{display:block;font-size:calc(12px*var(--fs));letter-spacing:.1em;text-transform:uppercase;color:var(--mat);font-weight:600}
+.big-s{display:block;color:var(--muted);font-size:calc(14.5px*var(--fs));margin-top:var(--s1)}
+.grid{list-style:none;padding:0;margin:var(--s4) 0 0;display:grid;gap:0}
+@media (min-width:520px){.grid{grid-template-columns:1fr 1fr;gap:var(--s3)}.grid .card{margin:0}}
+
+/* accentul fiecărei secțiuni */
+.sec-masina{border-left-color:var(--c-masina)} .sec-masina .ic{color:var(--c-masina)}
+.sec-mana{border-left-color:var(--c-mana)} .sec-mana .ic{color:var(--c-mana)}
+.sec-croset{border-left-color:var(--c-croset)} .sec-croset .ic{color:var(--c-croset)}
+.sec-tricot{border-left-color:var(--c-tricot)} .sec-tricot .ic{color:var(--c-tricot)}
+.sec-stiut{border-left-color:var(--c-stiut)} .sec-stiut .ic{color:var(--c-stiut)}
+.head.sec-masina,.head.sec-mana,.head.sec-croset,.head.sec-tricot,.head.sec-stiut{border-bottom-color:var(--ink)}
+.meta .ic{display:inline-flex;width:20px;height:20px}
+.meta .ic svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
+.head.sec-masina .meta .ic{color:var(--c-masina)} .head.sec-mana .meta .ic{color:var(--c-mana)}
+.head.sec-croset .meta .ic{color:var(--c-croset)} .head.sec-tricot .meta .ic{color:var(--c-tricot)}
+.head.sec-stiut .meta .ic{color:var(--c-stiut)}
+
+/* ---------- cartonaș de atenție ---------- */
+.alert{margin:0 0 var(--s4);padding:var(--s3) var(--s4);border:1.5px solid var(--amber);
+  border-left-width:4px;border-radius:12px;background:var(--panel)}
+.alert h2{font-size:calc(17px*var(--fs));margin-bottom:var(--s1)}
+.alert p{margin:var(--s1) 0 var(--s3);color:var(--muted)}
+.alert ul{margin:var(--s1) 0 var(--s2);padding-left:20px}
+.alert button{border:0;background:none;color:var(--mat);font-weight:600;padding:var(--s2) 0;cursor:pointer;min-height:40px}
+.alert.ok{border-color:var(--mat)}
+.alert.warn{border-color:var(--thread)}
+.alert .list li:last-child .row{border-bottom:0}
+
+/* ---------- Acasă: cele trei acțiuni ---------- */
+.a3s{display:grid;gap:var(--s2);margin:0 0 var(--s5)}
+@media (min-width:480px){.a3s{grid-template-columns:1fr 1fr 1fr}}
+.a3{display:block;padding:var(--s3) var(--s4);border:1.5px solid var(--line);border-radius:12px;
   background:var(--panel);text-decoration:none;color:var(--ink)}
-.big-k{display:block;font-size:calc(13px*var(--fs));letter-spacing:.08em;text-transform:uppercase;color:var(--mat);font-weight:600}
-.big-c b{display:block;font-family:Bitter,Georgia,serif;font-size:calc(24px*var(--fs));margin:4px 0 2px}
-.big-s{display:block;color:var(--muted);font-size:calc(15px*var(--fs))}
-.qa{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:0 0 20px}
-.qa-b{display:flex;align-items:center;justify-content:center;text-align:center;min-height:64px;padding:8px 6px;
-  border:1.5px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);background:var(--panel);
-  font-size:calc(14px*var(--fs));line-height:1.25}
-.idee{margin:0 0 20px}
-.idee h2{font-size:calc(19px*var(--fs));margin-bottom:4px}
-.sec-c{display:block;padding:14px 16px;margin:0 0 10px;border:1.5px solid var(--line);border-radius:12px;
-  background:var(--panel);text-decoration:none;color:var(--ink)}
-.sec-c b{display:block;font-family:Bitter,Georgia,serif;font-size:calc(20px*var(--fs))}
-.sec-c span{display:block;color:var(--muted);font-size:calc(14px*var(--fs));margin-top:1px}
-.sec-c u{display:block;text-decoration:none;color:var(--mat);font-size:calc(14px*var(--fs));margin-top:6px}
-.mini{display:block;height:6px;margin-top:8px;border-radius:999px;background:var(--mat-soft);overflow:hidden}
+.a3 b{display:block;font-family:Bitter,Georgia,serif;font-size:calc(17px*var(--fs))}
+.a3 span{display:block;color:var(--muted);font-size:calc(14px*var(--fs));margin-top:2px}
+.idee{margin:0 0 var(--s5)}
+.idee h2{font-size:calc(18px*var(--fs));margin-bottom:var(--s1)}
+.mini{display:block;height:6px;margin-top:var(--s2);border-radius:999px;background:var(--mat-soft);overflow:hidden}
 .mini span{display:block;height:100%;background:var(--mat)}
-.grp{margin:22px 0 2px;font-size:calc(15px*var(--fs));text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-family:"Source Sans 3",sans-serif;font-weight:600}
-
-/* ---------- cartonașe de secțiune ---------- */
-.grid{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px}
-@media (min-width:520px){.grid{grid-template-columns:1fr 1fr}}
-.gc{display:block;position:relative;padding:14px 16px 18px;border:1.5px solid var(--line);border-radius:12px;
-  background:var(--panel);text-decoration:none;color:var(--ink);overflow:hidden}
-.gc b{display:block;font-family:Bitter,Georgia,serif;font-size:calc(21px*var(--fs))}
-.gc span{display:block;color:var(--muted);font-size:calc(15px*var(--fs))}
-.gc i{display:block;margin-top:4px;font-style:normal;font-size:calc(14px*var(--fs));color:var(--mat)}
-.gc em{position:absolute;left:0;bottom:0;height:4px;background:var(--mat);display:block}
-.act3{display:grid;gap:10px;margin:18px 0}
-.a3{display:block;padding:14px 16px;border:1.5px solid var(--ink);border-radius:12px;background:var(--panel);
-  text-decoration:none;color:var(--ink)}
-.a3 b{display:block;font-family:Bitter,Georgia,serif;font-size:calc(19px*var(--fs))}
-.a3 span{display:block;color:var(--muted);font-size:calc(14px*var(--fs))}
-.row.alerta .row-t small{color:var(--thread)}
-.box-l{margin:10px 0 0;padding-left:20px}
-.box-l li{margin-bottom:6px}
-
-/* ---------- scurtături de pe Acasă ---------- */
-.sc{display:grid;gap:10px;margin:18px 0}
-.sc-c{display:block;padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);background:var(--panel)}
-.sc-c b{display:block;font-family:Bitter,Georgia,serif;font-size:calc(21px*var(--fs))}
-.sc-c span{display:block;color:var(--muted);font-size:calc(15px*var(--fs));margin-top:2px}
-.sc-c i{display:inline-block;margin-top:8px;font-style:normal;font-size:calc(14px*var(--fs));color:var(--mat)}
-.prog{margin:4px 0 8px}
+.grp{margin:var(--s5) 0 var(--s1);font-size:calc(14px*var(--fs));text-transform:uppercase;letter-spacing:.08em;
+  color:var(--muted);font-family:"Source Sans 3",sans-serif;font-weight:600}
+.prog{margin:var(--s1) 0 var(--s3)}
 .prog-b{height:10px;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden;background:var(--panel)}
 .prog-b span{display:block;height:100%;background:var(--mat)}
-.prog p{margin:8px 0 0;color:var(--muted)}
+.prog p{margin:var(--s2) 0 0;color:var(--muted)}
 
 /* ---------- comutator Învăț / Fac ---------- */
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 18px}
@@ -595,7 +604,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='6.0';
+const APP_VER='7.0';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -1819,6 +1828,146 @@ TECH.push(
 }
 );
 
+/* ================= CROȘETAT ȘI TRICOTAT: completare v6.1 ================= */
+TECH.push(
+{id:'schimb-culoare',sec:'croset',t:'Schimbarea culorii',lvl:'m',time:'15 min de exersat',
+ tags:'schimbare culoare fir nou dungi croșetat tricotat trecere curata',
+ intro:'Culoarea se schimbă la ultima tragere a punctului dinainte, nu la începutul punctului nou. Așa trecerea iese curată, fără un ochi cu două culori.',
+ need:['două culori de fir','croșeta sau andrelele obișnuite','ac cu vârf bont, pentru capete'],
+ steps:[
+  {h:'La croșetat: oprește-te cu o tragere înainte',p:'Lucrează ultimul punct din culoarea veche până rămân două bucle pe croșetă. Aici te oprești.',
+   d:()=>svg(hookH(240,90)+loopsOn(222,90,2)+T(222,120,'1','middle')+T(204,120,'2','middle')+
+     T2(20,40,'două bucle','pe croșetă')),
+   c:'Punctul nu e terminat încă.'},
+  {h:'Trage cu firul nou',p:'Prinde firul nou cu croșeta și trage-l prin cele două bucle. Punctul se termină, dar vârful lui e deja în culoarea nouă, deci rândul următor începe curat.',
+   d:()=>svg(hookH(240,90)+loopsOn(222,90,2)+
+     P('M258 112 C 266 84, 246 70, 236 82','yarnH')+A(240,80,232,86,'arrt')+
+     T2(20,40,'firul nou','trage prin ambele')),
+   c:'Firul evidențiat e cel nou.'},
+  {h:'La tricotat: pornește culoarea la capăt de rând',p:'Lasă firul vechi să atârne și începe rândul cu cel nou, ținând capetele împreună la primele două ochiuri, ca să nu se desfacă. Dungile se văd mai curat dacă schimbi mereu pe aceeași parte a lucrării.',
+   d:()=>svg(kneedle(20,84,300,84)+kloops(40,84,8,22)+
+     P('M40 106 C 40 132, 60 140, 76 132','yarn2')+
+     P('M60 106 C 60 136, 86 146, 108 136','yarnH')+
+     T2(160,164,'firul vechi rămâne atârnat,','cel nou pornește rândul','middle')),
+   c:'Capătul de rând, cu ambele fire.'},
+  {h:'Nu înnoda firele',p:'Un nod iese la suprafață după câteva spălări și se simte la purtat. Capetele se ascund, nu se leagă.',d:null,tech:'capete'},
+  {h:'Dungi late fără tăiat firul',p:'Dacă dungile au două sau patru rânduri, nu tăia culoarea nefolosită: las-o pe margine și ia-o de acolo când îi vine rândul. Prinde-o o dată la două rânduri, ca să nu rămână bucle lungi.',d:null}
+ ],
+ errors:['Culoarea schimbată la începutul punctului nou: ultimul ochi iese cu două culori.','Fire înnodate: nodul iese la suprafață și se simte.','Bucle lungi lăsate pe margine: se agață la îmbrăcat.','Schimbat pe părți diferite ale lucrării: dungile ies inegale la margine.']
+},
+
+{id:'capete',sec:'croset',t:'Ascunderea capetelor',lvl:'u',time:'10 min de exersat',
+ tags:'capete fire ascuns finisare ac bont croșetat tricotat se desface',
+ intro:'Capetele de fir se ascund în interiorul lucrării, pe traseul punctelor, nu se leagă. Un capăt bine ascuns nu se desface nici după spălări.',
+ need:['ac cu vârf bont, cu urechea mare','foarfecă mică'],
+ steps:[
+  {h:'Lasă capete de 12 până la 15 cm',p:'Mai scurt de atât nu ai ce ascunde. Taie-le la lungime egală când termini lucrarea.',d:null},
+  {h:'Mergi pe direcția punctelor, apoi schimbă direcția',p:'Bagă acul prin interiorul punctelor, pe 4 sau 5 cm, apoi întoarce-te 2 cm pe direcția opusă. Schimbarea de direcție e cea care ține capătul pe loc.',
+   d:()=>svg(
+     [0,1,2,3,4,5,6,7].map(i=>[0,1,2].map(j=>P(`M${34+i*34} ${54+j*40} c 10 12, 24 12, 34 0`,'yarn2')).join('')).join('')+
+     P('M52 94 L188 94','hid')+P('M188 94 L96 134','thr')+
+     C(52,94,4,'dot')+
+     T2(20,170,'întâi într-o direcție, apoi înapoi pe alta','')),
+   c:'Traseul acului prin interiorul lucrării.'},
+  {h:'Pe dos, nu prin față',p:'La lucrările cu față și dos clare, ascunde capetele pe dos. La cele care se văd pe ambele părți, mergi chiar prin miezul punctelor, nu pe suprafață.',d:null},
+  {h:'Taie întins, nu la ras',p:'Întinde ușor lucrarea și taie capătul la nivelul suprafeței. Când lucrarea revine, capătul intră înăuntru.',
+   d:()=>svg(fab(20,50,280,90)+P('M150 95 L214 95','thr')+P('M222 88 l16 10 m-16 0 l16 -10','ol')+
+     A(60,150,110,150)+A(280,150,230,150)+T2(160,176,'întinde, apoi taie','','middle')),
+   c:'Lucrarea ușor întinsă în momentul tăierii.'},
+  {h:'La amigurumi, capătul intră în umplutură',p:'Trage acul prin corpul jucăriei și scoate-l în partea opusă, întinde ușor și taie: capătul dispare în interior.',d:null}
+ ],
+ errors:['Capete legate cu nod: ies la suprafață și se simt.','Ascuns doar pe o direcție: se desface la primul spălat.','Tăiat prea aproape fără să întinzi: capătul iese afară când lucrarea revine.','Capete de 5 cm: nu ai pe unde să le bagi.']
+},
+
+{id:'blocare',sec:'tricot',t:'Blocarea lucrării',lvl:'m',time:'20 min de lucru, o zi de uscat',
+ tags:'blocare blocat umezire aburire intins forma dantela tricotat croșetat final',
+ intro:'Blocarea e pasul final: umezești lucrarea, o întinzi la forma corectă și o lași să se usuce așa. Fibrele se așază, punctele se egalizează, iar dantela se deschide. Pe multe lucrări, diferența e mai mare decât te aștepți.',
+ need:['prosoape curate','ace de blocat sau ace cu gămălie fără plastic colorat','o suprafață pe care poți înțepa: saltea de puzzle, prosop gros pe covor','metru'],
+ steps:[
+  {h:'Vezi întâi din ce e firul',p:'Lâna și fibrele naturale se blochează cel mai bine și rămân așa. Acrilicul nu ține blocarea la umed, dar se poate așeza cu abur, ținut la distanță. Nu atinge acrilicul cu fierul: se turtește definitiv.',d:null,tech:'banderola'},
+  {h:'Umezește',p:'Scufundă lucrarea în apă călduță cu puțin detergent de lână, 15 minute, fără să freci. Scoate-o susținând-o cu ambele mâini, ca să nu se lungească de la greutatea apei.',d:null},
+  {h:'Scoate apa fără să storci',p:'Rulează lucrarea într-un prosop și apasă. Nu răsuci și nu stoarce: firele se deformează.',
+   d:()=>svg(P('M30 120 C 80 60, 240 60, 290 120','lay')+P('M30 140 C 80 80, 240 80, 290 140','lay2')+
+     A(160,40,160,72)+A(160,170,160,138)+T2(160,186,'apeși, nu storci','','middle')),
+   c:'Lucrarea rulată în prosop.'},
+  {h:'Întinde la măsură și prinde cu ace',p:'Așază lucrarea pe suprafața de blocat, adu-o la dimensiunile din tipar, verifică cu metrul și prinde cu ace din 3 în 3 cm. Colțurile și marginile drepte se prind primele.',
+   d:()=>svg(R(50,40,220,120,'fab')+
+     [0,1,2,3,4,5,6].map(i=>C(50+i*36.6,40,4,'pinh')).join('')+
+     [0,1,2,3,4,5,6].map(i=>C(50+i*36.6,160,4,'pinh')).join('')+
+     [0,1,2].map(i=>C(50,70+i*45,4,'pinh')).join('')+[0,1,2].map(i=>C(270,70+i*45,4,'pinh')).join('')+
+     dimH(28,50,270)+T(160,180,'măsura din tipar','middle','m')),
+   c:'Acele din 3 în 3 cm țin marginea dreaptă.'},
+  {h:'Lasă să se usuce complet',p:'O zi, uneori două, ferit de soare direct și de calorifer. Scoate acele abia când lucrarea e uscată de tot, altfel revine.',d:null},
+  {h:'La dantelă, întinde mai mult',p:'Lucrările din punct dantelat se întind ferm, ca să se deschidă golurile. Acolo blocarea nu e o rafinare, ci parte din model.',d:null}
+ ],
+ errors:['Stors sau răsucit: lucrarea se lungește și nu mai revine.','Acrilic călcat cu fierul pe el: punctele se turtesc și rămân lucioase.','Ace scoase înainte de uscare: forma se pierde.','Uscat pe calorifer sau în soare: fibrele se întăresc și culorile se decolorează.']
+},
+
+{id:'banderola',sec:'stiut',t:'Banderola ghemului',lvl:'u',time:'de citit o dată',
+ tags:'banderola eticheta ghem grosime fir metraj croșetă andrele simboluri spalare lot',
+ intro:'Banderola spune tot ce trebuie ca să alegi firul și să știi câte ghemuri cumperi. Patru numere contează: gramajul, metrajul, mărimea recomandată a acului și densitatea.',
+ need:['banderola unui ghem pe care îl ai în casă'],
+ steps:[
+  {h:'Gramaj și metraj',p:'Scrie de obicei „50 g / 125 m”. Metrajul, nu gramajul, îți spune cât material ai: două fire de aceeași greutate pot avea lungimi foarte diferite. Când un tipar cere 800 m, împarți la metrajul de pe banderolă și afli câte ghemuri iei.',
+   d:()=>svg(R(30,40,260,110,'card',6)+
+     T(50,72,'50 g','start')+T(50,96,'125 m','start')+
+     T(150,72,'3,5 - 4 mm','start')+T(150,96,'10 × 10 cm: 22 o. / 28 r.','start','m')+
+     T(160,176,'cele patru numere de pe banderolă','middle','m')),
+   c:'Ce cauți pe etichetă.'},
+  {h:'Mărimea recomandată a acului',p:'E un punct de plecare, nu o regulă. Dacă lucrezi strâns, iei o croșetă sau o andrea cu o jumătate de mărime mai mare; dacă lucrezi lejer, mai mică. Decide după proba de densitate, nu după etichetă.',d:null,tech:'densitate'},
+  {h:'Densitatea',p:'Pătrățelul cu 10 × 10 cm îți spune câte ochiuri și câte rânduri ies pe această suprafață cu acul recomandat. Cu cifra asta compari firul tău cu firul cerut de tipar.',d:null},
+  {h:'Simbolurile de spălare',p:'Ligheanul cu cifra spune temperatura maximă, mâna în lighean înseamnă spălat manual, ligheanul tăiat înseamnă deloc. Triunghiul tăiat înseamnă fără înălbitor, fierul cu puncte dă temperatura de călcat, cercul e pentru curățătorie.',
+   d:()=>svg(
+     P('M30 70 C 30 100, 90 100, 90 70 L90 64 L30 64 Z','ol')+T(60,116,'temperatura','middle','m')+T(60,88,'30','middle')+
+     P('M120 70 C 120 100, 180 100, 180 70 L180 64 L120 64 Z','ol')+P('M134 58 L166 90','bad')+T(150,116,'nu se spală','middle','m')+
+     P('M214 62 L246 62 L230 92 Z','ol')+P('M212 58 L250 96','bad')+T(230,116,'fără înălbitor','middle','m')+
+     P('M60 140 L100 140 L108 160 L52 160 Z','ol')+C(72,150,2.5,'symf')+C(82,150,2.5,'symf')+T(80,180,'călcat, 2 puncte','middle','m')+
+     C(220,150,20,'ol')+T(220,180,'curățătorie','middle','m')),
+   c:'Cele mai des întâlnite simboluri.'},
+  {h:'Lotul',p:'Numărul de lot arată șarja de vopsire. Două ghemuri din loturi diferite pot avea nuanțe puțin diferite, care se văd clar într-o lucrare mare. Cumpără de la început toate ghemurile din același lot.',d:null},
+  {h:'Păstrează banderola',p:'Bagă banderola în coșul cu restul de fir. Peste un an, ea e singura care îți spune ce ai folosit.',d:null}
+ ],
+ errors:['Cumpărat după gramaj, nu după metraj: rămâi fără fir la ultimul rând.','Ghemuri din loturi diferite: apare o dungă de nuanță.','Acul luat orbește de pe etichetă: densitatea iese alta decât în tipar.','Banderola aruncată: nu mai știi cum se spală lucrarea.']
+},
+
+{id:'densitate',sec:'stiut',t:'Proba de densitate și echivalența acelor',lvl:'m',time:'30 min, o dată pe lucrare',
+ tags:'densitate proba esantion gauge croșetă andrele marimi echivalenta ochiuri pe 10 cm marime lucrare',
+ intro:'Densitatea e numărul de ochiuri și de rânduri care intră în 10 × 10 cm. Dacă a ta diferă de cea din tipar, lucrarea iese altă mărime, oricât de corect ai lucra. Proba durează o jumătate de oră și salvează zile de muncă.',
+ need:['firul și acul pe care vrei să le folosești','o riglă sau un metru','ac cu vârf bont'],
+ steps:[
+  {h:'Lucrează un pătrat mai mare decât zona măsurată',p:'Fă cel puțin 15 × 15 cm, în punctul cerut de tipar. Marginile se deformează, de aceea măsori doar la mijloc.',
+   d:()=>svg(R(40,30,240,150,'fab')+R(90,60,140,90,'cut')+
+     T(160,110,'aici măsori','middle')+T2(160,200,'pătratul e mai mare decât zona măsurată','','middle'),216),
+   c:'Zona de măsurat, la mijlocul probei.'},
+  {h:'Blochează proba, dacă blochezi lucrarea',p:'Densitatea se schimbă după blocare, uneori cu 10%. Dacă lucrarea finală va fi blocată, blochează și proba, altfel compari două lucruri diferite.',d:null,tech:'blocare'},
+  {h:'Numără pe 10 cm, nu pe toată proba',p:'Pune rigla la mijloc, marchează 10 cm cu două ace și numără ochiurile dintre ele, inclusiv jumătățile. Apoi la fel pe verticală, pentru rânduri.',
+   d:()=>svg(R(30,44,260,110,'fab')+
+     [0,1,2,3,4,5,6,7,8].map(i=>L(70+i*20,54,70+i*20,144,'zz')).join('')+
+     pinV(70,36,152)+pinV(230,36,152)+dimH(30,70,230)+T(150,26,'10 cm','middle','m')+
+     T(150,178,'numeri ochiurile dintre ace','middle','m')),
+   c:'Măsurarea pe orizontală.'},
+  {h:'Compară și schimbă acul, nu tensiunea mâinii',p:'Ai mai multe ochiuri decât cere tiparul: lucrezi mai strâns, treci la un ac mai gros. Ai mai puține: treci la unul mai subțire. O jumătate de milimetru schimbă de obicei un ochi pe 10 cm. Nu încerca să lucrezi altfel cu mâna: nu se ține pe toată lucrarea.',
+   d:()=>svg(
+     T(80,34,'prea multe ochiuri','middle','m')+T(240,34,'prea puține','middle','m')+
+     [0,1,2,3,4,5,6,7].map(i=>L(30+i*14,60,30+i*14,120,'zz')).join('')+
+     [0,1,2,3,4].map(i=>L(190+i*24,60,190+i*24,120,'zz')).join('')+
+     T(80,150,'ac mai gros','middle')+T(240,150,'ac mai subțire','middle')),
+   c:'Aceeași lățime, două densități.'},
+  {h:'Echivalența mărimilor',p:'Croșetele și andrelele se măsoară în milimetri, dar etichetele vechi și cele americane folosesc alte scări. Reperele uzuale: 2,5 mm este B/1 la croșete, 3,5 mm este E/4, 4 mm este G/6, 5 mm este H/8, 6 mm este J/10. La andrele, 3,25 mm este US 3, 4 mm este US 6, 5 mm este US 8, 6 mm este US 10. Când un tipar dă doar litera sau numărul american, transformă în milimetri și verifică pe ac.',
+   d:()=>svg(
+     [['2,5','B/1'],['3,5','E/4'],['4','G/6'],['5','H/8'],['6','J/10']].map((p,i)=>
+       T(40+i*58,70,p[0]+' mm','middle')+T(40+i*58,94,p[1],'middle','m')).join('')+
+     L(20,110,300,110,'seam')+
+     [['3,25','US 3'],['4','US 6'],['5','US 8'],['6','US 10']].map((p,i)=>
+       T(58+i*68,140,p[0]+' mm','middle')+T(58+i*68,164,p[1],'middle','m')).join('')+
+     T(160,38,'croșete','middle','m')+T(160,186,'andrele','middle','m')),
+   c:'Reperele cele mai folosite. Mărimile intermediare se citesc pe ac.'},
+  {h:'Notează rezultatul',p:'Scrie în notițele fișei: firul, acul și densitatea obținută. Data viitoare pornești direct cu acul potrivit.',d:null}
+ ],
+ errors:['Probă de 10 × 10 cm fix: marginile deformate strică măsurătoarea.','Măsurat înainte de blocare, deși lucrarea se blochează: iese altă mărime.','Numărat pe toată proba și împărțit: erorile se adună.','Densitate ignorată pentru că „diferența e mică”: la 100 de ochiuri, un ochi în minus pe 10 cm înseamnă 4 cm lipsă.']
+}
+);
+
 /* ================= MAȘINA IRINEI: JANOME 1522GN ================= */
 TECH.push(
 {id:'janome-1522',sec:'stiut',t:'Mașina ta: Janome 1522GN',lvl:'u',time:'de citit o dată, apoi de consultat',
@@ -2828,6 +2977,122 @@ PROJ.push(
 }
 );
 
+/* ================= PROIECTE, partea a cincea ================= */
+PROJ.push(
+{id:'rochie-copil',sec:'',t:'Rochie de vară pentru copil',lvl:'u',time:'o după-amiază',
+ intro:'Rochie ușoară, cu corsaj drept încrețit pe elastic și fustă amplă. Se trage peste cap, nu are închidere, deci se îmbracă singură.',
+ needM:['bust','lungimeRochie','umarTalie'],
+ opts:[{k:'bogatie',l:'Cât de amplă e fusta',v:[[2,'Medie (×2)'],[2.5,'Amplă (×2,5)'],[3,'Foarte amplă (×3)']],num:1},
+       {k:'bretele',l:'Umerii',v:[['bretele','Bretele înguste'],['volanas','Volănaș pe umăr']]}],
+ calc(m,o){
+   const C=m.bust+10;
+   const hCorsaj=r05(m.umarTalie*0.55+2*RC);
+   const latFusta=r05(C*o.bogatie);
+   const hFusta=r05(m.lungimeRochie-m.umarTalie*0.55+RC+TIV);
+   const piese=[
+     {shape:'rect',name:'corsajul',w:r05(C/2+2*RC),h:hCorsaj,qty:2},
+     {shape:'rect',name:'fusta',w:r05(latFusta/2+2*RC),h:hFusta,qty:2},
+     {shape:'rect',name:'banda de sus',w:r05(C+4),h:r05(2*2.5+2),qty:1}
+   ];
+   if(o.bretele==='bretele')piese.push({shape:'rect',name:'breteaua',w:7,h:r05(m.umarTalie*0.9),qty:2});
+   else piese.push({shape:'rect',name:'volănașul de umăr',w:r05(C/3),h:9,qty:2});
+   return {piese,
+     mercerie:[`elastic de 1 cm lățime, ${cm(m.bust*0.75)} cm lungime`,'ață'],
+     note:[`Corsajul are ${cm(C)} cm în circumferință și se strânge pe elastic până pe corp.`,
+           `Fusta are ${cm(latFusta)} cm lățime totală.`,
+           'Elasticul cusut direct pe material, cu zigzag îngust, ține mai bine decât tunelul la mărimile mici.',
+           'Lasă tivul lat, de 4 cm: anul viitor lungești rochia fără să se vadă.']};
+ },
+ pasi:(m,o)=>[
+  {h:'Coase laturile',p:'Corsajul și fusta, fiecare separat, în câte un inel. Finisează marginile.',tech:'zigzag'},
+  {h:'Încrețește fusta',p:'Două rânduri de împunsături lungi pe marginea de sus a fustei, trase până ajunge la lățimea corsajului.',tech:'increturi'},
+  {h:'Prinde fusta de corsaj',p:'Față pe față, cu sferturile potrivite. Finisează rezerva și calc-o în sus.'},
+  {h:'Pune banda și elasticul',p:'Coase banda pe marginea de sus, întoarce-o pe dos, apoi coase elasticul întins cu zigzag îngust pe interiorul ei.',tech:'cusatura-elastica'},
+  ...(o.bretele==='bretele'
+    ?[{h:'Fă și prinde bretelele',p:'Pliază fiecare fâșie în patru, coase-o, probează lungimea pe copil și abia apoi fixează-le cu un pătrat cu X.'}]
+    :[{h:'Prinde volănașele de umăr',p:'Tivește marginea de jos a fiecărui volănaș, încrețește-i marginea de sus și prinde-l între corsaj și bandă, pe umăr.',tech:'increturi'}]),
+  {h:'Tivește',p:'Tiv dublu de 1 cm plus 3 cm, lăsat lat pentru anul viitor.',tech:'tiv-dublu'}
+ ],
+ errors:['Elastic prea strâns: lasă urme pe pielea copilului.','Bretele fixate înainte de probă: ies mereu prea lungi.','Material sintetic la rochie de vară: nu respiră și se încarcă electrostatic.','Tiv îngust: nu mai ai ce lungi la anul.']
+},
+
+{id:'bluza-maneca-lunga',sec:'',t:'Bluză cu mânecă lungă',lvl:'a',time:'o zi și jumătate',
+ intro:'Bluză dreaptă cu mâneci lungi, prinse în răscroială, cu manșetă simplă la încheietură. E pasul următor după mâneca scurtă.',
+ needM:['bust','brat','umarTalie','lungimeBluza'],
+ opts:[{k:'lej',l:'Lejeritatea la bust',v:[[8,'Pe corp (8 cm)'],[12,'Obișnuită (12 cm)'],[18,'Lejeră (18 cm)']],num:1},
+       {k:'lungM',l:'Lungimea mânecii',v:[[52,'52 cm'],[56,'56 cm'],[60,'60 cm']],num:1},
+       {k:'mans',l:'La încheietură',v:[['mansheta','Manșetă de 6 cm'],['tiv','Doar tiv']]}],
+ calc(m,o){
+   const C=m.bust+o.lej;
+   const capM=r05(m.brat+8);
+   const incheietura=r05(m.brat*0.62+6);
+   const piese=[
+     {shape:'rect',name:'fața',w:r05(C/2+2*RC),h:r05(m.lungimeBluza+RC+TIV),qty:1},
+     {shape:'rect',name:'spatele',w:r05(C/2+2*RC),h:r05(m.lungimeBluza+RC+TIV),qty:1},
+     {shape:'trapez',name:'mâneca',wTop:r05(capM+2*RC),w:r05(incheietura+2*RC),
+      h:r05(o.lungM-(o.mans==='mansheta'?6:0)+RC+(o.mans==='mansheta'?RC:TIV)),qty:2,
+      note:'capul se rotunjește; partea din față a capului e mai scobită decât cea din spate'},
+     {shape:'rect',name:'biais pentru gât',w:4,h:r05(C*0.7),qty:1}
+   ];
+   if(o.mans==='mansheta')piese.push({shape:'rect',name:'manșeta',w:r05(incheietura+2*RC),h:r05(2*6+2*RC),qty:2});
+   return {piese,
+     mercerie:['ață','biais de 2 cm pentru gât, 60 cm'],
+     note:[`Bluza are ${cm(C)} cm în circumferință, mâneca ${cm(capM)} cm la cap și ${cm(incheietura)} cm la încheietură.`,
+           `Răscroiala mânecii: ${cm(m.umarTalie*0.45)} cm adâncime din colțul de sus.`,
+           'Mâneca lungă se îngustează treptat de la cap spre încheietură: trasează linia dintr-o singură mișcare, cu rigla.',
+           o.mans==='mansheta'?'Manșeta se coase în inel, se pliază în două și se prinde de mânecă, cu o încrețire ușoară.':'Fără manșetă, mâneca se termină cu tiv dublu îngust.']};
+ },
+ pasi:(m,o)=>[
+  {h:'Taie corpul și răscroielile',p:`Pliază fiecare piesă în două și taie gâtul, apoi răscroiala mânecii, adâncă de ${cm(m.umarTalie*0.45)} cm din colțul de sus.`},
+  {h:'Taie mânecile',p:'Rotunjește capul mânecii și marchează mijlocul lui. Îngustează linia laterală spre încheietură, cu rigla.'},
+  {h:'Coase umerii și finisează gâtul',p:'Cu bluza încă deschisă la laturi, biaisul de la gât se pune mult mai ușor.',tech:'biais'},
+  {h:'Prinde mânecile în răscroială',p:'Două rânduri de însăilare pe cap, semnele potrivite, surplusul distribuit în treimea de sus.',tech:'maneca'},
+  {h:'Coase laturile și mânecile dintr-o trecere',p:'De la marginea mânecii, prin subraț, până la poale. Finisează marginile.',tech:'zigzag'},
+  ...(o.mans==='mansheta'
+    ?[{h:'Pune manșetele',p:'Coase fiecare manșetă în inel, pliaz-o în două pe lungime și prinde-o de mânecă, distribuind ușor surplusul.'}]
+    :[{h:'Tivește mânecile',p:'Tiv dublu de 1 cm plus 1 cm.',tech:'tiv-dublu'}]),
+  {h:'Tivește poalele',p:'Tiv dublu de 1 cm plus 2 cm. Probează întâi lungimea.',tech:'tiv-dublu'}
+ ],
+ errors:['Mânecile montate după închiderea laturilor: se coase mult mai greu pe cerc mic.','Cap de mânecă prea plat: nu intră în răscroială.','Mâneca prinsă invers, cu fața în spate: marchează partea din față înainte de a coase.','Încheietură prea strânsă: mâna nu mai trece. Verifică măsura peste pumnul strâns.']
+},
+
+{id:'cos-depozitare',sec:'',t:'Coș de depozitare din material',lvl:'m',time:'3 ore',
+ intro:'Coș pătrat care stă în picioare, cu căptușeală și margine răsfrântă. Bun pentru fire, jucării sau rufe mici. Rigiditatea vine din întăritură, nu din material.',
+ needM:[],
+ opts:[{k:'lat',l:'Latura',input:1,def:30,min:18,max:50,h:'coșul e pătrat în plan'},
+       {k:'inalt',l:'Înălțimea',input:1,def:32,min:15,max:50},
+       {k:'mansh',l:'Marginea răsfrântă',v:[[8,'8 cm'],[12,'12 cm'],[0,'Fără']],num:1},
+       {k:'manere',l:'Mânere laterale',v:[['da','Da, două'],['nu','Fără']]}],
+ calc(m,o){
+   const h=r05(o.inalt+o.mansh+2*RC);
+   const piese=[
+     {shape:'rect',name:'exteriorul',w:r05(o.lat+2*RC),h,qty:2},
+     {shape:'rect',name:'căptușeala',w:r05(o.lat+2*RC),h,qty:2},
+     {shape:'rect',name:'întăritura',w:o.lat,h:r05(o.inalt+o.mansh),qty:2,
+      note:'întăritură groasă, termoadezivă sau cusută; fără ea coșul se lasă'},
+     {shape:'rect',name:'fundul',w:r05(o.lat+2*RC),h:r05(o.lat+2*RC),qty:2,note:'unul din exterior, unul din căptușeală'}
+   ];
+   if(o.manere==='da')piese.push({shape:'rect',name:'mânerul',w:10,h:r05(o.lat*0.6),qty:2});
+   return {piese,
+     mercerie:['ață rezistentă','întăritură groasă, cât suprafața pereților','opțional: o bucată de carton plastifiat pentru fund'],
+     note:[`Coșul iese ${cm(o.lat)} × ${cm(o.lat)} cm în plan și ${cm(o.inalt)} cm înălțime${o.mansh?`, plus ${cm(o.mansh)} cm marginea răsfrântă`:''}.`,
+           'Pereții se cos întâi între ei, apoi se prinde fundul: așa colțurile ies drepte.',
+           'Fundul rigid, tăiat cu 1 cm mai mic decât fundul cusut, se pune la final și se poate scoate la spălat.',
+           o.mansh?'Marginea răsfrântă arată căptușeala, deci alege-i un material care merge cu exteriorul.':'']};
+ },
+ pasi:(m,o)=>[
+  {h:'Lipește întăritura',p:'Pe dosul celor doi pereți exteriori, lăsând rezervele libere, ca să nu se îngroașe cusăturile.'},
+  ...(o.manere==='da'?[{h:'Fă și prinde mânerele',p:'Pliază fâșiile în patru, coase-le și prinde-le pe pereții exteriori, la jumătatea înălțimii, cu un pătrat cu X.',tech:'intarire'}]:[]),
+  {h:'Coase pereții',p:'Cei doi pereți exteriori, față pe față, pe laturile scurte, până iese un tub. La fel pentru căptușeală.'},
+  {h:'Prinde fundurile',p:'Potrivește colțurile fundului cu cusăturile laterale, prinde cu ace și coase de jur împrejur, cu acul lăsat în material la fiecare colț.',tech:'intarire'},
+  {h:'Unește exteriorul cu căptușeala',p:'Bagă exteriorul în căptușeală, față pe față, coase gura și lasă 12 cm deschiși în căptușeală.'},
+  {h:'Întoarce și fixează gura',p:'Întoarce prin deschidere, închide-o cu cusătura scară, calcă marginea de sus și coase la 2 mm de muchie.',tech:'cusatura-scara'},
+  ...(o.mansh?[{h:'Răsfrânge marginea',p:`Îndoaie ${cm(o.mansh)} cm spre exterior și calcă. Dacă vrei să stea, prinde-o cu câteva împunsături ascunse la cusăturile laterale.`}]:[])
+ ],
+ errors:['Fără întăritură: coșul se lasă și nu mai stă deschis.','Întăritură pusă și pe rezerve: cusăturile ies groase și strâmbe.','Fund cusut înainte de pereți: colțurile ies rotunjite și strâmbe.','Fund rigid cusut fix: nu-l mai poți scoate la spălat.']
+}
+);
+
 /* ================= COPIEZ CEVA CE AM DEJA =================
    Poza stă în IndexedDB, pe telefon. Măsurile se iau de pe poză,
    pornind de la un obiect cu dimensiune cunoscută, pus lângă lucru. */
@@ -3413,11 +3678,21 @@ const SECT=[
 const ORDER={
  masina:['intarire','zigzag','cusatura-elastica','frantuzeasca','tiv-dublu','tiv-invizibil','fermoar-clasic','fermoar-invizibil','fermoar-clapeta','butoniera','pense','increturi','biais','buzunar-aplicat','guler','maneca'],
  mana:['inainte','inapoi','tiv-ascuns','cusatura-scara','feston','nasture','capse','petice','insailare'],
- croset:['lant','punct-nedesfacut','semistalp','stalp','inel-magic','cresteri-croset'],
- tricot:['montare','fata','dos','inchidere','cresteri-tricot'],
- stiut:['depanare','janome-1522','tensiune','materiale']
+ croset:['lant','punct-nedesfacut','semistalp','stalp','inel-magic','cresteri-croset','schimb-culoare','capete'],
+ tricot:['montare','fata','dos','inchidere','cresteri-tricot','blocare'],
+ stiut:['depanare','janome-1522','tensiune','materiale','banderola','densitate']
 };
 const LVL={u:'Ușor',m:'Mediu',a:'Avansat'};
+const NIV={u:1,m:2,a:3};
+const lvlTag=l=>`<span class="lvl ${l}"><i aria-hidden="true">${'●'.repeat(NIV[l])}${'○'.repeat(3-NIV[l])}</i>${LVL[l]}</span>`;
+/* pictograma și accentul fiecărei secțiuni */
+const SIC={
+ masina:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15h18v4H3z"/><path d="M6 15V7h9a2 2 0 0 1 2 2v2"/><path d="M8 11v4"/><circle cx="17.5" cy="12.5" r="1.4"/></svg>',
+ mana:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 18 6"/><path d="M18 6l2-2"/><circle cx="16.5" cy="7.5" r="1.3"/><path d="M4 20l2-1-1-1z"/></svg>',
+ croset:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 16 8"/><path d="M16 8c1.5-1.5 4 0 2.6 1.8"/><path d="M6 13c-2 3 1 6 4 4"/></svg>',
+ tricot:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18 15 6"/><path d="M9 18 20 6"/><circle cx="15.4" cy="5.6" r="1.2"/><circle cx="20.4" cy="5.6" r="1.2"/></svg>',
+ stiut:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r="1"/></svg>'
+};
 const MASURI=[
  {k:'bust',l:'Bustul',h:'în partea cea mai plină a pieptului',min:50,max:180,fig:{c:104}},
  {k:'talie',l:'Talia',h:'de jur împrejur, unde se îndoaie corpul în lateral',min:40,max:160,fig:{c:128}},
@@ -3438,6 +3713,8 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.0',l:['Aspect unificat: un singur fel de cartonaș pentru navigare și unul pentru avertismente.','Fiecare secțiune are pictograma și culoarea ei, deci se recunoaște dintr-o privire.','Nivelul se vede acum și cu puncte, nu doar prin culoare.','Anteturi mai mici, fundal mai curat și spațiere după o scară fixă.']},
+ {v:'6.1',l:['Cinci fișe noi: schimbarea culorii, ascunderea capetelor, blocarea lucrării, banderola ghemului și proba de densitate cu echivalența acelor.','Trei proiecte noi: rochie de vară pentru copil, bluză cu mânecă lungă și coș de depozitare.']},
  {v:'6.0',l:['Caută după ce ai pățit, nu doar după denumire: scrie „se încrețește”, „ață pe dos” sau „sare cusătura” și te duc direct la pasul care răspunde.','Contor de rânduri pentru croșetat și tricotat, cu buton mare și ecranul care rămâne aprins.','Mod pas cu pas: un pas pe ecran, text mare, pentru când lucrezi lângă mașină.']},
  {v:'5.1',l:['Învăț și Fac se deschid acum pe secțiuni și pe grupe, nu pe o listă lungă: intri întâi în „La mașină” sau în „Fuste” și abia acolo vezi fișele.','Acasă arată doar ce te ajută: ce ai lăsat neterminat, trei acțiuni, favoritele și progresul.','Mai mult e împărțit în Datele mele, Aplicația și Ajutor, plus o pagină „Ce e nou”.']},
  {v:'5.0',l:['Aplicația are acum patru pagini, cu bară jos: Acasă, Învăț, Fac și Mai mult.','Acasă adună ce ai lăsat neterminat, progresul tău și scurtăturile spre restul.','Mai mult strânge la un loc persoanele, copierea din poză, setările, legenda desenelor și diagnosticul.']},
@@ -3534,12 +3811,12 @@ function backupBanner(){
   const lb=S.settings.lastBackup||0, z=lb?Math.round((Date.now()-lb)/ZI):null;
   if(lb&&z<30)return '';
   if(S.settings.bkAmanat&&Date.now()-S.settings.bkAmanat<7*ZI)return '';
-  return `<section class="bk" aria-label="Copie de siguranță"><h2>${lb?`Ultima copie de siguranță a fost acum ${z} de zile`:'Nu ai salvat încă nicio copie'}</h2>
+  return `<section class="alert" aria-label="Copie de siguranță"><h2>${lb?`Ultima copie de siguranță a fost acum ${z} de zile`:'Nu ai salvat încă nicio copie'}</h2>
    <p>Notițele, măsurile și proiectele tale stau doar în acest telefon. O copie durează zece secunde.</p>
    <div class="seg"><a class="btn pri" href="#/setari">Salvează o copie</a><button class="btn" id="bkLater">Mai târziu</button></div></section>`;
 }
 function bkBtn(){const b=document.getElementById('bkLater');
-  if(b)b.onclick=()=>{S.settings.bkAmanat=Date.now();save();b.closest('.bk').remove()}}
+  if(b)b.onclick=()=>{S.settings.bkAmanat=Date.now();save();b.closest('.alert').remove()}}
 function continua(){
   const R=S.recent||{}, items=[];
   if(R.t&&byId(R.t.id)){const t=byId(R.t.id);
@@ -3588,7 +3865,7 @@ function acasa(){
   const fav=TECH.filter(t=>S.fav[t.id]), per=activePerson();
   app.innerHTML=`<div class="view">${mast('Atelier','Manualul și proiectele tale de cusut, croșetat și tricotat.')}
    ${backupBanner()}${continua()}
-   <section class="act3" aria-label="Ce vrei să faci">
+   <section class="a3s" aria-label="Ce vrei să faci">
     <a class="a3" href="#/tehnici"><b>Caut o tehnică</b><span>cum se face ceva anume</span></a>
     <a class="a3" href="#/proiecte"><b>Încep un proiect</b><span>calculat cu măsurile tale</span></a>
     <a class="a3" href="#/copii"><b>Copiez din poză</b><span>măsor o lucrare gata făcută</span></a>
@@ -3596,7 +3873,7 @@ function acasa(){
    ${fav.length?`<section class="sec"><div class="sec-h"><h2>Favoritele tale</h2><span>${fav.length}</span></div>
      <ul class="list">${fav.slice(0,5).map(t=>`<li><a class="row" href="#/t/${t.id}">
        <span class="row-t">${esc(t.t)}<small>${esc(SECT.find(s=>s.id===t.sec).t)}</small></span>
-       <span class="lvl ${t.lvl}">${LVL[t.lvl]}</span></a></li>`).join('')}</ul></section>`:''}
+       ${lvlTag(t.lvl)}</a></li>`).join('')}</ul></section>`:''}
    <section class="prog" aria-label="Progresul tău">
     <div class="prog-b"><span style="width:${Math.round(nD/nT*100)}%"></span></div>
     <p>${nD===0?'Începe cu o tehnică ușoară: tivul dublu sau cusătura înainte.'
@@ -3642,12 +3919,12 @@ function tabs(cur){
    <a href="#/proiecte" class="tab${cur==='p'?' on':''}"${cur==='p'?' aria-current="page"':''}><b>Fac</b><span>proiecte cu măsurile mele</span></a>
   </nav>`;
 }
-function mast(titlu,sub){
-  const news=NEWS.length?`<section class="news" aria-label="Ce e nou"><h2>Ce e nou în Atelier ${APP_VER}</h2>
+function mast(titlu,sub,rigla){
+  const news=NEWS.length?`<section class="alert ok" aria-label="Ce e nou"><h2>Ce e nou în Atelier ${APP_VER}</h2>
     <ul>${NEWS.flatMap(n=>n.l).map(x=>`<li>${esc(x)}</li>`).join('')}</ul><button id="newsOk">Am înțeles</button></section>`:'';
   return `<header class="mast"><div class="mast-t"><h1>${esc(titlu||'Atelier')}</h1>
    <p>${esc(sub||'Manual de tehnici de cusut, croșetat și tricotat, pas cu pas, cu desene.')}</p>
-   <div class="tape" aria-hidden="true"></div></div></header>${news}`;
+   ${rigla?'<div class="tape" aria-hidden="true"></div>':''}</div></header>${news}`;
 }
 function newsBtn(){
   const ok=document.getElementById('newsOk');
@@ -3673,15 +3950,15 @@ function tehnici(){
 function randuri(arr){
   return `<ul class="list">${arr.map(t=>`<li><a class="row" href="#/t/${t.id}"><span class="row-t">${esc(t.t)}</span>
     <span class="marks">${S.fav[t.id]?'<span title="Favorit"><span aria-hidden="true">★</span><span class="sr">favorit</span></span>':''}${S.done[t.id]?'<span title="Exersat"><span aria-hidden="true">✓</span><span class="sr">exersat</span></span>':''}</span>
-    <span class="lvl ${t.lvl}">${LVL[t.lvl]}</span></a></li>`).join('')}</ul>`;
+    ${lvlTag(t.lvl)}</a></li>`).join('')}</ul>`;
 }
 function list(){
   const res=document.getElementById('res');
   if(!Q&&FILTER==='all'){
     res.innerHTML=`<ul class="grid">${SECT.map(s=>{
       const all=inSec(s.id), nd=all.filter(t=>S.done[t.id]).length;
-      return `<li><a class="gc" href="#/s/${s.id}"><b>${esc(s.t)}</b>
-        <span>${all.length} ${all.length===1?'fișă':'fișe'}</span><i>${nd} exersate</i>
+      return `<li><a class="card sec-${s.id}" href="#/s/${s.id}"><span class="ic">${SIC[s.id]}</span>
+        <b>${esc(s.t)}</b><span>${all.length} ${all.length===1?'fișă':'fișe'}, ${nd} exersate</span>
         <em style="width:${Math.round(nd/all.length*100)}%"></em></a></li>`}).join('')}</ul>`;
     return;
   }
@@ -3704,22 +3981,23 @@ function sectiune(id){
   const s=SECT.find(x=>x.id===id); if(!s){location.hash='#/tehnici';return}
   const all=inSec(s.id), nd=all.filter(t=>S.done[t.id]).length;
   app.innerHTML=`<div class="view"><a class="back" href="#/tehnici">← Învăț</a>
-   <header class="head"><div class="meta"><span>${all.length} ${all.length===1?'fișă':'fișe'}</span><span>${nd} exersate</span></div>
+   <header class="head sec-${s.id}"><div class="meta"><span class="ic">${SIC[s.id]}</span>
+   <span>${all.length} ${all.length===1?'fișă':'fișe'}</span><span>${nd} exersate</span></div>
    <h1>${esc(s.t)}</h1></header>${randuri(all)}</div>`;
 }
 const PGRP=[
  {id:'fuste',t:'Fuste',ids:['fusta-cerc','fusta-increțita','fusta-clini','fusta-dreapta']},
- {id:'purtat',t:'De purtat',ids:['rochie-elastic','rochie-bretele','bluza','bluza-maneca','pantaloni-casa']},
+ {id:'purtat',t:'De purtat',ids:['rochie-elastic','rochie-bretele','bluza','bluza-maneca','bluza-maneca-lunga','pantaloni-casa']},
  {id:'genti',t:'Genți și accesorii',ids:['poseta-tote','geanta-fermoar','geanta-plaja','penar']},
- {id:'copii',t:'Pentru copii',ids:['sac-dormit','saculet','fusta-copil','baveta']},
- {id:'casa',t:'Pentru casă',ids:['sort','fata-perna','perna-fermoar','husa-perna-canapea','husa-scaun','suport-oale','fata-masa','fata-masa-rotunda','saculeti-cadou']}
+ {id:'copii',t:'Pentru copii',ids:['sac-dormit','saculet','fusta-copil','rochie-copil','baveta']},
+ {id:'casa',t:'Pentru casă',ids:['sort','fata-perna','perna-fermoar','husa-perna-canapea','husa-scaun','suport-oale','fata-masa','fata-masa-rotunda','cos-depozitare','saculeti-cadou']}
 ];
 function projects(){
   const per=activePerson();
   app.innerHTML=`<div class="view">${mast('Fac','De la măsurile tale la bucățile de tăiat și pașii de urmat.')}
    <div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16" y1="16" x2="21" y2="21"/></svg>
    <input id="pq" type="search" placeholder="Caută, de exemplu „fustă”" value="${esc(PQ)}" aria-label="Caută un proiect"></div>
-   <a class="card-cta" href="#/copii"><b>Copiez ceva ce am deja</b>
+   <a class="card" href="#/copii"><b>Copiez ceva ce am deja</b>
     <span>Faci o poză unei lucrări gata făcute, cu o foaie A4 alături, și afli dimensiunile și materialul.</span></a>
    ${per?`<p class="who">Măsurile folosite: <b>${esc(per.nume)}</b>. Le schimbi din <a href="#/persoane">Persoane</a>.</p>`:''}
    <div id="pres" aria-live="polite"></div></div>`;
@@ -3732,15 +4010,15 @@ function pRanduri(arr,per){
     const st=S.proj[pKey(p,per)], n=st&&st.done?st.done.length:0;
     return `<li><a class="row" href="#/p/${p.id}"><span class="row-t">${esc(p.t)}<small>${esc(p.time)}</small></span>
       ${n?`<span class="marks">${n} ${n===1?'pas':'pași'}</span>`:''}
-      <span class="lvl ${p.lvl}">${LVL[p.lvl]}</span></a></li>`}).join('')}</ul>`;
+      ${lvlTag(p.lvl)}</a></li>`}).join('')}</ul>`;
 }
 function projList(){
   const per=activePerson(), res=document.getElementById('pres');
   if(!PQ){
     res.innerHTML=`<ul class="grid">${PGRP.map(g=>{
       const n=g.ids.length, porn=g.ids.filter(id=>{const st=S.proj[id+'|'+(per?per.id:'-')];return st&&st.done&&st.done.length}).length;
-      return `<li><a class="gc" href="#/g/${g.id}"><b>${esc(g.t)}</b>
-        <span>${n} ${n===1?'proiect':'proiecte'}</span><i>${porn?porn+' începute':'niciunul început'}</i>
+      return `<li><a class="card" href="#/g/${g.id}"><b>${esc(g.t)}</b>
+        <span>${n} ${n===1?'proiect':'proiecte'}, ${porn?porn+' începute':'niciunul început'}</span>
         <em style="width:${Math.round(porn/n*100)}%"></em></a></li>`}).join('')}</ul>`;
     return;
   }
@@ -3764,7 +4042,7 @@ function sheet(id,pasEvid){
   const n=SECT.indexOf(sec)+1, fig=k+1;
   const prev=k>0?byId(arr[k-1]):null, next=k<arr.length-1?byId(arr[k+1]):null;
   let h=`<div class="view"><a class="back" href="#/tehnici">← Toate tehnicile</a>
-   <header class="head"><div class="meta"><span>${sec.t}</span><span class="lvl ${t.lvl}">${LVL[t.lvl]}</span><span>${t.time}</span></div>
+   <header class="head sec-${t.sec}"><div class="meta"><span class="ic">${SIC[t.sec]}</span><span>${sec.t}</span>${lvlTag(t.lvl)}<span>${t.time}</span></div>
    <h1>${esc(t.t)}</h1></header>
    <p class="intro">${esc(t.intro)}</p>
    <div class="need"><h2>Ai nevoie de</h2><ul>${t.need.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
@@ -4003,7 +4281,7 @@ function project(id){
   const need=p.needM||[];
   const lipsa=need.filter(k=>!(per&&per.m[k]>0));
   let h=`<div class="view"><a class="back" href="#/proiecte">← Toate proiectele</a>
-   <header class="head"><div class="meta"><span>Proiect</span><span class="lvl ${p.lvl}">${LVL[p.lvl]}</span><span>${esc(p.time)}</span></div>
+   <header class="head"><div class="meta"><span>Proiect</span>${lvlTag(p.lvl)}<span>${esc(p.time)}</span></div>
    <h1>${esc(p.t)}</h1></header>
    <p class="intro">${esc(p.intro)}</p>`;
   if(need.length){
