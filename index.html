@@ -346,12 +346,11 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 /* ---------- Acasă: cele trei acțiuni ---------- */
 .a3s{display:grid;gap:var(--s2);margin:0 0 var(--s5)}
 @media (min-width:480px){.a3s{grid-template-columns:1fr 1fr 1fr}}
-.a3{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:var(--s3);
+.a3{display:flex;align-items:center;gap:var(--s3);
   padding:var(--s3) var(--s4);border:1.5px solid var(--line-f);border-radius:12px;
   background:var(--panel);text-decoration:none;color:var(--ink);min-height:68px}
 .a3 b{font-family:Bitter,Georgia,serif;font-size:calc(18px*var(--fs));line-height:1.2}
 .a3 span{display:block;color:var(--muted);font-size:calc(14px*var(--fs));margin-top:2px}
-.a3 .ric{grid-row:1/3}
 .a3 .txt{min-width:0}
 .idee{margin:0 0 var(--s5)}
 .idee h2{font-size:calc(18px*var(--fs));margin-bottom:var(--s1)}
@@ -673,7 +672,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.5';
+const APP_VER='7.6';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -3808,6 +3807,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.6',l:['Insignele de pe Acasă sunt aliniate cu textul de lângă ele.','Bara de progres apare doar când ai bifat ceva, iar sub ea scrie clar câte tehnici ai exersat.']},
  {v:'7.5',l:['Pictogramele de secțiune au fost redesenate și stau acum în aceeași insignă colorată ca cele din Mai mult.','Cele trei acțiuni de pe Acasă ocupă un rând fiecare, nu trei etaje.','Bara de progres se vede și când nu ai bifat încă nimic.']},
  {v:'7.4',l:['Două semne din „Cum citești desenele” nu se vedeau deloc. Reparat.','Fiecare persoană are acum pagina ei: nume, toate măsurile și manechinul, nu doar redenumirea.','Pictograme noi, cu fundal și umplere, și câte una pe fiecare rând din Mai mult.','Texte rescrise: fără punct și virgulă, propoziții scurte.']},
  {v:'7.3',l:['Pictogramele de secțiune sunt din nou curate: fără chenar și centrate pe cartonaș.']},
@@ -3975,9 +3975,9 @@ function acasa(){
        <span class="row-t">${esc(t.t)}<small>${esc(SECT.find(s=>s.id===t.sec).t)}</small></span>
        ${lvlTag(t.lvl)}</a></li>`).join('')}</ul></section>`:''}
    <section class="prog" aria-label="Progresul tău">
-    <div class="prog-b"><span style="width:${Math.round(nD/nT*100)}%"></span></div>
-    <p>${nD===0?'Începe cu o tehnică ușoară: tivul dublu sau cusătura înainte.'
-      :nD===nT?'Le-ai exersat pe toate.':`${nD} din ${nT} de tehnici exersate.`}</p>
+    ${nD?`<div class="prog-b"><span style="width:${Math.max(3,Math.round(nD/nT*100))}%"></span></div>`:''}
+    <p>${nD===0?'Bifează o tehnică după ce ai exersat-o și o să vezi aici cât ai parcurs.'
+      :nD===nT?`Le-ai exersat pe toate cele ${nT}.`:`Ai exersat ${nD} din ${nT} de tehnici.`}</p>
    </section>
    ${per?`<p class="who">Proiectele se calculează acum cu măsurile <b>${esc(per.nume)}</b>.</p>`:''}
    </div>`;
