@@ -292,8 +292,9 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .card span{display:block;color:var(--muted);font-size:calc(14.5px*var(--fs));margin-top:var(--s1)}
 .card i{display:inline-block;margin-top:var(--s2);font-style:normal;font-size:calc(14px*var(--fs));color:var(--mat)}
 .card em{position:absolute;left:0;bottom:0;height:3px;background:var(--acc,var(--mat));display:block;border-radius:0 3px 0 0}
-.card .ic{position:absolute;right:var(--s4);top:var(--s4);width:26px;height:26px;margin:0;color:var(--mat);opacity:.9}
-.card .ic svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.card .ic{position:absolute;right:var(--s4);top:50%;transform:translateY(-50%);width:28px;height:28px;
+  margin:0;border:0;background:none;color:var(--mat);opacity:.9;display:flex;align-items:center;justify-content:center}
+.card .ic svg{width:28px;height:28px;display:block;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .card.mare{border-left-color:var(--ink);border-width:1.5px 1.5px 1.5px 4px}
 .card.mare b{font-size:calc(24px*var(--fs));margin-top:var(--s1)}
 .big-k{display:block;font-size:calc(12px*var(--fs));letter-spacing:.1em;text-transform:uppercase;color:var(--mat);font-weight:600}
@@ -308,7 +309,7 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .sec-tricot{--acc:var(--c-tricot);border-left-color:var(--c-tricot)} .sec-tricot .ic{color:var(--c-tricot)}
 .sec-stiut{--acc:var(--c-stiut);border-left-color:var(--c-stiut)} .sec-stiut .ic{color:var(--c-stiut)}
 .head.sec-masina,.head.sec-mana,.head.sec-croset,.head.sec-tricot,.head.sec-stiut{border-bottom-color:var(--ink)}
-.meta .ic{display:inline-flex;width:20px;height:20px}
+.meta .ic{display:inline-flex;align-items:center;width:20px;height:20px;border:0;background:none;padding:0}
 .meta .ic svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
 .head.sec-masina .meta .ic{color:var(--c-masina)} .head.sec-mana .meta .ic{color:var(--c-mana)}
 .head.sec-croset .meta .ic{color:var(--c-croset)} .head.sec-tricot .meta .ic{color:var(--c-tricot)}
@@ -478,8 +479,8 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .pers-sel b{display:block;font-family:Bitter,Georgia,serif;font-size:calc(18px*var(--fs))}
 .pers-sel span{display:block;color:var(--muted);font-size:calc(14px*var(--fs))}
 .pers-a{display:flex;gap:6px;flex:none}
-.ic{width:46px;height:46px;border:1.5px solid var(--line-f);background:transparent;border-radius:10px;cursor:pointer;font-size:18px;line-height:1}
-.ic.dgr{border-color:var(--thread);color:var(--thread)}
+.icb{width:46px;height:46px;border:1.5px solid var(--line-f);background:transparent;border-radius:10px;cursor:pointer;font-size:18px;line-height:1}
+.icb.dgr{border-color:var(--thread);color:var(--thread)}
 
 /* ---------- desen mărit ---------- */
 .zoom{align-items:center}
@@ -652,7 +653,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.2';
+const APP_VER='7.3';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -3368,8 +3369,8 @@ function copie(id){
       ${c.masuri.length&&R?`<table class="tb"><tbody>${c.masuri.map((m,i)=>`<tr>
         <td>${esc(m.n)}${m.real?`<small>știut: ${cm(m.real)} cm, diferență ${(Math.abs(val(m)-m.real)/m.real*100).toFixed(0)}%</small>`:''}</td>
         <td><b>${cm(val(m))} cm</b></td>
-        <td><button class="ic" data-ver="${i}" aria-label="Verifică ${esc(m.n)}">✓</button>
-            <button class="ic dgr" data-delm="${i}" aria-label="Șterge ${esc(m.n)}">🗑</button></td></tr>`).join('')}</tbody></table>
+        <td><button class="icb" data-ver="${i}" aria-label="Verifică ${esc(m.n)}">✓</button>
+            <button class="icb dgr" data-delm="${i}" aria-label="Șterge ${esc(m.n)}">🗑</button></td></tr>`).join('')}</tbody></table>
         <p class="mm-l">Butonul ✓ îți compară măsura cu o valoare pe care o știi deja, ca să vezi cât de bine a ieșit.</p>`:''}
      </section>
      ${c.masuri.length&&R?fisa(c.masuri.map(m=>({n:m.n,cm:val(m)})),c,R):''}
@@ -3787,6 +3788,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.3',l:['Pictogramele de secțiune sunt din nou curate: fără chenar și centrate pe cartonaș.']},
  {v:'7.2',l:['Butonul „Am înțeles” de la „Ce e nou” funcționează din nou.','Banda colorată din stânga cartonașelor nu se mai bate cu bara de progres.','Lățimea balotului se schimbă direct din bara de sus a proiectului.']},
  {v:'7.1',l:['Pictograme în meniuri și pe acțiunile de pe Acasă.','Ecranele goale au acum un desen și îți spun ce poți face acolo.','Fișele lungi au butoane numerotate, ca să sari direct la un pas.','La proiecte, secțiunile se pliază, iar sus rămâne un rezumat cu persoana, lățimea balotului și materialul necesar.','Chenarele și textele trec pragurile de contrast, în ambele teme.']},
  {v:'7.0',l:['Aspect unificat: un singur fel de cartonaș pentru navigare și unul pentru avertismente.','Fiecare secțiune are pictograma și culoarea ei, deci se recunoaște dintr-o privire.','Nivelul se vede acum și cu puncte, nu doar prin culoare.','Anteturi mai mici, fundal mai curat și spațiere după o scară fixă.']},
@@ -4298,8 +4300,8 @@ function persoane(){
    ${S.people.length?`<ul class="list pl-people">${S.people.map(x=>`<li class="pers${per&&x.id===per.id?' on':''}">
      <button class="pers-sel" data-sel="${x.id}" aria-pressed="${!!(per&&x.id===per.id)}">
        <b>${esc(x.nume)}</b><span>${MASURI.filter(z=>x.m[z.k]>0).map(z=>esc(z.l.toLowerCase())+' '+cm(x.m[z.k])).join(', ')||'fără măsuri completate'}</span></button>
-     <span class="pers-a"><button class="ic" data-ren="${x.id}" aria-label="Redenumește ${esc(x.nume)}">✎</button>
-     <button class="ic dgr" data-del="${x.id}" aria-label="Șterge ${esc(x.nume)}">🗑</button></span></li>`).join('')}</ul>`
+     <span class="pers-a"><button class="icb" data-ren="${x.id}" aria-label="Redenumește ${esc(x.nume)}">✎</button>
+     <button class="icb dgr" data-del="${x.id}" aria-label="Șterge ${esc(x.nume)}">🗑</button></span></li>`).join('')}</ul>`
    :ecranGol('manechin','Nicio persoană salvată. Adaugi măsurile o singură dată și se folosesc la toate proiectele.')}
    <div class="seg" style="margin-top:14px"><button class="btn pri" id="addp">Adaugă o persoană</button></div></div>`;
   document.getElementById('addp').onclick=async()=>{
