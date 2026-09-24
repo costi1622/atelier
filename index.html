@@ -257,6 +257,13 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
   background:var(--panel);border-top:1.5px solid var(--line);border-bottom:1.5px solid var(--line);
   font-size:calc(14.5px*var(--fs));color:var(--muted)}
 .sumar b{font-family:Bitter,Georgia,serif;color:var(--ink);font-size:calc(16px*var(--fs))}
+.sumar-w{display:inline-flex;align-items:center;gap:2px}
+.sumar-w i{font-style:normal;margin-left:2px}
+.wch{min-width:38px;min-height:34px;padding:2px 6px;border:1.5px solid var(--line-f);background:transparent;
+  border-radius:8px;color:var(--muted);font-size:calc(13.5px*var(--fs));cursor:pointer}
+.wch+.wch{margin-left:2px}
+.wch.on{background:var(--ink);border-color:var(--ink);color:var(--paper);font-weight:600}
+.sumar-m{color:var(--mat);font-weight:600}
 .fold{border-bottom:1px solid var(--line);padding:var(--s2) 0}
 .fold>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
   padding:var(--s2) 0;min-height:48px}
@@ -284,7 +291,7 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .card b{display:block;font-family:Bitter,Georgia,serif;font-size:calc(20px*var(--fs));line-height:1.25}
 .card span{display:block;color:var(--muted);font-size:calc(14.5px*var(--fs));margin-top:var(--s1)}
 .card i{display:inline-block;margin-top:var(--s2);font-style:normal;font-size:calc(14px*var(--fs));color:var(--mat)}
-.card em{position:absolute;left:0;bottom:0;height:3px;background:var(--mat);display:block}
+.card em{position:absolute;left:0;bottom:0;height:3px;background:var(--acc,var(--mat));display:block;border-radius:0 3px 0 0}
 .card .ic{position:absolute;right:var(--s4);top:var(--s4);width:26px;height:26px;margin:0;color:var(--mat);opacity:.9}
 .card .ic svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .card.mare{border-left-color:var(--ink);border-width:1.5px 1.5px 1.5px 4px}
@@ -295,11 +302,11 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 @media (min-width:520px){.grid{grid-template-columns:1fr 1fr;gap:var(--s3)}.grid .card{margin:0}}
 
 /* accentul fiecărei secțiuni */
-.sec-masina{border-left-color:var(--c-masina)} .sec-masina .ic{color:var(--c-masina)}
-.sec-mana{border-left-color:var(--c-mana)} .sec-mana .ic{color:var(--c-mana)}
-.sec-croset{border-left-color:var(--c-croset)} .sec-croset .ic{color:var(--c-croset)}
-.sec-tricot{border-left-color:var(--c-tricot)} .sec-tricot .ic{color:var(--c-tricot)}
-.sec-stiut{border-left-color:var(--c-stiut)} .sec-stiut .ic{color:var(--c-stiut)}
+.sec-masina{--acc:var(--c-masina);border-left-color:var(--c-masina)} .sec-masina .ic{color:var(--c-masina)}
+.sec-mana{--acc:var(--c-mana);border-left-color:var(--c-mana)} .sec-mana .ic{color:var(--c-mana)}
+.sec-croset{--acc:var(--c-croset);border-left-color:var(--c-croset)} .sec-croset .ic{color:var(--c-croset)}
+.sec-tricot{--acc:var(--c-tricot);border-left-color:var(--c-tricot)} .sec-tricot .ic{color:var(--c-tricot)}
+.sec-stiut{--acc:var(--c-stiut);border-left-color:var(--c-stiut)} .sec-stiut .ic{color:var(--c-stiut)}
 .head.sec-masina,.head.sec-mana,.head.sec-croset,.head.sec-tricot,.head.sec-stiut{border-bottom-color:var(--ink)}
 .meta .ic{display:inline-flex;width:20px;height:20px}
 .meta .ic svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
@@ -645,7 +652,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.1';
+const APP_VER='7.2';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -3780,6 +3787,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.2',l:['Butonul „Am înțeles” de la „Ce e nou” funcționează din nou.','Banda colorată din stânga cartonașelor nu se mai bate cu bara de progres.','Lățimea balotului se schimbă direct din bara de sus a proiectului.']},
  {v:'7.1',l:['Pictograme în meniuri și pe acțiunile de pe Acasă.','Ecranele goale au acum un desen și îți spun ce poți face acolo.','Fișele lungi au butoane numerotate, ca să sari direct la un pas.','La proiecte, secțiunile se pliază, iar sus rămâne un rezumat cu persoana, lățimea balotului și materialul necesar.','Chenarele și textele trec pragurile de contrast, în ambele teme.']},
  {v:'7.0',l:['Aspect unificat: un singur fel de cartonaș pentru navigare și unul pentru avertismente.','Fiecare secțiune are pictograma și culoarea ei, deci se recunoaște dintr-o privire.','Nivelul se vede acum și cu puncte, nu doar prin culoare.','Anteturi mai mici, fundal mai curat și spațiere după o scară fixă.']},
  {v:'6.1',l:['Cinci fișe noi: schimbarea culorii, ascunderea capetelor, blocarea lucrării, banderola ghemului și proba de densitate cu echivalența acelor.','Trei proiecte noi: rochie de vară pentru copil, bluză cu mânecă lungă și coș de depozitare.']},
@@ -3997,7 +4005,7 @@ function mast(titlu,sub,rigla){
 }
 function newsBtn(){
   const ok=document.getElementById('newsOk');
-  if(ok)ok.onclick=()=>{S.settings.lastVer=APP_VER;save();NEWS.length=0;ok.closest('.news').remove()};
+  if(ok)ok.onclick=()=>{S.settings.lastVer=APP_VER;save();NEWS.length=0;ok.closest('.alert').remove()};
 }
 function foot(){return `<footer class="foot"><a href="#/legenda">Cum citești desenele</a><span>Atelier ${APP_VER}</span></footer>`}
 
@@ -4419,7 +4427,9 @@ function project(id){
     const m=per?per.m:{}, r=p.calc(m,st.opts,st.W);
     const nec=fabricNeed(r.piese,st.W);
     rez.innerHTML=`<div class="sumar"><b>${esc(per?per.nume:'fără măsuri')}</b>
-       <span>balot ${st.W} cm</span><span>${nec.prea?'nu încape':cm(nec.len)+' cm material'}</span></div>
+       <span class="sumar-w" role="group" aria-label="Lățimea balotului">${[90,110,140,150].map(w=>
+         `<button class="wch${st.W===w?' on':''}" data-w="${w}">${w}</button>`).join('')}<i>cm</i></span>
+       <span class="sumar-m">${nec.prea?'nu încape':cm(nec.len)+' cm material'}</span></div>
      <details class="fold" open><summary><h2>De tăiat</h2></summary>
       <figure class="fig">${drawPieces(r.piese)}<figcaption><b>Schema</b>Bucățile, la scară, cu cotele calculate din măsurile tale.</figcaption></figure>
       ${nec.prea?'':`<figure class="fig">${drawLayout(nec,st.W)}<figcaption><b>Așezarea</b>O variantă de așezare pe balot, la lățimea de ${st.W} cm. Săgețile verzi arată firul drept.</figcaption></figure>`}
@@ -4430,9 +4440,7 @@ function project(id){
              `${cm(x.w)} × ${cm(x.h)} cm`}</td><td>${x.qty}</td></tr>`).join('')}
       </tbody></table></details>
      <details class="fold"><summary><h2>Material și mercerie</h2></summary>
-      <p class="mm-l">Lățimea balotului</p>
-      <div class="seg" role="group" aria-label="Lățimea materialului">${[90,110,140,150].map(w=>
-        `<button class="btn${st.W===w?' pri':''}" data-w="${w}">${w} cm</button>`).join('')}</div>
+      <p class="mm-l">Lățimea balotului se schimbă din bara de sus.</p>
       <p class="big">${nec.prea?'Nu încape pe această lățime':`Îți trebuie aproximativ <b>${cm(nec.len)} cm</b>, adică ${(nec.len/100).toFixed(2).replace('.',',')} m`}</p>
       ${nec.prea?`<p class="msg err">Bucata „${esc(nec.prea)}” e mai lată decât ${st.W} cm. Alege un material mai lat sau o croială mai domoală.</p>`:
         `<p>Calculul include 8% pentru potrivit și 10 cm siguranță. Dacă materialul are model care trebuie potrivit sau fir cu direcție, ia cu 20% mai mult. Bucățile marcate opțional nu sunt socotite.</p>`}
