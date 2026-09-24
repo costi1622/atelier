@@ -19,7 +19,7 @@
   --line:#CBD3CE; --line-f:#808D85; --mat:#2C6A54; --mat-soft:#E3EFE9; --thread:#C0283F; --amber:#8A5D0A;
   --fab:#D9E5EF; --fabS:#7FA3C2; --fab2:#F0DDB4; --fab2S:#C0913A;
   --tape:#8795A3; --yarn:#9C4E7C; --yarnH:#E0A21A; --hook:#6E7C86; --gap:#B9C3CA;
-  --metalHi:#D7DEE3; --yarnHi:#C173A0;
+  --metalHi:#D7DEE3; --yarnHi:#C173A0; --janome:#1E5140; --janomeD:#17402F;
   --s1:4px; --s2:8px; --s3:12px; --s4:18px; --s5:28px; --s6:44px;
   --c-masina:#2C6A54; --c-mana:#8A5D0A; --c-croset:#9C4E7C; --c-tricot:#2F6690; --c-stiut:#7A4A3A;
   --bgdot:rgba(44,106,84,.16); --bgweave:rgba(31,43,51,.035); --bgglow:rgba(44,106,84,.13); --bgedge:rgba(192,40,63,.14);
@@ -37,7 +37,7 @@
     --line:#2F3B44; --line-f:#6A7984; --mat:#72B99B; --mat-soft:#1E3129; --thread:#FF6F86; --amber:#E0B45A;
     --fab:#2A3B4B; --fabS:#6E93B4; --fab2:#4A3F2A; --fab2S:#C9A15A;
     --tape:#6D7D8C; --yarn:#D38DB7; --yarnH:#F2C14E; --hook:#9AA8B1; --gap:#3A4852;
-    --metalHi:#7E8D98; --yarnHi:#E7AFD0;
+    --metalHi:#7E8D98; --yarnHi:#E7AFD0; --janome:#1E5140; --janomeD:#17402F;
     --bgdot:rgba(114,185,155,.13); --bgweave:rgba(255,255,255,.03); --bgglow:rgba(114,185,155,.10); --bgedge:rgba(255,111,134,.14);
   }
 }
@@ -46,7 +46,7 @@
   --line:#2F3B44; --line-f:#6A7984; --mat:#72B99B; --mat-soft:#1E3129; --thread:#FF6F86; --amber:#E0B45A;
   --fab:#2A3B4B; --fabS:#6E93B4; --fab2:#4A3F2A; --fab2S:#C9A15A;
   --tape:#6D7D8C; --yarn:#D38DB7; --yarnH:#F2C14E; --hook:#9AA8B1; --gap:#3A4852;
-  --metalHi:#7E8D98; --yarnHi:#E7AFD0;
+  --metalHi:#7E8D98; --yarnHi:#E7AFD0; --janome:#1E5140; --janomeD:#17402F;
   --c-masina:#72B99B; --c-mana:#E0B45A; --c-croset:#D38DB7; --c-tricot:#7FB2DA; --c-stiut:#C79A86;
   --bgdot:rgba(114,185,155,.13); --bgweave:rgba(255,255,255,.03); --bgglow:rgba(114,185,155,.10); --bgedge:rgba(255,111,134,.14);
 }
@@ -280,9 +280,9 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 @media (prefers-reduced-motion:reduce){.fold>summary::after{transition:none}}
 
 /* ---------- pictograme în rânduri ---------- */
-.ric{flex:none;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;
-  border-radius:11px;background:var(--mat-soft);color:var(--mat)}
-.ric svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.ric{flex:none;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;
+  border-radius:13px;background:var(--mat-soft);color:var(--mat)}
+.ric svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .ric svg .f{fill:currentColor;fill-opacity:.18}
 .ric svg .f2{fill:currentColor;fill-opacity:.10}
 .ric svg .hole{fill:var(--panel);stroke:currentColor}
@@ -349,8 +349,8 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .a3{display:flex;align-items:center;gap:var(--s3);
   padding:var(--s3) var(--s4);border:1.5px solid var(--line-f);border-radius:12px;
   background:var(--panel);text-decoration:none;color:var(--ink);min-height:68px}
-.a3 b{font-family:Bitter,Georgia,serif;font-size:calc(18px*var(--fs));line-height:1.2}
-.a3 span{display:block;color:var(--muted);font-size:calc(14px*var(--fs));margin-top:2px}
+.a3 .txt b{display:block;font-family:Bitter,Georgia,serif;font-size:calc(18px*var(--fs));line-height:1.2}
+.a3 .txt span{display:block;color:var(--muted);font-size:calc(14px*var(--fs));margin-top:2px}
 .a3 .txt{min-width:0}
 .idee{margin:0 0 var(--s5)}
 .idee h2{font-size:calc(18px*var(--fs));margin-bottom:var(--s1)}
@@ -413,6 +413,27 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .cont .row{border-bottom:1px dashed var(--line)}
 .cont .list li:last-child .row{border-bottom:0}
 .cont .marks{color:var(--muted)}
+
+/* ---------- mașina Janome, desenată după fotografii ---------- */
+.d .corpAlb{fill:var(--panel);stroke:var(--ink);stroke-width:1.8}
+.d .placaSus{fill:var(--paper);stroke:var(--ink);stroke-width:1.2}
+.d .chart{fill:none;stroke:var(--muted);stroke-width:1}
+.d .panou{fill:var(--janome);stroke:var(--ink);stroke-width:1.4}
+.d text.logo{fill:#fff;font:700 13px "Source Sans 3",sans-serif;stroke:none;letter-spacing:.5px}
+.d text.etich{fill:#fff;font:600 9px "Source Sans 3",sans-serif;stroke:none;letter-spacing:.6px}
+.d .buton{fill:var(--janomeD);stroke:#0d1f18;stroke-width:1.2}
+.d .butonInel{fill:none;stroke:rgba(255,255,255,.75);stroke-width:1.1}
+.d .marcaj{stroke:#fff;stroke-width:1.6;stroke-linecap:round}
+.d .scala{fill:var(--panel);stroke:var(--ink);stroke-width:1.1}
+.d text.scalaT{fill:var(--ink);font:600 8px "Source Sans 3",sans-serif;stroke:none}
+.d .volanAlb{fill:var(--panel);stroke:var(--ink);stroke-width:1.6}
+.d .tija{stroke:var(--hook);stroke-width:2.6;stroke-linecap:round}
+.d .mosor{fill:var(--fab2);stroke:var(--ink);stroke-width:1.2}
+.d .acJ{stroke:url(#metal);stroke-width:2.4;stroke-linecap:round}
+.d .piciorusJ{fill:url(#metal);stroke:var(--ink);stroke-width:1.2}
+.d .atarJ{fill:none;stroke:var(--thread);stroke-width:1.6}
+.d text.numJ{fill:var(--ink);font:600 10px "Source Sans 3",sans-serif;stroke-width:3px}
+.d .butonPres{fill:var(--panel);stroke:var(--ink);stroke-width:1.6}
 
 /* ---------- piese de mașină ---------- */
 .d .masina{fill:var(--panel);stroke:var(--ink);stroke-width:2;filter:url(#soft)}
@@ -672,7 +693,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.6';
+const APP_VER='7.7';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -2043,33 +2064,37 @@ TECH.push(
  intro:'Fișa dinainte, „Depanarea mașinii”, e valabilă la orice mașină. Aici sunt lucrurile care țin de modelul tău: unde se află fiecare reglaj, ce limite are și ce diferă față de mașinile cu bobină pusă de sus.',
  need:['manualul mașinii, pentru drumul exact al aței','șurubelnița și periuța din trusă','ace noi, sistem casnic obișnuit'],
  steps:[
-  {h:'Ce are mașina ta',p:'Model electromecanic, 25 de programe după eticheta din magazin, adică 22 de cusături plus butoniera. Viteză maximă 860 de împunsături pe minut, 60 W. Lățimea cusăturii până la 5 mm, lungimea până la 4 mm. Are cusut invers, ac dublu, tăietor de ață pe carcasă, înfilător de ac, iluminare LED, braț liber și picioare cu prindere rapidă.',
+  {h:'Ce are mașina ta',p:'Model electromecanic. Selectorul are literele de la A la L, plus poziția de butonieră și RESET. Viteză maximă 860 de împunsături pe minut, 60 W. Lățimea cusăturii până la 5 mm, lungimea până la 4 mm. Are cusut invers, ac dublu, tăietor de ață pe carcasă, înfilător de ac, iluminare LED, braț liber și picioare cu prindere rapidă.',
    d:()=>svg(
-     /* silueta: cap în stânga, braț sus, coloană în dreapta, masa de lucru jos */
-     P('M28 168 L28 72 Q28 58 44 58 L286 58 Q300 58 300 74 L300 168 L236 168 L236 110 L78 110 L78 168 Z','masina')+
-     R(12,168,296,40,'masina',5)+L(100,168,100,208,'seam')+
-     /* volan și selector, pe coloană */
-     C(268,98,24,'volan')+C(268,98,8,'btn')+T(268,46,'volan','middle','m')+
-     C(268,146,17,'btn')+L(268,146,268,133,'olt')+
-     T(304,196,'selector de programe','end','m')+A(280,190,268,166)+
-     /* mosor și bobinator, deasupra brațului */
-     L(150,58,150,38,'ol')+E(150,34,13,6,'btn')+T(150,24,'mosor','middle','m')+
-     L(200,58,200,44,'ol')+C(200,40,6,'btn')+T(214,32,'bobinator','start','m')+
-     /* întinzătorul și discul de tensiune, pe cap */
-     P('M40 74 L56 74 L56 82','olt')+T(16,50,'întinzător','start','m')+A(40,56,52,70)+
-     C(52,98,14,'btn')+C(52,98,4,'symf')+
-     [0,1,2,3,4,5,6].map(i=>{const a=-Math.PI*1.15+i*Math.PI*1.3/6;
-       return L(52+10*Math.cos(a),98+10*Math.sin(a),52+14*Math.cos(a),98+14*Math.sin(a),'ol')}).join('')+
-     T(12,140,'tensiune','start','m')+A(30,134,44,110)+
-     /* lățime, lungime, cusut invers, pe brațul mașinii */
-     C(112,84,12,'btn')+C(112,84,3,'symf')+T(108,150,'lățime','middle','m')+A(108,144,112,100)+
-     C(160,84,12,'btn')+C(160,84,3,'symf')+T(172,150,'lungime','middle','m')+A(170,144,160,100)+
-     R(198,78,14,10,'olt',2)+T(304,66,'cusut invers','end','m')+A(252,72,212,82)+
-     /* acul și piciorușul */
-     L(52,116,52,146,'ndl')+P('M44 146 L60 146 L60 154 L44 154 Z','ol')+
-     T(84,176,'ac și picioruș','start','m')+A(90,170,64,156)+
-     T(56,200,'braț liber','middle','m'),230),
-   c:'Schemă, nu desen exact: pozițiile butoanelor diferă puțin de la o variantă de culoare la alta.'},
+     /* corpul alb: braț, cap, coloană, masa de lucru */
+     P('M24 170 L24 52 Q24 40 38 40 L276 40 Q292 40 292 54 L292 170 Z','corpAlb')+
+     R(12,170,296,32,'corpAlb',5)+L(90,170,90,202,'seam')+
+     /* placa de sus, cu tabelul de cusături */
+     R(24,40,268,11,'placaSus')+
+     [0,1,2,3,4,5,6,7,8,9,10].map(i=>P(`M${140+i*13} 43 l3 5 l3 -5`,'chart')).join('')+
+     /* panoul verde */
+     R(24,56,268,56,'panou')+
+     T(56,92,'JANOME','middle','logo')+
+     /* scala de tensiune, pe cap */
+     R(96,70,13,30,'scala',2)+T(102.5,83,'5','middle','scalaT')+T(102.5,96,'4','middle','scalaT')+
+     /* cele trei butoane, în ordinea de pe mașină */
+     T(152,68,'SELECTOR','middle','etich')+C(152,90,17,'buton')+C(152,90,11,'butonInel')+L(152,76,152,81,'marcaj')+
+     T(216,68,'LENGTH','middle','etich')+C(216,90,14,'buton')+C(216,90,9,'butonInel')+L(216,79,216,83,'marcaj')+
+     T(266,68,'WIDTH','middle','etich')+C(266,90,14,'buton')+C(266,90,9,'butonInel')+L(266,79,266,83,'marcaj')+
+     /* volanul alb, pe dreapta */
+     C(292,126,24,'volanAlb')+C(292,126,9,'volanAlb')+
+     /* mosorul și bobinatorul */
+     L(206,40,206,24,'tija')+E(206,20,11,5,'mosor')+
+     L(244,40,244,28,'tija')+C(244,25,5,'mosor')+
+     /* acul, piciorușul, traseul aței */
+     L(76,112,76,146,'acJ')+P('M68 146 L84 146 L84 154 L68 154 Z','piciorusJ')+
+     P('M60 112 C 56 124, 62 134, 70 140','atarJ')+
+     /* cote și etichete */
+     T(152,128,'A – L','middle','m')+T(216,128,'0 – 4','middle','m')+T(262,128,'0 – 5','middle','m')+
+     T(24,148,'scala de tensiune','start','m')+A(60,144,98,102)+
+     T(160,196,'masa de lucru se scoate, dedesubt e brațul liber','middle','m')+
+     T(292,166,'volan','middle','m'),214),
+   c:'Mașina ta, văzută din față. Cele trei butoane de pe panoul verde, în ordinea de pe mașină.'},
   {h:'Bobina se pune din față, nu de sus',p:'Mașina are cârlig oscilant vertical și suveică frontală. Scoți capacul de la brațul liber, tragi suveica de clapetă, pui bobina în ea astfel încât ața să iasă prin fanta laterală și pe sub arcul de tensiune, apoi împingi suveica la loc până se aude clicul. Dacă nu intră complet, nu forța: rotește volanul puțin și încearcă din nou.',
    d:()=>svg(
      T(84,26,'suveica cu bobina','middle','m')+T(244,26,'cum iese ața','middle','m')+
@@ -2102,7 +2127,7 @@ TECH.push(
      A(60,126,108,92)+A(258,126,208,92),176),
    c:'Mașina văzută din spate.',tech:'depanare'},
   {h:'Presiunea piciorușului, trei poziții',p:'Poziția obișnuită e cea de mijloc, pentru majoritatea materialelor. Slăbește presiunea la materiale groase sau pufoase, ca să nu le turtească, și crește-o la materiale foarte subțiri, care alunecă. E reglajul la care se uită lumea ultimul, deși rezolvă multe ondulații.',d:null},
-  {h:'Limitele de reținut la rețetele din manual',p:'Unde în fișele de tehnică scrie zigzag de 3 până la 5 mm, la tine 5 mm e maximul. Lungimea maximă e 4 mm, deci pentru încrețit folosește 4, nu mai mult. Pentru butonieră ai picioruș dedicat, iar butoniera se face într-un singur pas: dacă pe tabelul de cusături de pe mașină vezi patru simboluri de butonieră, urmează ordinea de acolo.',d:null,tech:'increturi'},
+  {h:'Limitele de reținut la rețetele din manual',p:'Unde în fișele de tehnică scrie zigzag de 3 până la 5 mm, la tine 5 mm e maximul. Lungimea maximă e 4 mm, deci pentru încrețit folosește 4, nu mai mult. Butoniera se face într-un singur pas: pe tabelul de pe capacul de sus scrie „1 STEP BUTTONHOLE”, iar selectorul are poziția ei, lângă RESET.',d:null,tech:'increturi'},
   {h:'Curățarea, la fiecare proiect mare',p:'Scoate acul, piciorușul, capacul și suveica. Periază lăcașul cârligului și zona transportorului. Scamele adunate acolo schimbă tensiunea și fac zgomot metalic. Nu sufla cu gura: umezeala rămâne înăuntru. Pune o picătură de ulei de mașină doar dacă manualul o cere, și doar acolo unde îl arată.',
    d:()=>svg(
      /* placa acului și dinții transportorului */
@@ -3807,6 +3832,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.7',l:['Insignele de pe Acasă ieșeau gri și mici. Reparat: verzi și de aceeași mărime peste tot.','Mașina din fișa Janome e desenată acum după fotografiile mașinii tale: panoul verde, cele trei butoane în ordinea reală, scala de tensiune, volanul alb, mosorul și bobinatorul.','Butonul de presiune are desenul lui, văzut din stânga, cu pozițiile 1, 2 și 3.']},
  {v:'7.6',l:['Insignele de pe Acasă sunt aliniate cu textul de lângă ele.','Bara de progres apare doar când ai bifat ceva, iar sub ea scrie clar câte tehnici ai exersat.']},
  {v:'7.5',l:['Pictogramele de secțiune au fost redesenate și stau acum în aceeași insignă colorată ca cele din Mai mult.','Cele trei acțiuni de pe Acasă ocupă un rând fiecare, nu trei etaje.','Bara de progres se vede și când nu ai bifat încă nimic.']},
  {v:'7.4',l:['Două semne din „Cum citești desenele” nu se vedeau deloc. Reparat.','Fiecare persoană are acum pagina ei: nume, toate măsurile și manechinul, nu doar redenumirea.','Pictograme noi, cu fundal și umplere, și câte una pe fiecare rând din Mai mult.','Texte rescrise: fără punct și virgulă, propoziții scurte.']},
