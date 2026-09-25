@@ -709,6 +709,20 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .d .lL{fill:none;stroke:var(--fabLit);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
 .d .lL2{fill:none;stroke:var(--fab2Lit);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
 
+/* ---------- interfața, 7.22 ---------- */
+/* Setări: opțiunile pe grilă cu lățimi egale, nu rupte pe rânduri */
+.seg.g2,.seg.g3{display:grid;gap:8px}
+.seg.g2{grid-template-columns:1fr 1fr}
+.seg.g3{grid-template-columns:1fr 1fr 1fr}
+.seg.g2 .btn,.seg.g3 .btn{width:100%;padding-left:6px;padding-right:6px;white-space:normal;line-height:1.2}
+.fsprev{margin:12px 0 0;padding:12px 14px;border:1px dashed var(--line);border-radius:10px;background:var(--panel);font-size:calc(17px*var(--fs))}
+/* bara de progres pe carduri, doar când există progres */
+.card .trk{position:absolute;left:var(--s4);right:calc(var(--s4) + 60px);bottom:12px;height:5px;border-radius:3px;background:var(--line);display:block}
+.card .trk em{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--acc,var(--mat))}
+.card.pgc{border-left:5px solid var(--mat);padding-right:84px}
+.card.pgc .ic{color:var(--mat);background:var(--acc-soft,rgba(44,106,84,.12))}
+.a3one{grid-template-columns:1fr !important;margin-bottom:0}
+
 </style>
 </head>
 <body>
@@ -778,7 +792,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.21';
+const APP_VER='7.22';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -4162,6 +4176,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.22',l:['Setări: opțiunile stau pe o grilă ordonată, iar sub mărimea textului vezi imediat cum arată textul ales. Legătura de sus duce înapoi la „Mai mult”.','Fac: grupurile de proiecte au iconițe, iar „Copiez ceva ce am deja” arată ca o acțiune, ca pe prima pagină.','„Continuă de unde ai rămas” spune totul pe un rând scurt, de exemplu „Proiect · în ultima oră · 0 din 5 pași”.','Pe carduri apare o bară de progres, de îndată ce ai exersat o fișă sau ai început un proiect.']},
  {v:'7.21',l:['Butonul de mărire s-a mutat din colțul desenului în bara legendei, jos în dreapta. Nu mai acoperă nimic din desen, nici punctele animațiilor. Mărirea merge în continuare și atingând oriunde pe desen.']},
  {v:'7.20',l:['Butonul de mărire din colțul desenelor are acum o iconiță desenată, de mărime fixă, care se vede la fel de clar pe orice telefon și în ambele teme.']},
  {v:'7.19',l:['La proiecte, bucățile de pe balot arată ca tiparele de hârtie așezate pe material, iar sub balot e o legendă mică cu firul drept și liziera. În schema bucăților apare și firul drept.','Textele din desene sunt puțin mai mari, iar pe telefon desenele folosesc aproape toată lățimea ecranului.','Butonul de mărire din colțul desenelor se vede mai bine.']},
@@ -4271,7 +4286,7 @@ let Q='',PQ='',FILTER='all',ACTIVE_M=null;
 const GEAR='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>';
 
 function cand(ts){const z=Date.now()-ts, zi=864e5;
-  if(z<36e5)return 'acum mai puțin de o oră'; if(z<zi)return 'astăzi';
+  if(z<36e5)return 'în ultima oră'; if(z<zi)return 'astăzi';
   if(z<2*zi)return 'ieri'; if(z<7*zi)return `acum ${Math.round(z/zi)} zile`;
   if(z<30*zi)return `acum ${Math.round(z/(7*zi))} săptămâni`; return 'mai demult'}
 const ZI=864e5;
@@ -4290,21 +4305,21 @@ function bkBtn(){const b=document.getElementById('bkLater');
 function continua(){
   const R=S.recent||{}, items=[];
   if(R.t&&byId(R.t.id)){const t=byId(R.t.id);
-    items.push({ts:R.t.ts,href:'#/t/'+t.id,et:'Tehnica citită ultima dată',t:t.t,
-      s:S.done[t.id]?'ai bifat-o ca exersată':'încă nebifată'})}
+    items.push({ts:R.t.ts,href:'#/t/'+t.id,et:'Fișă',t:t.t,
+      s:S.done[t.id]?'exersată':'neexersată'})}
   if(R.p&&projById(R.p.id)){const p=projById(R.p.id),per=activePerson(),st=S.proj[pKey(p,per)];
     const n=st&&st.done?st.done.length:0;
     const tot=(()=>{try{return p.pasi(per?per.m:{},pState(p,per).opts).length}catch(e){return 0}})();
-    items.push({ts:R.p.ts,href:'#/p/'+p.id,et:'Proiectul început',t:p.t,
-      s:tot?`${n} din ${tot} ${tot===1?'pas':'pași'} bifați`:'de continuat'})}
+    items.push({ts:R.p.ts,href:'#/p/'+p.id,et:'Proiect',t:p.t,
+      s:tot?`${n} din ${tot} ${tot===1?'pas':'pași'}`:'de continuat'})}
   if(R.c&&copieById(R.c.id)){const c=copieById(R.c.id);
-    items.push({ts:R.c.ts,href:'#/copie/'+c.id,et:'Copia din poză',t:c.nume||'Copie fără nume',
+    items.push({ts:R.c.ts,href:'#/copie/'+c.id,et:'Copie din poză',t:c.nume||'Copie fără nume',
       s:`${c.masuri.length} ${c.masuri.length===1?'măsură luată':'măsuri luate'}`})}
   if(!items.length)return '';
   items.sort((a,b)=>b.ts-a.ts);
   return `<section class="cont" aria-label="Ce ai lăsat neterminat"><h2>Continuă de unde ai rămas</h2>
    <ul class="list">${items.slice(0,3).map(i=>`<li><a class="row" href="${i.href}">
-     <span class="row-t">${esc(i.t)}<small>${esc(i.et)}, ${esc(cand(i.ts))}. ${esc(i.s)}.</small></span>
+     <span class="row-t">${esc(i.t)}<small>${esc(i.et)} · ${esc(cand(i.ts))} · ${esc(i.s)}</small></span>
      <span class="marks" aria-hidden="true">→</span></a></li>`).join('')}</ul></section>`;
 }
 
@@ -4365,7 +4380,7 @@ function maiMult(){
     ${rand('#/setari','Copie de siguranță',lb?`ultima ${cand(lb)}`:'nu ai salvat încă niciuna',!lb||zile>30,'backup')}
    </ul></section>
    <section class="sec"><div class="sec-h"><h2>Aplicația</h2></div><ul class="list">
-    ${rand('#/setari','Setări','mărimea textului, tema, mișcarea din desene',0,'setari')}
+    ${rand('#/setari','Setări','text, temă, mișcare',0,'setari')}
     ${rand('#/noutati','Ce e nou',`versiunea ${APP_VER}`,0,'nou')}
    </ul></section>
    <section class="sec"><div class="sec-h"><h2>Ajutor</h2></div><ul class="list">
@@ -4429,8 +4444,8 @@ function list(){
     res.innerHTML=`<ul class="grid">${SECT.map(s=>{
       const all=inSec(s.id), nd=all.filter(t=>S.done[t.id]).length;
       return `<li><a class="card sec-${s.id}" href="#/s/${s.id}"><span class="ic">${SIC[s.id]}</span>
-        <b>${esc(s.t)}</b><span>${all.length} ${all.length===1?'fișă':'fișe'}, ${nd} exersate</span>
-        <em style="width:${Math.round(nd/all.length*100)}%"></em></a></li>`}).join('')}</ul>`;
+        <b>${esc(s.t)}</b><span>${all.length} ${all.length===1?'fișă':'fișe'}${nd?`, ${nd} ${nd===1?'exersată':'exersate'}`:''}</span>
+        ${nd?`<i class="trk" aria-hidden="true"><em style="width:${Math.round(nd/all.length*100)}%"></em></i>`:''}</a></li>`}).join('')}</ul>`;
     return;
   }
   let out=blocSimpt(Q),total=0;
@@ -4456,6 +4471,14 @@ function sectiune(id){
    <span>${all.length} ${all.length===1?'fișă':'fișe'}</span><span>${nd} exersate</span></div>
    <h1>${esc(s.t)}</h1></header>${randuri(all)}</div>`;
 }
+/* iconițele grupurilor de proiecte, în același stil cu cele ale secțiunilor (7.22) */
+const GIC={
+ fuste:'<svg viewBox="0 0 24 24"><path d="M8 4h8l3.6 15.4a1 1 0 0 1-1 1.2H5.4a1 1 0 0 1-1-1.2z" class="f"/><path d="M8 7.2h8"/><path d="M12 7.2v13.4M9.2 7.2 7.4 20.6M14.8 7.2l1.8 13.4" class="f2"/></svg>',
+ purtat:'<svg viewBox="0 0 24 24"><path d="M8.6 3.8 3.8 6.6l1.9 4.1 2.1-1.1V20.4h8.4V9.6l2.1 1.1 1.9-4.1-4.8-2.8c-.6 1.6-1.9 2.5-3.4 2.5s-2.8-.9-3.4-2.5z" class="f"/></svg>',
+ genti:'<svg viewBox="0 0 24 24"><path d="M4.8 8.6h14.4l-1.3 11a1 1 0 0 1-1 .9H7.1a1 1 0 0 1-1-.9z" class="f"/><path d="M9 8.6V7a3 3 0 0 1 6 0v1.6"/></svg>',
+ copii:'<svg viewBox="0 0 24 24"><path d="M8.2 3.6h7.6l3.4 3.2-2.1 2.6-1.3-1V14l-1.6 6.4h-4.4L8.2 14V8.4l-1.3 1-2.1-2.6z" class="f"/><path d="M9.8 3.6a2.2 2.2 0 0 0 4.4 0"/><circle cx="12" cy="11" r=".7" class="hole-s"/><circle cx="12" cy="13.6" r=".7" class="hole-s"/></svg>',
+ casa:'<svg viewBox="0 0 24 24"><path d="M4.6 6.2c2.4-1.2 12.4-1.2 14.8 0 1.2 2.4 1.2 9.2 0 11.6-2.4 1.2-12.4 1.2-14.8 0-1.2-2.4-1.2-9.2 0-11.6z" class="f"/><circle cx="12" cy="12" r="1.3"/><path d="M4.6 6.2 8 9.4M19.4 6.2 16 9.4M4.6 17.8 8 14.6M19.4 17.8 16 14.6" class="f2"/></svg>'
+};
 const PGRP=[
  {id:'fuste',t:'Fuste',ids:['fusta-cerc','fusta-increțita','fusta-clini','fusta-dreapta']},
  {id:'purtat',t:'De purtat',ids:['rochie-elastic','rochie-bretele','bluza','bluza-maneca','bluza-maneca-lunga','pantaloni-casa']},
@@ -4468,8 +4491,7 @@ function projects(){
   app.innerHTML=`<div class="view">${mast('Fac','De la măsurile tale la bucățile de tăiat și pașii de urmat.')}
    <div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16" y1="16" x2="21" y2="21"/></svg>
    <input id="pq" type="search" placeholder="Caută, de exemplu „fustă”" value="${esc(PQ)}" aria-label="Caută un proiect"></div>
-   <a class="card" href="#/copii"><b>Copiez ceva ce am deja</b>
-    <span>Faci o poză unei lucrări gata făcute, cu o foaie A4 alături, și afli dimensiunile și materialul.</span></a>
+   <section class="a3s a3one" aria-label="Copiere"><a class="a3" href="#/copii">${ic('poza')}<span class="txt"><b>Copiez ceva ce am deja</b><span>o poză cu o foaie A4 alături îți dă dimensiunile și materialul</span></span></a></section>
    ${per?`<p class="who">Măsurile folosite: <b>${esc(per.nume)}</b>. Le schimbi din <a href="#/persoane">Persoane</a>.</p>`:''}
    <div id="pres" aria-live="polite"></div></div>`;
   const q=document.getElementById('pq');
@@ -4488,9 +4510,9 @@ function projList(){
   if(!PQ){
     res.innerHTML=`<ul class="grid">${PGRP.map(g=>{
       const n=g.ids.length, porn=g.ids.filter(id=>{const st=S.proj[id+'|'+(per?per.id:'-')];return st&&st.done&&st.done.length}).length;
-      return `<li><a class="card" href="#/g/${g.id}"><b>${esc(g.t)}</b>
-        <span>${n} ${n===1?'proiect':'proiecte'}, ${porn?porn+' începute':'niciunul început'}</span>
-        <em style="width:${Math.round(porn/n*100)}%"></em></a></li>`}).join('')}</ul>`;
+      return `<li><a class="card pgc" href="#/g/${g.id}"><span class="ic">${GIC[g.id]||''}</span><b>${esc(g.t)}</b>
+        <span>${n} ${n===1?'proiect':'proiecte'}${porn?`, ${porn} ${porn===1?'început':'începute'}`:''}</span>
+        ${porn?`<i class="trk" aria-hidden="true"><em style="width:${Math.round(porn/n*100)}%"></em></i>`:''}</a></li>`}).join('')}</ul>`;
     return;
   }
   const gasite=PROJ.filter(p=>matches(norm(p.t+' '+p.intro),PQ));
@@ -4626,15 +4648,16 @@ function settings(){
   const fsz=[[1,'Normal'],[1.15,'Mare'],[1.3,'Foarte mare'],[1.45,'Maxim']];
   const th=[['auto','Ca telefonul'],['light','Luminoasă'],['dark','Întunecată']];
   const nNotes=Object.keys(S.notes).length;
-  app.innerHTML=`<div class="view"><a class="back" href="#/tehnici">← Toate tehnicile</a>
+  app.innerHTML=`<div class="view"><a class="back" href="#/mai-mult">← Mai mult</a>
    <header class="head"><h1>Setări</h1></header>
-   <section class="set"><h2>Mărimea textului</h2><div class="seg" role="group" aria-label="Mărimea textului">
-    ${fsz.map(([v,l])=>`<button class="btn${S.settings.fs===v?' pri':''}" data-fs="${v}" aria-pressed="${S.settings.fs===v}">${l}</button>`).join('')}</div></section>
+   <section class="set"><h2>Mărimea textului</h2><div class="seg g2" role="group" aria-label="Mărimea textului">
+    ${fsz.map(([v,l])=>`<button class="btn${S.settings.fs===v?' pri':''}" data-fs="${v}" aria-pressed="${S.settings.fs===v}">${l}</button>`).join('')}</div>
+    <p class="fsprev" aria-live="polite"><b>Așa arată textul.</b> Coase la 1 cm de margine, cu împunsătura de 2,5 mm.</p></section>
    <section class="set"><h2>Mișcarea din desene</h2>
     <p>Câteva desene se mișcă, ca să arate ordinea gesturilor. Le poți opri.</p>
-    <div class="seg" role="group" aria-label="Mișcarea din desene">
+    <div class="seg g2" role="group" aria-label="Mișcarea din desene">
      ${[['da','Pornită'],['nu','Oprită']].map(([v,l])=>`<button class="btn${S.settings.motion===v?' pri':''}" data-mo="${v}" aria-pressed="${S.settings.motion===v}">${l}</button>`).join('')}</div></section>
-   <section class="set"><h2>Tema</h2><div class="seg" role="group" aria-label="Tema">
+   <section class="set"><h2>Tema</h2><div class="seg g3" role="group" aria-label="Tema">
     ${th.map(([v,l])=>`<button class="btn${S.settings.theme===v?' pri':''}" data-th="${v}" aria-pressed="${S.settings.theme===v}">${l}</button>`).join('')}</div></section>
    <section class="set"><h2>Copie de siguranță</h2>
     <p>Notițele, favoritele și tehnicile exersate stau doar pe acest telefon. ${nNotes?`Ai notițe la ${nNotes} ${nNotes===1?'fișă':'fișe'}.`:'Nu ai încă notițe.'} Salvează din când în când o copie, ca să nu le pierzi dacă schimbi telefonul. ${S.settings.lastBackup?`Ultima copie: acum ${Math.round((Date.now()-S.settings.lastBackup)/864e5)} zile.`:'Nu ai salvat încă niciuna.'}</p>
