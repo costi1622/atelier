@@ -198,10 +198,16 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
   padding-bottom:env(safe-area-inset-bottom,0px)}
 .tb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
   min-height:62px;text-decoration:none;color:var(--muted);font-size:calc(12.5px*var(--fs));padding:6px 2px}
-.tb svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tb svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tb svg .f{fill:currentColor;fill-opacity:.16}
+.tb svg .f2{fill:currentColor;fill-opacity:.08}
+.tb svg .hole{fill:var(--panel)}
+.tb svg .s2{stroke-width:2.1}
+.tb svg .s3{stroke-width:1.3;opacity:.75}
 .tb.on{color:var(--mat);font-weight:600}
-.tb.on svg{stroke-width:2}
-.tb.on svg :is(path,rect,circle){fill:currentColor;fill-opacity:.14}
+.tb.on svg .f{fill-opacity:.26}
+.tb.on svg .f2{fill-opacity:.14}
+.tb.on svg{stroke-width:1.9}
 
 /* ---------- simptome în căutare ---------- */
 .simp{margin:0 0 18px;padding:12px 14px 4px;border:1.5px solid var(--thread);border-left-width:5px;border-radius:0 12px 12px 0;background:var(--panel)}
@@ -434,6 +440,21 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .d .atarJ{fill:none;stroke:var(--thread);stroke-width:1.6}
 .d text.numJ{fill:var(--ink);font:600 10px "Source Sans 3",sans-serif;stroke-width:3px}
 .d .butonPres{fill:var(--panel);stroke:var(--ink);stroke-width:1.6}
+
+/* ---------- zona suveicii, după fotografii ---------- */
+.d .compart{fill:var(--gap);stroke:var(--ink);stroke-width:1.2;opacity:.45}
+.d .placaJ{fill:url(#metal);stroke:var(--ink);stroke-width:1.2}
+.d .inelMare{fill:url(#metal);stroke:var(--ink);stroke-width:1.6}
+.d .inelMic{fill:var(--panel);stroke:var(--ink);stroke-width:1.2;opacity:.55}
+.d .lacasGol{fill:var(--gap);stroke:var(--ink);stroke-width:1.2}
+.d .suveicaJ{fill:url(#metal);stroke:var(--ink);stroke-width:1.6}
+.d .clapetaJ{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.d .clapetaJ2{fill:var(--panel);stroke:var(--ink);stroke-width:1.2}
+.d .zavor{fill:var(--panel);stroke:var(--ink);stroke-width:1.2}
+.d .brat{fill:#2a2f33;stroke:var(--ink);stroke-width:1.1}
+.d .surub{fill:url(#metal);stroke:var(--ink);stroke-width:1.2}
+.d .surubS{stroke:var(--ink);stroke-width:1.2}
+.d .carlig{fill:none;stroke:var(--hook);stroke-width:7;stroke-linecap:round}
 
 /* ---------- piese de mașină ---------- */
 .d .masina{fill:var(--panel);stroke:var(--ink);stroke-width:2;filter:url(#soft)}
@@ -693,7 +714,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.7';
+const APP_VER='7.8';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -2095,22 +2116,21 @@ TECH.push(
      T(160,196,'masa de lucru se scoate, dedesubt e brațul liber','middle','m')+
      T(292,166,'volan','middle','m'),214),
    c:'Mașina ta, văzută din față. Cele trei butoane de pe panoul verde, în ordinea de pe mașină.'},
-  {h:'Bobina se pune din față, nu de sus',p:'Mașina are cârlig oscilant vertical și suveică frontală. Scoți capacul de la brațul liber, tragi suveica de clapetă, pui bobina în ea astfel încât ața să iasă prin fanta laterală și pe sub arcul de tensiune, apoi împingi suveica la loc până se aude clicul. Dacă nu intră complet, nu forța: rotește volanul puțin și încearcă din nou.',
+  {h:'Bobina se pune din față, nu de sus',p:'Deschide ușa din față a brațului liber. În mijloc se vede suveica, prinsă în inelul cârligului. O scoți trăgând de clapeta din mijlocul ei. Pui bobina înăuntru, treci ața prin fantă și pe sub arcul de tensiune, apoi o împingi la loc, cu clapeta ridicată, până se așază și se aude clicul. Dacă nu intră complet, nu forța: rotește volanul puțin și încearcă din nou. Cele două brațe negre de lângă inel nu se ating decât la curățat.',
    d:()=>svg(
-     T(84,26,'suveica cu bobina','middle','m')+T(244,26,'cum iese ața','middle','m')+
-     /* suveica: corp rotund, clapetă la mijloc, arc de tensiune pe margine */
-     C(84,104,46,'suveica')+C(84,104,33,'bobina')+C(84,104,9,'btn')+
-     P('M84 66 L84 82','olt')+T(84,58,'clapetă','middle','m')+
-     P('M118 78 L132 70 L134 96 L120 100 Z','arc')+P('M124 82 L130 79','ol')+
-     T(150,70,'arc de','start','m')+T(150,84,'tensiune','start','m')+
-     /* fanta prin care iese ața */
-     P('M116 116 L130 124','olt')+T(96,150,'fantă','middle','m')+A(104,144,116,122)+
-     /* drumul aței, în dreapta */
-     C(244,104,46,'suveica')+C(244,104,33,'bobina')+
-     P('M244 137 C 268 132, 280 122, 282 108 C 284 96, 276 88, 268 92','thr')+
-     A(268,92,258,96,'arrt')+
-     T(160,166,'ața iese prin fantă, trece pe sub arc','middle','m')+T(160,180,'și urcă spre ac','middle','m'),196),
-   c:'Suveica văzută din față, cu capacul scos.'},
+     P('M24 40 L296 40 L296 176 L24 176 Z','corpAlb')+
+     R(36,52,248,112,'compart',4)+
+     R(96,30,140,16,'placaJ',2)+T(166,26,'placa acului','middle','m')+
+     C(150,108,50,'inelMare')+C(150,108,40,'inelMic')+
+     C(150,108,26,'suveicaJ')+L(150,108,150,86,'clapetaJ')+E(150,84,7,4,'clapetaJ2')+
+     R(141,102,18,11,'zavor',2)+
+     P('M112 124 L84 136 Q76 140 80 146 Q84 152 92 148 L118 134 Z','brat')+
+     P('M188 124 L216 136 Q224 140 220 146 Q216 152 208 148 L182 134 Z','brat')+
+     C(230,152,7,'surub')+P('M226 152 h8 M230 148 v8','surubS')+
+     T(28,80,'inelul','start','m')+A(52,84,102,100)+
+     T(292,80,'clapeta suveicii','end','m')+A(248,84,162,90)+
+     T(160,192,'brațele negre se ating doar la curățat','middle','m'),200),
+   c:'Compartimentul din față al mașinii tale, cu ușa deschisă.'},
   {h:'Diferența față de mașinile cu bobină de sus',p:'La bobina pusă de sus, ața de jos se trage singură aproape mereu. La suveică frontală, dacă bobina e pusă invers, cusătura iese cu bucle pe dos, dar mașina pare că merge normal. Regula: privind suveica din față, ața trebuie să iasă în aceeași direcție de fiecare dată. Fotografiază-ți suveica pusă corect și ține poza în aplicație, la notițele acestei fișe.',d:null},
   {h:'Coborârea transportorului',p:'Maneta stă sub brațul liber, în spate. Se coboară pentru cusut liber, pentru reparat cu peticul sau pentru cusut nasturi. Dacă materialul nu avansează deloc, prima verificare la mașina asta e maneta uitată jos.',
    d:()=>svg(
@@ -2128,23 +2148,20 @@ TECH.push(
    c:'Mașina văzută din spate.',tech:'depanare'},
   {h:'Presiunea piciorușului, trei poziții',p:'Poziția obișnuită e cea de mijloc, pentru majoritatea materialelor. Slăbește presiunea la materiale groase sau pufoase, ca să nu le turtească, și crește-o la materiale foarte subțiri, care alunecă. E reglajul la care se uită lumea ultimul, deși rezolvă multe ondulații.',d:null},
   {h:'Limitele de reținut la rețetele din manual',p:'Unde în fișele de tehnică scrie zigzag de 3 până la 5 mm, la tine 5 mm e maximul. Lungimea maximă e 4 mm, deci pentru încrețit folosește 4, nu mai mult. Butoniera se face într-un singur pas: pe tabelul de pe capacul de sus scrie „1 STEP BUTTONHOLE”, iar selectorul are poziția ei, lângă RESET.',d:null,tech:'increturi'},
-  {h:'Curățarea, la fiecare proiect mare',p:'Scoate acul, piciorușul, capacul și suveica. Periază lăcașul cârligului și zona transportorului. Scamele adunate acolo schimbă tensiunea și fac zgomot metalic. Nu sufla cu gura: umezeala rămâne înăuntru. Pune o picătură de ulei de mașină doar dacă manualul o cere, și doar acolo unde îl arată.',
+  {h:'Curățarea, la fiecare proiect mare',p:'Scoate acul, piciorușul, suveica, iar dacă vrei să ajungi la tot, rotește cele două brațe negre în lături și scoate inelul cârligului. Periază lăcașul și zona transportorului. Scamele adunate acolo schimbă tensiunea și fac zgomot metalic. Nu sufla cu gura: umezeala rămâne înăuntru. Pune o picătură de ulei de mașină doar dacă manualul o cere, și doar acolo unde îl arată.',
    d:()=>svg(
-     /* placa acului și dinții transportorului */
-     R(16,30,288,54,'placa',3)+
-     [0,1,2].map(r=>[0,1,2,3,4,5].map(i=>L(120+i*12,44+r*14,132+i*12,44+r*14,'dinti')).join('')).join('')+
-     C(96,57,4,'gaura')+
-     T(160,22,'placa acului, scoasă la curățat','middle','m')+
-     T(300,102,'dinții transportorului','end','m')+A(240,96,200,86)+
-     /* lăcașul cârligului, gol */
-     C(80,140,44,'lacas')+C(80,140,26,'groove')+
-     P('M80 96 A44 44 0 0 1 118 162','olt')+
-     [0,1,2,3,4].map(i=>E(58+i*13,120+(i%2)*10,6,3,'zz')).join('')+
-     T(136,128,'scame adunate','start')+T(136,144,'aici schimbă tensiunea','start','m')+
-     /* periuța */
-     P('M250 176 L286 150','ol')+P('M250 176 L242 182 L236 174 L244 168 Z','peria')+
-     T(250,196,'periuța din trusă','middle','m'),206),
-   c:'Lăcașul cârligului, cu capacul și suveica scoase.'},
+     P('M24 34 L296 34 L296 182 L24 182 Z','corpAlb')+
+     R(36,46,248,116,'compart',4)+
+     C(150,104,50,'inelMare')+C(150,104,38,'lacasGol')+
+     P('M150 66 A38 38 0 0 1 184 122','carlig')+
+     P('M104 128 L74 116 Q66 112 62 118 Q58 125 66 129 L100 140 Z','brat')+
+     P('M196 128 L226 116 Q234 112 238 118 Q242 125 234 129 L200 140 Z','brat')+
+     [0,1,2,3,4].map(i=>E(126+i*13,96+(i%2)*12,6,3,'zz')).join('')+
+     P('M244 168 L282 146','ol')+P('M244 168 L236 174 L230 166 L238 160 Z','peria')+
+     T(160,198,'brațele se rotesc în lături, apoi scoți inelul','middle','m')+
+     T(28,64,'scame','start')+A(58,68,120,94)+
+     T(292,64,'cârligul','end','m')+A(258,68,182,98),206),
+   c:'Același compartiment, cu suveica scoasă.'},
   {h:'Când nu mai e de reparat acasă',p:'Zgomot metalic constant, volan care se învârte greu, cusături care sar după ce ai schimbat acul, ața și ai curățat, sau ac care lovește placa: astea cer service. Până atunci nu forța nimic, fiindcă un cârlig lovit costă mai mult decât o revizie.',d:null}
  ],
  errors:['Bobina pusă invers în suveică: bucle pe dos, deși mașina pare că merge normal.','Zigzag pus peste 5 mm din obișnuință de la altă mașină: acul lovește placa.','Transportorul lăsat coborât după o reparație: materialul stă pe loc.','Suveica împinsă cu forța: se deformează arcul de tensiune și tensiunea de jos nu mai e constantă.','Bobine de la alte mașini: chiar dacă intră, grosimea diferă și tensiunea de jos devine instabilă.']
@@ -3832,6 +3849,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.8',l:['Zona suveicii e desenată acum după fotografiile mașinii tale: ușa din față, inelul cârligului, suveica cu clapetă și cele două brațe negre.','Pictogramele din bara de jos au fost redesenate, în același stil cu restul.']},
  {v:'7.7',l:['Insignele de pe Acasă ieșeau gri și mici. Reparat: verzi și de aceeași mărime peste tot.','Mașina din fișa Janome e desenată acum după fotografiile mașinii tale: panoul verde, cele trei butoane în ordinea reală, scala de tensiune, volanul alb, mosorul și bobinatorul.','Butonul de presiune are desenul lui, văzut din stânga, cu pozițiile 1, 2 și 3.']},
  {v:'7.6',l:['Insignele de pe Acasă sunt aliniate cu textul de lângă ele.','Bara de progres apare doar când ai bifat ceva, iar sub ea scrie clar câte tehnici ai exersat.']},
  {v:'7.5',l:['Pictogramele de secțiune au fost redesenate și stau acum în aceeași insignă colorată ca cele din Mai mult.','Cele trei acțiuni de pe Acasă ocupă un rând fiecare, nu trei etaje.','Bara de progres se vede și când nu ai bifat încă nimic.']},
@@ -3966,10 +3984,10 @@ function continua(){
 
 /* ================= cele patru pagini ================= */
 const IC={
- acasa:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11 12 4l8.5 7"/><path d="M6 10v10h12V10"/><path d="M10.5 20v-5.5h3V20"/></svg>',
- invat:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h6.5a2 2 0 0 1 1.5 1.8V20a2 2 0 0 0-1.5-1.5H4z"/><path d="M20 5.5h-6.5A2 2 0 0 0 12 7.3V20a2 2 0 0 1 1.5-1.5H20z"/></svg>',
- fac:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19c3-6 8-11 14-14"/><path d="M4.5 19.5 8 18l-1.5-3.5z"/><circle cx="17.5" cy="6.5" r="2.2"/></svg>',
- mult:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18.5" cy="12" r="1.6"/></svg>'
+ acasa:'<svg viewBox="0 0 24 24"><path d="M3.4 10.8 12 3.6l8.6 7.2" class="s"/><path d="M5.6 10v9.6a.8.8 0 0 0 .8.8h11.2a.8.8 0 0 0 .8-.8V10" class="f"/><path d="M9.8 20.4v-5.2a.8.8 0 0 1 .8-.8h2.8a.8.8 0 0 1 .8.8v5.2" class="hole"/></svg>',
+ invat:'<svg viewBox="0 0 24 24"><path d="M12 6.6C10.2 5.2 7.6 4.6 3.6 4.8v13.4c4-.2 6.6.4 8.4 1.8z" class="f"/><path d="M12 6.6c1.8-1.4 4.4-2 8.4-1.8v13.4c-4-.2-6.6.4-8.4 1.8z" class="f2"/><path d="M12 6.6V20" class="s"/></svg>',
+ fac:'<svg viewBox="0 0 24 24"><path d="M4.4 19.6 16.8 7.2" class="s2"/><path d="M16.8 7.2 20.4 3.6" class="s"/><ellipse cx="18.6" cy="5.4" rx="2" ry="1.3" transform="rotate(-45 18.6 5.4)" class="hole"/><path d="M3.4 20.6 6.9 19.4 5.7 15.9z" class="f"/><path d="M12.6 11.4c-2.8.8-3.4 3.4-1.2 4.6" class="s3"/></svg>',
+ mult:'<svg viewBox="0 0 24 24"><circle cx="5.4" cy="12" r="2.1" class="f"/><circle cx="12" cy="12" r="2.1" class="f"/><circle cx="18.6" cy="12" r="2.1" class="f"/></svg>'
 };
 const PAGINI=[
  {h:'#/',t:'Acasă',i:'acasa'},

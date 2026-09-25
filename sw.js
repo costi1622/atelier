@@ -1,7 +1,7 @@
 /* Atelier: service worker.
    ATENȚIE: cache-urile sunt comune pe tot domeniul (costi1622.github.io), deci și cu Nivelo.
    Aici ștergem DOAR cache-urile care încep cu „atelier-”. */
-const VER='7.7';
+const VER='7.8';
 const CACHE='atelier-v'+VER;
 const FONTS='atelier-fonts';
 const SHELL=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','icon-maskable-512.png'];
