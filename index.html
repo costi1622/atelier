@@ -650,6 +650,25 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 @media (prefers-reduced-motion:no-preference){.view{animation:in .18s ease-out}}
 @keyframes in{from{opacity:.4}to{opacity:1}}
 
+/* ---------- tabelul de cusături și traseul aței, după fotografii (8.0) ---------- */
+.d .cusS{fill:none;stroke:var(--ink);stroke-width:1.3;stroke-linejoin:round;stroke-linecap:round}
+.d .cusD{fill:none;stroke:var(--ink);stroke-width:1.3;stroke-dasharray:4 2.4;stroke-linecap:round}
+.d .cusG{fill:none;stroke:var(--ink);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.d .cusF{fill:none;stroke:var(--ink);stroke-width:.9;stroke-linejoin:round}
+.d .cusB{fill:none;stroke:var(--ink);stroke-width:2.2}
+.d text.tabL{font:700 11px "Source Sans 3",sans-serif;fill:var(--ink);stroke-width:2.5px}
+.d .canalJ{fill:var(--gap);stroke:var(--ink);stroke-width:1.1}
+.d .ochiJ{fill:var(--panel);stroke:var(--ink);stroke-width:.8}
+.d .atarJA{fill:none;stroke:var(--thread);stroke-width:1.8;stroke-linejoin:round;marker-end:url(#aht)}
+.d .badgeJ{fill:var(--thread);stroke:var(--panel);stroke-width:1.6}
+.d text.numB{font:700 10px "Source Sans 3",sans-serif;fill:var(--paper);stroke:none}
+.d .sepJ{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
+.d.anim .aTr{animation:aTraseu 6s infinite backwards}
+.d.anim .aTr1{animation-delay:0s}.d.anim .aTr2{animation-delay:.9s}
+.d.anim .aTr3{animation-delay:1.8s}.d.anim .aTr4{animation-delay:2.7s}
+@keyframes aTraseu{0%{opacity:.18}8%,62%{opacity:1}76%,100%{opacity:.18}}
+@media (prefers-reduced-motion:reduce){.d.anim .aTr{animation:none;opacity:1}}
+
 </style>
 </head>
 <body>
@@ -719,7 +738,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.9';
+const APP_VER='7.10';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -2084,6 +2103,105 @@ TECH.push(
 );
 
 /* ================= MAȘINA IRINEI: JANOME 1522GN ================= */
+/* ---- desenele după fotografii: tabelul de cusături, traseul aței, acul ---- */
+/* zigzag vertical care poate porni spre stânga (s=-1) sau spre dreapta (s=1) */
+function jZig(x,y0,y1,a,st,c,s=1){let d=`M${x} ${y0}`,k=0;for(let y=y0+st/2;y<=y1+.01;y+=st/2){d+=` L${k%2?x:x+s*a} ${y}`;k++}return P(d,c)}
+/* satin: împunsături dese, cu lățimea dată de o funcție w(t), t între 0 și 1 */
+function jSatin(xf,y0,y1,c='cusF'){let d='',k=0;for(let y=y0;y<=y1+.01;y+=2.2){const t=(y-y0)/(y1-y0),[a,b]=xf(t);d+=(k?' L':'M')+(k%2?b:a).toFixed(1)+' '+y.toFixed(1);k++}return P(d,c)}
+/* bucla care arată poziția acului, la cusătura dreaptă */
+const jBucla=(x,y)=>P(`M${x-1.5} ${y-4} A4 4 0 0 0 ${x-1.5} ${y+4}`,'cusS')+P(`M${x+1.5} ${y-4} A4 4 0 0 1 ${x+1.5} ${y+4}`,'cusS');
+/* dinți ascuțiți pe o bază verticală: baza la xb, vârfurile la xv */
+function jDinti(xb,xv,y0,y1,pas,c,ond){let d=`M${xb} ${y0}`;for(let y=y0;y+pas<=y1+.01;y+=pas){
+  if(ond){for(let k=1;k<=3;k++)d+=` L${xb+(k%2?1.4:-1.4)} ${y+k*2}`}else d+=` L${xb} ${y+6}`;
+  d+=` L${xv} ${y+pas*.72} L${xb} ${y+pas}`}return P(d,c)}
+function jSimbol(l,rand,x,y0,y1){
+  const h=y1-y0;
+  if(l==='A'||l==='B'){const lx=l==='A'?x:x-3,yb=y1-9;
+    return (rand?[-2,0,2].map(o=>L(lx+o,y0,lx+o,y1,'cusD')).join(''):L(lx,y0,lx,y1,'cusD'))+jBucla(x,yb)}
+  if(!rand){switch(l){
+    case 'C':return jZig(x-6,y0,y1,12,12,'cusS');
+    case 'D':return jZig(x-6,y0,y1,12,16,'cusD');
+    case 'E':return jDinti(x+5,x-6,y0,y1,16,'cusS',1);
+    case 'F':return jDinti(x+5,x-6,y0,y1,16,'cusS',0);
+    case 'G':return jDinti(x-5,x+6,y0,y1,16,'cusS',0);
+    case 'H':{let d=`M${x-6} ${y0}`;for(let y=y0,k=0;y+8<=y1+.01;y+=8,k++){const a=k%2?x-6:x+6,b=k%2?x+6:x-6;d+=` L${a} ${y} Q${a+(k%2?-3:3)} ${y} ${a+(k%2?-3:3)} ${y+4} Q${a+(k%2?-3:3)} ${y+8} ${a} ${y+8}`}return P(d,'cusS')}
+    case 'I':return jSatin(t=>[x-6+2*Math.floor(t*3.999)*1.6,x+6],y0,y1);
+    case 'J':return jSatin(t=>[x-5,x-3+12*(1-Math.abs(2*t-1))],y0,y1);
+    case 'K':return jSatin(t=>{const c=x+4-8*(1-Math.pow(2*t-1,2));return[c-3.5,c+3.5]},y0,y1);
+    case 'L':return jSatin(t=>{const w=2+5*Math.sin(Math.PI*t);return[x-w,x+w]},y0,y1);
+  }}else{switch(l){
+    case 'C':return [0,2.4,4.8].map(o=>jZig(x-6,y0+o,y1-4.8+o,12,16,'cusS')).join('');
+    case 'D':return jZig(x-6,y0,y1,12,12,'cusS')+jZig(x+6,y0,y1,12,12,'cusS',-1);
+    case 'E':return jDinti(x+5,x-6,y0,y1,16,'cusS',1)+L(x+5,y0,x+5,y1,'cusS');
+    case 'F':return jDinti(x+5,x-6,y0,y1,16,'cusS',0)+L(x+5,y0,x+5,y1,'cusS')+[0,1,2,3].map(k=>L(x+5,y0+k*16,x+5,y0+k*16+5,'cusG')).join('');
+    case 'G':return L(x-5,y0,x-5,y1,'cusG')+[0,1,2,3,4,5].map(k=>L(x-5,y0+3+k*8.4,x+6,y0+1+k*8.4,'cusG')).join('');
+    case 'H':return L(x-6,y0,x-6,y1,'cusS')+L(x+6,y0,x+6,y1,'cusS')+jZig(x-6,y0,y1,12,16,'cusS')+jZig(x+6,y0,y1,12,16,'cusS',-1);
+    case 'I':{let d=`M${x+5} ${y0}`;for(let y=y0;y+16<=y1+.01;y+=16)d+=` L${x-5} ${y+6} L${x-1} ${y+5} L${x+5} ${y+12} L${x-5} ${y+16}`;return P(d,'cusG')}
+    case 'J':return jZig(x-5,y0,y1,11,16,'cusG');
+    case 'K':{let d=`M${x+4} ${y0}`;for(let y=y0;y+16<=y1+.01;y+=16)d+=` L${x-4} ${y+7} L${x+1} ${y+8} L${x-5} ${y+16} L${x+5} ${y+10}`;return P(d,'cusS')}
+    case 'L':return jZig(x-6,y0,y1,12,16,'cusS')+jZig(x-4,y0+2,y1+2,10,16,'cusS');
+  }}
+  return ''}
+function jTabel(){
+  const cols='ABCDEFGHIJKL'.split(''),cx=i=>96+i*18.6;
+  return svg(
+    R(6,6,308,150,'placaSus',6)+
+    /* butoniera într-un pas */
+    T(40,28,'1 STEP','middle','tabS')+T(40,38,'BUTTONHOLE','middle','tabS')+
+    R(35,48,10,30,'cusB',1)+L(40,52,40,74,'cusS')+
+    T(78,126,'S.S.','end','tabL')+
+    cols.map((l,i)=>T(cx(i),28,l,'middle','tabL')+jSimbol(l,0,cx(i),42,90)+jSimbol(l,1,cx(i),100,148)).join('')+
+    T(160,176,'sus obișnuită, jos elastică (S.S.)','middle','m'),186)}
+function jTraseu(){
+  /* capul mașinii, văzut din față, după fotografie */
+  const cS=142,cD=178,u=cS+3,j=cS-3;
+  const sag=(x,y1,y2)=>P(`M${x} ${y1} L${x} ${y2}`,'atarJA');
+  const seg=(n,d,extra='')=>`<g class="aTr aTr${n}">${P(d,n===4?'atarJA':'atarJ')}${extra}</g>`;
+  const nr=(n,x,y)=>C(x,y,8,'badgeJ')+T(x,y+3.6,String(n),'middle','numB');
+  return svgA(
+    /* capacul de sus și capul */
+    R(64,14,192,10,'placaSus',3)+
+    P('M64 24 L256 24 L256 112 L64 112 Z','panou')+
+    P('M64 112 L256 112 L256 162 Q256 170 248 170 L72 170 Q64 170 64 162 Z','corpAlb')+
+    T(98,74,'JANOME','middle','logo')+
+    /* cele două canale și banda dintre ele, cu scala de tensiune */
+    R(cS-7,22,14,146,'canalJ',5)+R(cD-6,22,12,146,'canalJ',5)+
+    R(153,44,14,30,'scala',2)+T(160,56,'5','middle','scalaT')+T(160,68,'4','middle','scalaT')+
+    T(192,68,'tensiune','start','etich')+
+    /* pârghia de ață, sus în canalul din stânga */
+    P(`M${cS-5} 29 L${cS+5} 29 L${cS+5} 44 L${cS-5} 44 Z`,'placaJ')+C(cS,35,2.4,'ochiJ')+
+    /* ghidajul de sus și mosorul */
+    R(198,12,12,6,'placaJ',2)+L(286,14,286,4,'tija')+E(286,8,16,5,'mosor',0)+
+    T(286,30,'mosor','middle','m')+T(56,39,'pârghia','end','m')+
+    /* bara acului, ghidajul, acul, piciorușul */
+    R(146,170,8,18,'placaJ',1)+R(142,186,16,8,'placaJ',2)+L(158,190,176,190,'tija')+C(179,190,4,'buton')+
+    P('M146 180 l-5 0 l0 4 l5 0','cusS')+
+    L(150,194,150,216,'acJ')+E(150,211,.9,2,'ochiJ')+P('M136 216 L164 216 L164 222 L136 222 Z','piciorusJ')+
+    T(134,185,'ghidaj','end','m')+T(134,212,'ac','end','m')+
+    /* traseul, pe segmente care se aprind pe rând */
+    seg(1,`M280 10 C 250 16, 218 14, 210 15 L${cD} 23 L${cD} 100`,sag(cD,56,66))+
+    seg(2,`M${cD} 100 L${cD} 154 Q${cD} 164 ${(cD+u)/2} 164 Q${u} 164 ${u} 154 L${u} 100`,sag(u,140,130))+
+    seg(3,`M${u} 100 L${u} 37 Q${cS} 31 ${j} 37 L${j} 100`,sag(j,76,86))+
+    seg(4,`M${j} 100 L${j} 164 L141 182 L149 204`)+
+    nr(1,206,42)+nr(2,206,150)+nr(3,118,36)+nr(4,118,150),
+    232,'Traseul aței pe capul mașinii: de la mosor prin ghidajul de sus, în jos pe canalul din dreapta, în sus pe cel din stânga până la pârghie, apoi în jos spre ac. Segmentele se aprind pe rând, de la 1 la 4.')}
+function jAc(){
+  const ac=(x)=>P(`M${x-3} 94 L${x+3} 94 L${x+2.2} 166 L${x} 176 L${x-2.2} 166 Z`,'placaJ');
+  return svg(
+    /* stânga: din față */
+    R(72,8,16,70,'placaJ',2)+R(66,78,28,16,'placaJ',3)+L(94,86,116,86,'tija')+C(120,86,5,'buton')+
+    P('M72 58 L60 58 L60 70 L67 70','cusG')+
+    ac(80)+E(80,156,1.4,5,'ochiJ')+
+    P('M63 4 L63 66 L79 150 L80 156','atarJ')+C(80,156,1.8,'badgeJ')+
+    T(54,62,'ghidaj','end','m')+L(86,156,98,156,'sepJ')+T(101,160,'urechea','start','m')+
+    T(80,190,'din față','middle','m')+
+    /* dreapta: din lateral */
+    L(166,10,166,178,'sepJ')+
+    R(232,8,16,70,'placaJ',2)+R(226,78,28,16,'placaJ',3)+
+    ac(240)+R(238.6,151,2.8,10,'ochiJ',1.2)+
+    P('M214 6 L214 138 Q216 156 236 156 L298 150','atarJA')+
+    T(196,120,'față','middle','m')+T(290,120,'spate','middle','m')+
+    T(240,190,'din lateral','middle','m'),198)}
 TECH.push(
 {id:'janome-1522',sec:'stiut',t:'Mașina ta: Janome 1522GN',lvl:'u',time:'de citit o dată, apoi de consultat',
  tags:'janome 1522 1522GN mașina mea suveică bobina frontală transportor presiune picioruș buton tensiune reglaje service',
@@ -2121,36 +2239,15 @@ TECH.push(
      T(160,196,'masa de lucru se scoate, dedesubt e brațul liber','middle','m')+
      T(292,166,'volan','middle','m'),214),
    c:'Mașina ta, văzută din față. Cele trei butoane de pe panoul verde, în ordinea de pe mașină.'},
-  {h:'Capacul de sus: tabelul de cusături',p:'Pe capac sunt trecute toate cusăturile, cu litera fiecăreia. Coloana din stânga arată cusătura așa cum iese, cea din dreapta varianta ei elastică, marcată S.S. Sus de tot e butoniera, cu mențiunea „1 STEP”. Când un tipar îți cere o cusătură, cauți simbolul pe capac și pui selectorul pe litera lui.',
-   d:()=>svg(
-     R(20,30,280,150,'corpAlb',6)+
-     R(150,44,132,124,'placaSus',3)+
-     T(216,40,'tabelul de cusături','middle','m')+
-     R(200,52,14,12,'ol',2)+T(238,62,'1 STEP','start','tabS')+T(238,72,'BUTTONHOLE','start','tabS')+
-     'ABCDEFGHIJKL'.split('').map((l,i)=>T(160,80+i*8,l,'start','tabS')+
-       zigH(78+i*8,176,208,2.2,5,'tabLin')+zigH(78+i*8,222,258,2.2,3.4,'tabLin')).join('')+
-     T(192,180,'obișnuită','middle','m')+T(268,180,'elastică','middle','m')+
-     /* mosoare și bobinator */
-     C(70,72,9,'mosor')+C(104,72,9,'mosor')+T(87,54,'mosoare','middle','m')+
-     C(70,120,12,'buton')+T(70,146,'bobinator','middle','m')+
-     /* ghidajele numerotate */
-     R(112,104,26,7,'placaJ',2)+T(125,126,'1','middle')+
-     R(112,132,26,7,'placaJ',2)+T(125,154,'3','middle'),192),
-   c:'Capacul de sus, privit de deasupra.'},
-  {h:'Traseul aței, după numerele de pe mașină',p:'Mașina are traseul marcat cu patru numere. 1 și 3 sunt pe capacul de sus, 2 și 4 pe capul mașinii, lângă ac. Le urmezi în ordine, cu piciorușul ridicat, ca ața să intre între discurile de tensiune. Dacă sari peste unul, cel mai des apare cuibul de ață pe dos.',
-   d:()=>svg(
-     P('M20 40 L300 40 L300 78 L20 78 Z','corpAlb')+
-     P('M20 78 L120 78 L120 176 L20 176 Z','corpAlb')+
-     E(250,28,12,6,'mosor')+L(250,34,250,40,'tija')+
-     /* traseul */
-     P('M250 34 C 210 34, 196 44, 176 52','atarJ')+C(176,52,5,'punctJ')+T(176,34,'1','middle')+
-     P('M176 52 C 140 62, 112 74, 96 96','atarJ')+C(96,96,5,'punctJ')+T(88,72,'tensiune','end','m')+
-     P('M96 96 C 84 74, 76 60, 68 52','atarJ')+C(68,52,5,'punctJ')+T(68,34,'2','middle')+
-     P('M68 52 C 62 74, 60 88, 62 104','atarJ')+C(62,104,5,'punctJ')+T(40,104,'3','end')+
-     P('M62 104 C 64 124, 68 134, 70 146','atarJ')+C(70,146,5,'punctJ')+T(48,146,'4','end')+
-     P('M70 146 L70 162','atarJ')+L(70,162,70,176,'acJ')+
-     T(160,196,'1 și 3 pe capac, 2 și 4 pe capul mașinii','middle','m'),206),
-   c:'Traseul aței, de la mosor până la ac.'},
+  {h:'Capacul de sus: tabelul de cusături',p:'Pe capac sunt tipărite toate cusăturile. Literele de la A la L stau pe un rând, iar sub fiecare literă sunt două simboluri. Cel de sus e cusătura obișnuită. Cel de jos, pe rândul marcat S.S., e varianta ei elastică, pentru tricot și materiale care se întind. În stânga e butoniera, cu mențiunea „1 STEP”. A e cusătura dreaptă cu acul la mijloc, iar B tot dreaptă, cu acul mutat spre stânga, după cum arată simbolul. C e zigzagul, D zigzagul în trei pași. Pe rândul S.S., A și B devin cusătura dreaptă triplă, iar C zigzagul triplu. Când un tipar îți cere o cusătură, cauți simbolul pe capac și pui selectorul pe litera lui.',
+   d:()=>jTabel(),
+   c:'Tabelul de pe capacul de sus, desenat după mașina ta. Fiecare simbol se citește de sus în jos, în sensul cusutului.'},
+  {h:'Traseul aței, după numerele de pe mașină',p:'Traseul e marcat pe mașină cu patru numere. 1 și 3 sunt pe capacul de sus, 2 și 4 pe capul mașinii. Ridică piciorușul înainte să începi, altfel ața nu intră între discurile de tensiune. Rotește volanul spre tine până când pârghia de ață ajunge sus de tot. De la mosor, trece ața prin ghidajul de sus și coboar-o pe canalul din dreapta (1). Ocolește fundul canalului și urc-o pe canalul din stânga (2). Sus, treci-o prin ochiul pârghiei de ață (3). Coboar-o apoi pe canalul din stânga, spre ac (4). Dacă sari peste un număr, cel mai des apare cuibul de ață pe dos.',
+   d:()=>jTraseu(),
+   c:'Capul mașinii văzut din față, cu cele două canale. Numerele sunt cele de pe mașină.'},
+  {h:'Ultimul drum: ghidajul și acul',p:'Sub capul mașinii, ața trece prin ghidajul mic de pe bara acului. O prinzi în el din lateral, ca într-un cârlig. Apoi o treci prin urechea acului, din față spre spate. Trage aproximativ 10 cm de ață prin ureche și las-o sub picioruș, spre spate.',
+   d:()=>jAc(),
+   c:'Stânga: bara acului văzută din față. Dreapta: același ac din lateral, cu ața trecută din față spre spate.'},
   {h:'Bobina se pune din față, nu de sus',p:'Deschide ușa din față a brațului liber. În mijloc se vede suveica, prinsă în inelul cârligului. O scoți trăgând de clapeta din mijlocul ei. Pui bobina înăuntru, treci ața prin fantă și pe sub arcul de tensiune, apoi o împingi la loc, cu clapeta ridicată, până se așază și se aude clicul. Dacă nu intră complet, nu forța: rotește volanul puțin și încearcă din nou. Cele două brațe negre de lângă inel nu se ating decât la curățat.',
    d:()=>svg(
      P('M24 40 L296 40 L296 176 L24 176 Z','corpAlb')+
@@ -3674,8 +3771,8 @@ const SIMPT=[
  {q:'marginea tricotata se rasuceste inchidere prea stransa',t:'Marginea închisă e prea strânsă',teh:'inchidere',pas:4},
  {q:'nasturele strange materialul nasture rupt',t:'Nasturele strânge materialul',teh:'nasture',pas:3},
  {q:'butoniera se increteste butoniera prea mica',t:'Butoniera nu iese curat',teh:'butoniera',pas:1},
- {q:'suveica bobina invers janome bucle',t:'Bobina pusă invers în suveică',teh:'janome-1522',pas:2},
- {q:'transportorul coborat maneta janome nu avanseaza',t:'Transportorul a rămas coborât',teh:'janome-1522',pas:4}
+ {q:'suveica bobina invers janome bucle',t:'Bobina pusă invers în suveică',teh:'janome-1522',pas:5},
+ {q:'transportorul coborat maneta janome nu avanseaza',t:'Transportorul a rămas coborât',teh:'janome-1522',pas:7}
 ];
 function simptome(q){
   if(!q||norm(q).trim().length<3)return [];
@@ -3884,6 +3981,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.10',l:['Tabelul de cusături e redesenat după capacul mașinii tale: literele A–L pe un rând, cusătura obișnuită sus, varianta elastică S.S. jos, butoniera în stânga.','Traseul aței are acum două desene: capul mașinii văzut din față, cu cele două canale și numerele 1–4 care se aprind pe rând, și un plan apropiat pe ghidaj și ac.','Două simptome din căutare trimiteau spre pași greșiți din fișa mașinii. Reparat.']},
  {v:'7.9',l:['Fișa mașinii are două desene noi: capacul de sus cu tabelul de cusături și traseul aței, cu numerele 1 până la 4 marcate pe mașină.']},
  {v:'7.8',l:['Zona suveicii e desenată acum după fotografiile mașinii tale: ușa din față, inelul cârligului, suveica cu clapetă și cele două brațe negre.','Pictogramele din bara de jos au fost redesenate, în același stil cu restul.']},
  {v:'7.7',l:['Insignele de pe Acasă ieșeau gri și mici. Reparat: verzi și de aceeași mărime peste tot.','Mașina din fișa Janome e desenată acum după fotografiile mașinii tale: panoul verde, cele trei butoane în ordinea reală, scala de tensiune, volanul alb, mosorul și bobinatorul.','Butonul de presiune are desenul lui, văzut din stânga, cu pozițiile 1, 2 și 3.']},
