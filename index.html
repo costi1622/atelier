@@ -499,7 +499,7 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 /* ---------- schema de așezare ---------- */
 .d .balot{fill:url(#weave);stroke:var(--ink);stroke-width:1.4}
 .d .selv{stroke:var(--fabS);stroke-width:4;stroke-dasharray:6 4}
-.d .pieceL{fill:var(--panel);stroke:var(--ink);stroke-width:1.4;opacity:.92}
+.d .pieceL{fill:url(#weave2);stroke:var(--ink);stroke-width:1.3;filter:url(#soft)}
 .d .grain{fill:none;stroke:var(--mat);stroke-width:1.4;marker-end:url(#ahg)}
 .d text.lyt{font-size:11px;fill:var(--ink);stroke-width:3px}
 .d .nrbg{fill:var(--ink);stroke:none}
@@ -556,7 +556,10 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .zsvg svg{display:block;width:100%;height:auto}
 .zbox p{margin:10px 2px 0;color:var(--muted);font-size:calc(15px*var(--fs))}
 .fig.zoomable{cursor:zoom-in;position:relative}
-.fig.zoomable::after{content:'⤢';position:absolute;top:6px;right:8px;color:var(--muted);font-size:15px;opacity:.65}
+.fig.zoomable::after{content:'⤢';position:absolute;top:6px;right:6px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;background:var(--paper);border:1px solid var(--line);color:var(--ink);font-size:15px;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+/* pe telefon, desenele folosesc aproape toată lățimea ecranului (7.19) */
+@media (max-width:559px){.fig{margin-left:calc(-1*var(--s2));margin-right:calc(-1*var(--s2))}}
 
 /* ---------- tipărire ---------- */
 @media print{
@@ -595,7 +598,7 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 #updbar button{border:0;border-radius:8px;padding:10px 14px;min-height:44px;background:var(--paper);color:var(--ink);font-weight:600;cursor:pointer}
 
 /* ---------- diagram vocabulary ---------- */
-.d text{font:600 12.5px "Source Sans 3",system-ui,sans-serif;fill:var(--ink);
+.d text{font:600 13px "Source Sans 3",system-ui,sans-serif;fill:var(--ink);
   paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
 .d text.m{font-weight:400;fill:var(--muted)}
 .d .fab{fill:url(#weave);stroke:var(--ink);stroke-width:1.4;stroke-linejoin:round;filter:url(#soft)}
@@ -773,7 +776,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.18';
+const APP_VER='7.19';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -1114,7 +1117,7 @@ TECH.push(
    d:()=>svg(fab(20,40,280,120)+L(20,52,300,52,'st')+L(20,64,300,64,'st')+dimV(304,40,64)+T2(160,110,'fără întărire, capete lungi','','middle')+T(20,32,'marginea de sus','start','m')),
    c:'Cele două rânduri, în rezerva de cusătură.'},
   {h:'Împarte în sferturi',p:'Marchează sferturile pe piesa de încrețit și pe piesa pe care o coși, de exemplu talia. Potrivește semnele și prinde cu ace doar în aceste puncte.',
-   d:()=>svg(fab(20,24,280,50)+L(90,24,90,40,'mk')+L(160,24,160,40,'mk')+L(230,24,230,40,'mk')+fab(80,120,160,40)+L(120,120,120,136,'mk')+L(160,120,160,136,'mk')+L(200,120,200,136,'mk')+A(90,80,120,114)+A(160,80,160,114)+A(230,80,200,114)+T(310,56,'piesa lungă','end','m')+T(250,150,'talia','start','m')),
+   d:()=>svg(fab(20,24,280,50)+L(90,24,90,40,'mk')+L(160,24,160,40,'mk')+L(230,24,230,40,'mk')+fab(80,120,160,40)+L(120,120,120,136,'mk')+L(160,120,160,136,'mk')+L(200,120,200,136,'mk')+A(90,80,120,114)+A(160,80,160,114)+A(230,80,200,114)+T(300,16,'piesa lungă','end','m')+T(250,150,'talia','start','m')),
    c:'Semnele de pe piesa lungă se potrivesc cu cele de pe talie.'},
   {h:'Trage ațele de jos',p:'Trage deodată cele două ațe de jos, de la bobină, de la ambele capete spre mijloc. Împinge materialul pe ață până se potrivește lungimea, apoi distribuie cutele uniform. Înfășoară capetele de ață în jurul unui ac.',
    d:()=>{const fire=x=>P(`M${x} 64 Q${x+16} 60 ${x+26} 48`,'thr')+P(`M${x} 72 Q${x+18} 72 ${x+28} 62`,'thr');
@@ -1239,8 +1242,8 @@ const DZ={
    P('M196 94 L210 94 L262 124 L254 136 L200 106 Z','tape')+
    L(202,84,202,178,'thr')+
    T(40,32,'piesele față pe față','start')+
-   T(100,72,'cusătura fermoarului','middle','m')+A(160,66,192,58)+
-   T(100,132,'cusătura nouă:','middle')+T(100,146,'1 cm mai sus și','middle','m')+T(100,160,'1–2 mm spre margine','middle','m')+A(162,138,198,118)+
+   T(100,72,'cusătura fermoarului','middle','m')+A(166,64,192,58)+
+   T(106,132,'cusătura nouă:','middle')+T(106,146,'1 cm mai sus și','middle','m')+T(106,160,'1–2 mm spre margine','middle','m')+A(162,138,198,118)+
    T(304,152,'banda, dată','end','m')+T(304,166,'la o parte','end','m')
  ),
  done:()=>svg(
@@ -1281,7 +1284,7 @@ const DS={
  start:()=>svg(
    R(20,14,110,128,'fab')+R(190,14,110,128,'fab')+L(130,14,130,142,'olt')+L(190,14,190,142,'olt')+
    C(118,34,4,'dot')+L(118,34,130,48,'hid')+C(130,48,3,'dot')+
-   T(30,80,'nodul rămâne','start')+T(30,94,'în pliu','start','m')+A(58,70,112,38)+
+   T(25,80,'nodul rămâne','start')+T(25,94,'în pliu','start','m')+A(58,70,112,38)+
    T(200,112,'ieși exact','start')+T(200,126,'pe muchie','start','m')+A(206,102,136,52)
  ),
  cross:()=>svg(
@@ -1498,7 +1501,7 @@ const DM={
    P('M146 72 a8 8 0 1 0 12 10','yarn2')+
    P('M170 82 C 186 70, 176 56, 160 62','yarn2')+A(222,86,170,68)+
    T(316,80,'jeteu și trage','end')+T(316,94,'prin bucla de','end','m')+T(316,108,'pe croșetă','end','m')+
-   T(160,190,'acest ochi lanț fixează inelul și nu se numără','middle'),198
+   T(160,190,'ochiul lanț fixează inelul, nu se numără','middle'),198
  ),
  first:()=>svg(
    C(150,96,56,'yarn')+P('M150 152 C 140 132, 108 120, 100 96 C 94 70, 110 50, 130 44','yarn2')+
@@ -1847,8 +1850,8 @@ TECH.push(
      T2(80,160,'taie firele','materialului','middle')+T2(240,160,'le dă la o','parte','middle')),
    c:'Vârful acului, mărit.'},
   {h:'Reglează cusătura',p:'Zigzag îngust: lățimea 0,5 până la 1 mm, lungimea 2,5 mm. Dacă mașina are punctul elastic, adică zigzagul în trei pași, e și mai bun la cusăturile care trag, cum sunt umerii.',
-   d:()=>svg(fab(20,40,280,120)+zigH(80,40,280,4,12)+zigH(118,40,280,9,12)+
-     T2(160,62,'zigzag îngust: lățime 0,5–1 mm','','middle')+T2(160,148,'punct elastic, pentru cusături care trag','','middle')),
+   d:()=>svg(fab(20,36,280,134)+zigH(76,40,280,4,12)+zigH(112,40,280,9,12)+
+     T2(160,58,'zigzag îngust: lățime 0,5–1 mm','','middle')+T2(160,144,'punct elastic,','pentru cusături care trag','middle')),
    c:'Cele două variante, la aceeași scară.'},
   {h:'Nu întinde materialul sub picioruș',p:'Lasă transportorul să lucreze. Dacă tragi, cusătura iese ondulată și nu mai revine la loc, nici la călcat.',d:null},
   {h:'Finisarea marginilor: de obicei, nimic',p:'Tricotul nu se destramă, deci marginile pot rămâne tăiate. Dacă vrei totuși, un zigzag lat pe margine e suficient.',d:null}
@@ -2377,7 +2380,7 @@ TECH.push(
    d:()=>svg(
      /* corpul alb: braț, cap, coloană, masa de lucru */
      P('M24 170 L24 52 Q24 40 38 40 L276 40 Q292 40 292 54 L292 170 Z','corpAlb')+
-     R(12,170,296,32,'corpAlb',5)+L(90,170,90,202,'seam')+
+     R(12,170,296,38,'corpAlb',5)+L(90,170,90,208,'seam')+
      /* placa de sus, cu tabelul de cusături */
      R(24,40,268,11,'placaSus')+
      [0,1,2,3,4,5,6,7,8,9,10].map(i=>P(`M${140+i*13} 43 l3 5 l3 -5`,'chart')).join('')+
@@ -2401,8 +2404,8 @@ TECH.push(
      /* cote și etichete */
      T(152,128,'A – L','middle','m')+T(216,128,'0 – 4','middle','m')+T(266,128,'0 – 5','middle','m')+
      T(30,162,'scala de tensiune','start','m')+A(106,152,101,102)+
-     T(160,196,'masa se scoate, dedesubt e brațul liber','middle','m')+
-     T(286,164,'volan','end','m'),214),
+     T(199,186,'masa se scoate,','middle','m')+T(199,199,'dedesubt e brațul liber','middle','m')+
+     T(286,164,'volan','end','m'),216),
    c:'Mașina ta, văzută din față. Cele trei butoane de pe panoul verde, în ordinea de pe mașină.'},
   {h:'Capacul de sus: tabelul de cusături',p:'Pe capac sunt tipărite toate cusăturile. Literele de la A la L stau pe un rând, iar sub fiecare literă sunt două simboluri. Cel de sus e cusătura obișnuită. Cel de jos, pe rândul marcat S.S., e varianta ei elastică, pentru tricot și materiale care se întind. În stânga e butoniera, cu mențiunea „1 STEP”. A e cusătura dreaptă cu acul la mijloc, iar B tot dreaptă, cu acul mutat spre stânga, după cum arată simbolul. C e zigzagul, D zigzagul în trei pași. Pe rândul S.S., A și B devin cusătura dreaptă triplă, iar C zigzagul triplu. Când un tipar îți cere o cusătură, cauți simbolul pe capac și pui selectorul pe litera lui.',
    d:()=>jTabel(),
@@ -2513,11 +2516,14 @@ function drawLayout(pack,W){
     const gx=ingust||!nr?px+pw/2:Math.max(px+pw/2,px+26);
     if(ph>26&&pw>10&&g2-g1>14)o+=A(gx,g2,gx,g1,'grain')+A(gx,g1,gx,g2,'grain');
   }));
+  /* legenda mică de sub balot: semnele, desenate, nu doar spuse (7.19) */
+  const ly=y0+fh+20;
   o+=T(160,y0-20,'balot de '+W+' cm lățime','middle')
    +T(160,y0-6,'îți trebuie '+cm(pack.len)+' cm din el','middle','m')
-   +T(160,y0+fh+16,'numerele sunt cele din schema de mai sus','middle','m')
-   +T(160,y0+fh+30,'săgeata verde arată firul drept','middle','m');
-  return svg(o,y0+fh+40);
+   +A(56,ly+2,56,ly-12,'grain')+A(56,ly-12,56,ly+2,'grain')+T(66,ly,'firul drept','start','m')
+   +L(176,ly-12,176,ly+3,'selv')+T(186,ly,'liziera','start','m')
+   +T(160,ly+18,'numerele sunt cele din schema de mai sus','middle','m');
+  return svg(o,ly+28);
 }
 
 /* --- schema pieselor, desenată la scară din cotele calculate ---
@@ -2539,6 +2545,8 @@ function drawPieces(pieces){
     }else{
       o+=R(x,y,w,h,'fab');
     }
+    /* firul drept, ca pe balot, ca bucata să se recunoască în ambele scheme (7.19) */
+    if(p.shape!=='donut'&&h>=44&&w>=16){const gx=w>=40?cx+4:cx,g1=y+(w>=30&&h>=30?30:8),g2=y+h-8;if(g2-g1>14)o+=A(gx,g2,gx,g1,'grain')+A(gx,g1,gx,g2,'grain')}
     /* numărul bucății, într-un cerc, plus câte bucăți sunt */
     /* în colț, în interior, dacă încape; altfel deasupra bucății */
     const inauntru=p.shape==='donut'||(w>=30&&h>=30);
@@ -4152,6 +4160,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.19',l:['La proiecte, bucățile de pe balot arată ca tiparele de hârtie așezate pe material, iar sub balot e o legendă mică cu firul drept și liziera. În schema bucăților apare și firul drept.','Textele din desene sunt puțin mai mari, iar pe telefon desenele folosesc aproape toată lățimea ecranului.','Butonul de mărire din colțul desenelor se vede mai bine.']},
  {v:'7.18',l:['Desenele din „Știut” sunt refăcute: texte care nu mai ating marginile, tricotul care nu mai iese din desen, săgeți și etichete mai clare la testul de întindere.','„Cum citești desenele” explică semnele noi: săgeata roșie și cea neagră, marginea tăiată și muchia pliată, firul drept, uneltele și punctele animațiilor.','În tema întunecată, straturile din secțiuni se văd mai bine.']},
  {v:'7.17',l:['Desenele de tricotat sunt în prim-plan: ochiurile și andrelele sunt mai mari, iar capetele andrelelor ies din desen, ca într-o fotografie de aproape.','La împunsătura înapoi, feston și cusătura înainte, detaliul stă în mijlocul desenului, nu într-un colț.','Toate săgețile care arată o mișcare sunt roșii, iar cele negre doar arată spre ceva.']},
  {v:'7.16',l:['La butonul de tensiune, etichetele erau inversate față de cifre. Acum stânga, spre 0, e „mai mic: slăbește”, iar dreapta, spre 8, „mai mare: strânge”, cu câte o săgeată pe sensul de rotire.','Simbolurile de pe banderolă sunt centrate, pe două rânduri simetrice.']},
