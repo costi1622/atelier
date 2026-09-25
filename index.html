@@ -556,14 +556,16 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .zsvg svg{display:block;width:100%;height:auto}
 .zbox p{margin:10px 2px 0;color:var(--muted);font-size:calc(15px*var(--fs))}
 .fig.zoomable{cursor:zoom-in;position:relative}
-.fig.zoomable::after{content:'';position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:50%;
+.fig.zoomable figcaption{position:relative;padding:11px 56px 11px 10px;min-height:48px;box-sizing:border-box}
+/* butonul de mărire stă în bara legendei, nu peste desen (7.21): nu acoperă nimic, nici la animații */
+.fig.zoomable figcaption::after{content:'';position:absolute;top:50%;right:8px;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;
   background:var(--paper) var(--zoomIco) center/20px 20px no-repeat;border:1px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.16)}
 /* pe telefon, desenele folosesc aproape toată lățimea ecranului (7.19) */
 @media (max-width:559px){.fig{margin-left:calc(-1*var(--s2));margin-right:calc(-1*var(--s2))}}
 
 /* ---------- tipărire ---------- */
 @media print{
-  body::before,body::after,.tabs,#bara,.chips,.search,.actions,.gear,.back,.foot,.news,.pn,#updbar,.fig.zoomable::after{display:none !important}
+  body::before,body::after,.tabs,#bara,.chips,.search,.actions,.gear,.back,.foot,.news,.pn,#updbar,.fig.zoomable figcaption::after{display:none !important}
   body{background:#fff;color:#000;font-size:11pt}
   .wrap{max-width:none;padding:0}
   .fig,.step,.box,.tb tr{break-inside:avoid}
@@ -776,7 +778,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.20';
+const APP_VER='7.21';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -4160,6 +4162,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.21',l:['Butonul de mărire s-a mutat din colțul desenului în bara legendei, jos în dreapta. Nu mai acoperă nimic din desen, nici punctele animațiilor. Mărirea merge în continuare și atingând oriunde pe desen.']},
  {v:'7.20',l:['Butonul de mărire din colțul desenelor are acum o iconiță desenată, de mărime fixă, care se vede la fel de clar pe orice telefon și în ambele teme.']},
  {v:'7.19',l:['La proiecte, bucățile de pe balot arată ca tiparele de hârtie așezate pe material, iar sub balot e o legendă mică cu firul drept și liziera. În schema bucăților apare și firul drept.','Textele din desene sunt puțin mai mari, iar pe telefon desenele folosesc aproape toată lățimea ecranului.','Butonul de mărire din colțul desenelor se vede mai bine.']},
  {v:'7.18',l:['Desenele din „Știut” sunt refăcute: texte care nu mai ating marginile, tricotul care nu mai iese din desen, săgeți și etichete mai clare la testul de întindere.','„Cum citești desenele” explică semnele noi: săgeata roșie și cea neagră, marginea tăiată și muchia pliată, firul drept, uneltele și punctele animațiilor.','În tema întunecată, straturile din secțiuni se văd mai bine.']},
