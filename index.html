@@ -19,7 +19,7 @@
   --line:#CBD3CE; --line-f:#808D85; --mat:#2C6A54; --mat-soft:#E3EFE9; --thread:#C0283F; --amber:#8A5D0A;
   --fab:#D9E5EF; --fabS:#7FA3C2; --fab2:#F0DDB4; --fab2S:#C0913A;
   --tape:#8795A3; --yarn:#9C4E7C; --yarnH:#E0A21A; --hook:#6E7C86; --gap:#B9C3CA;
-  --metalHi:#D7DEE3; --metalLit:#EEF2F5; --yarnHi:#C173A0; --janome:#1E5140; --janomeD:#17402F;
+  --metalHi:#D7DEE3; --metalLit:#EEF2F5; --yarnD:#5E2447; --yarnLit:#E6B8D3; --yarnHD:#8A5A00; --yarnHLit:#FFEBB0; --yarnHi:#C173A0; --janome:#1E5140; --janomeD:#17402F;
   --s1:4px; --s2:8px; --s3:12px; --s4:18px; --s5:28px; --s6:44px;
   --c-masina:#2C6A54; --c-mana:#8A5D0A; --c-croset:#9C4E7C; --c-tricot:#2F6690; --c-stiut:#7A4A3A;
   --bgdot:rgba(44,106,84,.16); --bgweave:rgba(31,43,51,.035); --bgglow:rgba(44,106,84,.13); --bgedge:rgba(192,40,63,.14);
@@ -37,7 +37,7 @@
     --line:#2F3B44; --line-f:#6A7984; --mat:#72B99B; --mat-soft:#1E3129; --thread:#FF6F86; --amber:#E0B45A;
     --fab:#2A3B4B; --fabS:#6E93B4; --fab2:#4A3F2A; --fab2S:#C9A15A;
     --tape:#6D7D8C; --yarn:#D38DB7; --yarnH:#F2C14E; --hook:#9AA8B1; --gap:#3A4852;
-    --metalHi:#7E8D98; --metalLit:#D5DDE3; --yarnHi:#E7AFD0; --janome:#1E5140; --janomeD:#17402F;
+    --metalHi:#7E8D98; --metalLit:#D5DDE3; --yarnD:#6E3558; --yarnLit:#F7DCEB; --yarnHD:#8F6A10; --yarnHLit:#FFF1C4; --yarnHi:#E7AFD0; --janome:#1E5140; --janomeD:#17402F;
     --bgdot:rgba(114,185,155,.13); --bgweave:rgba(255,255,255,.03); --bgglow:rgba(114,185,155,.10); --bgedge:rgba(255,111,134,.14);
   }
 }
@@ -46,7 +46,7 @@
   --line:#2F3B44; --line-f:#6A7984; --mat:#72B99B; --mat-soft:#1E3129; --thread:#FF6F86; --amber:#E0B45A;
   --fab:#2A3B4B; --fabS:#6E93B4; --fab2:#4A3F2A; --fab2S:#C9A15A;
   --tape:#6D7D8C; --yarn:#D38DB7; --yarnH:#F2C14E; --hook:#9AA8B1; --gap:#3A4852;
-  --metalHi:#7E8D98; --yarnHi:#E7AFD0; --janome:#1E5140; --janomeD:#17402F;
+  --metalHi:#7E8D98; --metalLit:#D5DDE3; --yarnD:#6E3558; --yarnLit:#F7DCEB; --yarnHD:#8F6A10; --yarnHLit:#FFF1C4; --yarnHi:#E7AFD0; --janome:#1E5140; --janomeD:#17402F;
   --c-masina:#72B99B; --c-mana:#E0B45A; --c-croset:#D38DB7; --c-tricot:#7FB2DA; --c-stiut:#C79A86;
   --bgdot:rgba(114,185,155,.13); --bgweave:rgba(255,255,255,.03); --bgglow:rgba(114,185,155,.10); --bgedge:rgba(255,111,134,.14);
 }
@@ -624,9 +624,9 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .d .pinh{fill:var(--thread)}
 .d .dot{fill:var(--thread)}
 .d .halo{fill:none;stroke:var(--panel);stroke-width:13;stroke-linecap:butt;stroke-dasharray:0 48 400}
-.d .yarn{fill:none;stroke:url(#yarnG) var(--yarn);stroke-width:7.5;stroke-linecap:round;stroke-linejoin:round}
-.d .yarn2{fill:none;stroke:url(#yarnG) var(--yarn);stroke-width:4.4;stroke-linecap:round}
-.d .yarn3{fill:none;stroke:url(#yarnG) var(--yarn);stroke-width:3.6}
+.d .yarn{fill:none;stroke:var(--yarn);stroke-width:7.5;stroke-linecap:round;stroke-linejoin:round}
+.d .yarn2{fill:none;stroke:var(--yarn);stroke-width:4.4;stroke-linecap:round}
+.d .yarn3{fill:none;stroke:var(--yarn);stroke-width:3.6;stroke-linecap:round}
 .d .yarnH{fill:none;stroke:var(--yarnH);stroke-width:4}
 .d .hook{fill:none;stroke:var(--hook);stroke-width:5.4;stroke-linecap:round}
 .d .kn{fill:none;stroke:var(--hook);stroke-width:6.4;stroke-linecap:round}
@@ -672,6 +672,16 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 /* lumina de pe unelte (vezi TUB în lib.js) */
 .d .tubH,.d .tubK,.d .tubN{stroke:var(--metalLit);stroke-linecap:round;fill:none}
 .d .tubH{stroke-width:1.8}.d .tubK{stroke-width:2.1}.d .tubN{stroke-width:.9}
+
+/* firul cu volum (vezi YV în lib.js): margine, culoare, lumină */
+.d .yO{fill:none;stroke:var(--yarnD);stroke-linecap:round;stroke-linejoin:round}
+.d .yO7{stroke-width:9.6}.d .yO4{stroke-width:6}.d .yO3{stroke-width:5.2}
+.d .yL{fill:none;stroke:var(--yarnLit);stroke-linecap:round;stroke-linejoin:round;opacity:.6}
+.d .yL7{stroke-width:2}.d .yL4{stroke-width:1.2}.d .yL3{stroke-width:.9}
+.d .yOH{fill:none;stroke:var(--yarnHD);stroke-width:5.6;stroke-linecap:round}
+.d .yLH{fill:none;stroke:var(--yarnHLit);stroke-width:1.2;stroke-linecap:round}
+/* în desenele mărite cu Z(), săgețile rămân de grosimea obișnuită */
+.d .zg .arr{stroke-width:1.1}.d .zg .arrt{stroke-width:1.25}.d .zg .dim{stroke-width:.8}
 
 </style>
 </head>
@@ -742,7 +752,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.12';
+const APP_VER='7.13';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -760,9 +770,15 @@ const L=(x1,y1,x2,y2,c)=>{const l=`<line class="${c}" x1="${x1}" y1="${y1}" x2="
   /* lumina stă pe partea de sus a unealtei, indiferent de sensul în care e desenată */
   const s=oy>0||(oy===0&&ox>0)?-1:1;
   return l+`<line class="${t[1]}" x1="${x1+s*ox}" y1="${y1+s*oy}" x2="${x2+s*ox}" y2="${y2+s*oy}"/>`};
-const P=(d,c)=>`<path class="${c}" d="${d}"/>`;
-const C=(x,y,r,c)=>`<circle class="${c}" cx="${x}" cy="${y}" r="${r}"/>`;
-const E=(x,y,rx,ry,c,rot=0)=>`<ellipse class="${c}" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"${rot?` transform="rotate(${rot} ${x} ${y})"`:''}/>`;
+
+
+/* firul are volum: margine închisă, culoarea firului, linie de lumină în mijloc.
+   Orice formă cu o clasă de fir (yarn, yarn2, yarn3, yarnH) primește automat cele trei straturi. */
+const YV={yarn:['yO yO7','yL yL7'],yarn2:['yO yO4','yL yL4'],yarn3:['yO yO3','yL yL3'],yarnH:['yOH','yLH']};
+const vol=(tag,c,att)=>YV[c]?`<${tag} class="${YV[c][0]}" ${att}/><${tag} class="${c}" ${att}/><${tag} class="${YV[c][1]}" ${att}/>`:`<${tag} class="${c}" ${att}/>`;
+const P=(d,c)=>vol('path',c,`d="${d}"`);
+const C=(x,y,r,c)=>vol('circle',c,`cx="${x}" cy="${y}" r="${r}"`);
+const E=(x,y,rx,ry,c,rot=0)=>vol('ellipse',c,`cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"${rot?` transform="rotate(${rot} ${x} ${y})"`:''}`);
 const T=(x,y,s,a='start',c='')=>`<text x="${x}" y="${y}" text-anchor="${a}"${c?` class="${c}"`:''}>${esc(s)}</text>`;
 /* text pe două rânduri: primul îngroșat, al doilea discret */
 const T2=(x,y,a,b,an='start')=>T(x,y,a,an)+(b?T(x,y+14,b,an,'m'):'');
@@ -796,10 +812,20 @@ function run(x1,x2,y,on=14,off=10){let o='';for(let x=x1;x<x2;x+=on+off){o+=L(x,
 /* ---- croșetat ---- */
 /* croșeta orizontală: vârful la (x,y), coada spre stânga */
 const hookH=(x,y,len=150)=>L(x-len,y,x,y,'hook')+P(`M${x} ${y} q7 -1 5 -9`,'hook');
+/* o buclă care înconjoară o unealtă orizontală: partea din stânga trece prin spatele ei,
+   deci peste bucla desenată se repune o bucată de unealtă chiar în punctul de trecere */
+const hst=(x,y,rx=5,ry=10,c='yarn3',ul='hook')=>E(x,y,rx,ry,c)+L(x-rx-3,y,x-rx+3,y,ul);
 /* bucle pe croșetă */
-function loopsOn(x,y,n,dx=18){let o='';for(let i=0;i<n;i++)o+=E(x-i*dx,y,5,10,'yarn3');return o}
+function loopsOn(x,y,n,dx=18){let o='';for(let i=0;i<n;i++)o+=hst(x-i*dx,y,6,12);return o}
+/* un ochi de lanț văzut de sus: o frunză de fir, cu vârfurile intrate în ochiurile vecine */
+const link=(x,y,a,b,c='yarn3')=>P(`M${x-a} ${y} C ${x-a*.35} ${y-b*1.45}, ${x+a*.35} ${y-b*1.45}, ${x+a} ${y} C ${x+a*.35} ${y+b*1.45}, ${x-a*.35} ${y+b*1.45}, ${x-a} ${y} Z`,c);
+/* mărire în jurul unui punct, pentru desenele în care croșeta ar sta mică într-un colț.
+   Z() mărește doar desenul, ZT() mută un text în locul corespunzător, fără să-l mărească. */
+const ZK=1.45,ZX=206,ZY=92;
+const Z=inner=>`<g class="zg" transform="translate(${ZX*(1-ZK)} ${ZY*(1-ZK)}) scale(${ZK})">${inner}</g>`;
+const ZT=(x,y,s,a,c)=>T(+(ZX+(x-ZX)*ZK).toFixed(1),+(ZY+(y-ZY)*ZK).toFixed(1),s,a,c);
 /* lanț de ochiuri orizontal */
-function chainH(x,y,n,dx=22){let o='';for(let i=0;i<n;i++)o+=E(x+i*dx,y,10,6,'yarn3');return o}
+function chainH(x,y,n,dx=22){let o='';for(let i=0;i<n;i++)o+=link(x+i*dx,y,dx*.56,6);return o}
 /* simboluri de diagramă */
 const sOL=(x,y)=>E(x,y,8,4.5,'sym');                                  /* ochi lanț */
 const sPN=(x,y,s=6)=>L(x-s,y-s,x+s,y+s,'sym')+L(x-s,y+s,x+s,y-s,'sym'); /* punct nedesfăcut */
@@ -812,8 +838,18 @@ const X=sPN;
 /* andrea: de la (x1,y1) spre vârful (x2,y2) */
 function kneedle(x1,y1,x2,y2){const a=Math.atan2(y2-y1,x2-x1),bx=x2-Math.cos(a)*10,by=y2-Math.sin(a)*10;
   return L(x1,y1,bx,by,'kn')+P(`M${bx-Math.sin(a)*3} ${by+Math.cos(a)*3} L${x2} ${y2} L${bx+Math.sin(a)*3} ${by-Math.cos(a)*3} Z`,'knp')}
+/* un ochi pe andreaua orizontală de la înălțimea ny: bucla trece peste andrea,
+   piciorul din stânga stă în spate, cel din dreapta în față */
+const kst=(x,ny,c='yarn3',rx=6,ry=11)=>{const k=rx/6;
+  /* bucla peste andrea și cele două picioare, care coboară în ochiul de dedesubt (V-ul) */
+  const u=`M${x-2.4*k} ${ny+20} L${x-5*k} ${ny+12} C ${x-7.5*k} ${ny+1}, ${x-6*k} ${ny-8}, ${x} ${ny-8} C ${x+6*k} ${ny-8}, ${x+7.5*k} ${ny+1}, ${x+5*k} ${ny+12} L${x+2.4*k} ${ny+20}`;
+  return P(u,c)+L(x-9.6*k,ny,x-3.6*k,ny,'kn')};
+/* piciorul din față al unui ochi, redesenat peste andreaua dreaptă: arată că ea a intrat prin ochi, pe sub el */
+const kfront=(x,ny,c='yarn3',rx=6)=>{const k=rx/6;return P(`M${x+.6*k} ${ny-8} C ${x+6*k} ${ny-8}, ${x+7.5*k} ${ny+1}, ${x+5*k} ${ny+12} L${x+2.4*k} ${ny+20}`,c)};
 /* ochiuri pe andrea orizontală */
-function kloops(x,y,n,dx=18){let o='';for(let i=0;i<n;i++)o+=E(x+i*dx,y+6,6,11,'yarn3');return o}
+function kloops(x,y,n,dx=18){let o='';
+  /* un rând de tricot sub andrea: V-urile rândului de dinainte */
+  for(let i=0;i<n;i++)o+=kst(x+i*dx,y);return o}
 /* grilă de diagramă tricot: cells = array de rânduri (de sus în jos), fiecare string: '.'=față, 'o'=dos, '/'=2 împreună, 'v'=creștere */
 function kgrid(x,y,rows,s=16){let o='';rows.forEach((r,j)=>{[...r].forEach((ch,i)=>{const cx=x+i*s,cy=y+j*s;o+=R(cx,cy,s,s,'kcell');
   if(ch==='o')o+=C(cx+s/2,cy+s/2,2.6,'symf');
@@ -1443,7 +1479,7 @@ TECH.push(
 /* jeteu: firul trece peste croșetă, de la spate spre față */
 const yo=(x,y)=>P(`M${x+18} ${y+22} C ${x+26} ${y-6}, ${x-4} ${y-20}, ${x-8} ${y-4}`,'yarn2')+A(x-2,y-10,x-8,y-2,'arrt');
 /* vârful ochiurilor dintr-un rând: ochiuri orizontale ca un lanț */
-function tops(x,y,n,dx=26,hl=-1){let o='';for(let i=0;i<n;i++){o+=E(x+i*dx,y,11,6,i===hl?'yarnH':'yarn3')}return o}
+function tops(x,y,n,dx=26,hl=-1){let o='';for(let i=0;i<n;i++){o+=link(x+i*dx,y,dx*.56,5.5,i===hl?'yarnH':'yarn3')}return o}
 TECH.push(
 {id:'lant',sec:'croset',t:'Lanțul de ochiuri',lvl:'u',time:'10 min de exersat',
  tags:'lanț ochiuri lanț ol început bază nod glisant croșetat',
@@ -1451,17 +1487,17 @@ TECH.push(
  need:['croșetă potrivită firului, mărimea e scrisă pe banderola ghemului','fir'],
  steps:[
   {h:'Nodul glisant',p:'Fă o buclă cu firul, trage firul de lucru prin ea și pune bucla pe croșetă. Strânge-o cât să alunece ușor pe croșetă. Nodul glisant nu se numără ca ochi.',
-   d:()=>svg(hookH(230,80)+E(206,80,7,13,'yarn3')+P('M206 93 C 200 120, 170 140, 120 150','yarn2')+P('M210 93 C 220 120, 250 140, 290 150','yarn2')+T2(104,172,'capătul','scurt','middle')+T2(290,172,'spre ghem','','end')+T2(20,40,'bucla stă lejer','pe croșetă')),
+   d:()=>svg(hookH(230,80)+hst(206,80,7,13)+P('M206 93 C 200 120, 170 140, 120 150','yarn2')+P('M210 93 C 220 120, 250 140, 290 150','yarn2')+T2(104,172,'capătul','scurt','middle')+T2(290,172,'spre ghem','','end')+T2(20,40,'bucla stă lejer','pe croșetă')),
    c:'Nodul glisant pe croșetă.'},
   {h:'Jeteu și trage',p:'Fă jeteu: prinde firul de lucru cu croșeta, trecându-l peste ea de la spate spre față. Trage-l prin bucla de pe croșetă. Ai făcut primul ochi lanț.',
-   d:()=>svg(hookH(230,80)+E(200,80,7,13,'yarn3')+yo(230,80)+A(230,96,196,96,'arr')+T2(20,40,'jeteu: firul','peste croșetă')+T2(150,140,'trage prin bucla','de pe croșetă','middle')),
+   d:()=>svg(hookH(230,80)+hst(200,80,7,13)+yo(230,80)+A(230,96,196,96,'arr')+T2(20,40,'jeteu: firul','peste croșetă')+T2(150,140,'trage prin bucla','de pe croșetă','middle')),
    c:'Jeteul și direcția în care tragi.'},
   {h:'Repetă și numără',p:'Repetă jeteul și tragerea până ai numărul de ochiuri cerut. Numără ochiurile făcute, fără bucla de pe croșetă și fără nodul glisant.',
-   d:()=>svg(chainH(40,96,8,22)+hookH(250,96,60)+E(232,96,6,11,'yarn3')+T(40,130,'1','middle')+T(62,130,'2','middle')+T(84,130,'3','middle')+T(106,130,'4','middle')+T(128,130,'5','middle')+T(150,130,'6','middle')+T(172,130,'7','middle')+T(194,130,'8','middle')+T2(232,150,'bucla de pe','croșetă: nu','middle')+T2(20,50,'8 ochiuri lanț','')),
+   d:()=>svg(chainH(40,96,8,22)+hookH(250,96,60)+hst(232,96,6,11)+T(40,130,'1','middle')+T(62,130,'2','middle')+T(84,130,'3','middle')+T(106,130,'4','middle')+T(128,130,'5','middle')+T(150,130,'6','middle')+T(172,130,'7','middle')+T(194,130,'8','middle')+T2(232,150,'bucla de pe','croșetă: nu','middle')+T2(20,50,'8 ochiuri lanț','')),
    c:'Lanț de 8 ochiuri.'},
   {h:'Fața și spatele lanțului',p:'Pe față, fiecare ochi arată ca un „V”. Pe spate, pe mijloc, fiecare ochi are o mică umflătură, numită spinare. Tiparele îți spun uneori să lucrezi primul rând doar în spinare, pentru o margine mai curată.',
-   d:()=>svg(T(20,40,'fața: V-uri','start','m')+[0,1,2,3,4,5,6,7,8,9].map(i=>P(`M${42+i*24} 60 L${52+i*24} 76 L${62+i*24} 60`,'yarn2')).join('')+
-     T(20,120,'spatele: spinarea','start','m')+[0,1,2,3,4,5,6,7,8,9].map(i=>E(52+i*24,146,7,5,'yarn3')).join('')),
+   d:()=>svg(T(20,40,'fața: V-uri','start','m')+[0,1,2,3,4,5,6,7,8,9].map(i=>P(`M${36+i*24} 60 Q ${48+i*24} 61 ${60+i*24} 70`,'yarn2')+P(`M${36+i*24} 80 Q ${48+i*24} 79 ${60+i*24} 70`,'yarn2')).join('')+
+     T(20,120,'spatele: spinarea','start','m')+P('M34 146 L286 146','yarn3')+[0,1,2,3,4,5,6,7,8,9].map(i=>E(52+i*24,146,7,5,'yarn2')).join('')),
    c:'Aceleași ochiuri, văzute din față și din spate.'}
  ],
  errors:['Lanț strâns: primul rând intră greu în ochiuri. Lucrează-l mai lejer sau cu o croșetă mai mare.','Numeri și bucla de pe croșetă: rândul iese cu un ochi în plus.','Tensiune inegală: lanțul iese ondulat, iar marginea lucrării la fel.']
@@ -1473,19 +1509,19 @@ TECH.push(
  need:['croșetă și fir','un lanț de ochiuri de exersat'],
  steps:[
   {h:'Unde intri pe lanț',p:'Pe un lanț de ochiuri, primul pn se lucrează în al doilea ochi de la croșetă. Primul ochi de lângă croșetă ține loc de întoarcere.',
-   d:()=>svg(chainH(40,110,9,22)+hookH(250,110,40)+E(236,110,6,11,'yarn3')+E(194,110,10,6,'yarnH')+A(194,70,194,98)+T2(194,52,'al doilea ochi','de la croșetă','middle')),
+   d:()=>svg(chainH(40,110,9,22)+hookH(250,110,40)+hst(236,110,6,11)+link(194,110,13.2,6,'yarnH')+A(194,70,194,98)+T2(194,52,'al doilea ochi','de la croșetă','middle')),
    c:'Ochiul evidențiat e cel în care intri.'},
   {h:'Pe rând, sub ambele fire',p:'Pe un rând deja lucrat, vârful fiecărui punct arată ca un „V” culcat. Introdu croșeta pe sub ambele fire ale lui, dacă tiparul nu cere altceva.',
    d:()=>svg(tops(50,110,9,26,4)+L(80,40,150,104,'hook')+T2(170,56,'pe sub ambele','fire ale V-ului')+T2(50,150,'vârfurile punctelor','din rândul anterior')),
    c:'Rândul anterior, văzut de sus.'},
   {h:'Trage o buclă: 2 pe croșetă',p:'Fă jeteu și trage o buclă prin ochi. Acum ai 2 bucle pe croșetă.',
-   d:()=>svg(hookH(240,90)+loopsOn(222,90,2)+T(222,120,'1','middle')+T(204,120,'2','middle')+T2(20,40,'2 bucle','pe croșetă')),
+   d:()=>svg(Z(hookH(240,90)+loopsOn(222,90,2))+ZT(222,120,'1','middle')+ZT(204,120,'2','middle')+T2(20,40,'2 bucle','pe croșetă')),
    c:'Cele două bucle.'},
   {h:'Jeteu prin amândouă',p:'Fă din nou jeteu și trage prin ambele bucle. Punctul e gata. Rămâne o singură buclă pe croșetă.',
-   d:()=>svg(hookH(240,90)+loopsOn(222,90,2)+yo(240,90)+A(236,108,196,108)+T2(20,40,'jeteu, trage','prin ambele')),
+   d:()=>svg(Z(hookH(240,90)+loopsOn(222,90,2)+yo(240,90)+A(236,108,196,108))+T2(20,40,'jeteu, trage','prin ambele')),
    c:'Tragi firul prin ambele bucle deodată.'},
   {h:'Întoarcerea rândului',p:'La capătul rândului, fă 1 ol de întoarcere, întoarce lucrarea și lucrează primul pn în primul punct. Ochiul de întoarcere nu se numără ca punct.',
-   d:()=>svg(chainH(60,164,8,24)+[0,1,2,3,4,5,6,7].map(i=>X(60+i*24,132,6)).join('')+sOL(60+7*24+26,118)+[0,1,2,3,4,5,6,7].map(i=>X(60+i*24,98,6)).join('')+sOL(34,84)+[0,1,2,3,4,5,6,7].map(i=>X(60+i*24,64,6)).join('')+T(20,168,'lanț','start','m')+T(20,136,'r. 1','start','m')+T(20,102,'r. 2','start','m')+T(20,68,'r. 3','start','m')+T2(240,156,'1 ol de','întoarcere')),
+   d:()=>svg(chainH(60,164,8,24)+[0,1,2,3,4,5,6,7].map(i=>X(60+i*24,132,6)).join('')+sOL(60+7*24+26,118)+[0,1,2,3,4,5,6,7].map(i=>X(60+i*24,98,6)).join('')+sOL(34,84)+[0,1,2,3,4,5,6,7].map(i=>X(60+i*24,64,6)).join('')+T(20,168,'lanț','start','m')+T(20,136,'r. 1','start','m')+T(20,102,'r. 2','start','m')+T(20,68,'r. 3','start','m')+T2(252,148,'1 ol de','întoarcere')),
    c:'Diagrama cu simboluri: fiecare × e un pn, ovalele sunt ochiuri lanț.'}
  ],
  errors:['Prinzi un singur fir al V-ului: lucrarea capătă dungi și devine mai subțire.','Ochiul de întoarcere numărat ca punct: rândurile cresc câte un punct.','Uiți ultimul punct din rând: rândurile scad. Numără la fiecare capăt de rând.']
@@ -1497,13 +1533,13 @@ TECH.push(
  need:['croșetă și fir','un lanț de ochiuri de exersat'],
  steps:[
   {h:'Jeteu înainte să intri',p:'Fă jeteu înainte să introduci croșeta. Pe lanț, primul sst se lucrează în al treilea ochi de la croșetă.',
-   d:()=>svg(hookH(240,90)+loopsOn(222,90,2)+T2(20,40,'jeteu întâi,','apoi intri')),
+   d:()=>svg(Z(hookH(240,90)+loopsOn(222,90,2))+T2(20,40,'jeteu întâi,','apoi intri')),
    c:'O buclă și un jeteu pe croșetă.'},
   {h:'Trage o buclă: 3 pe croșetă',p:'Introdu croșeta în ochi, fă jeteu și trage o buclă. Acum ai 3 bucle pe croșetă.',
-   d:()=>svg(hookH(240,90)+loopsOn(222,90,3)+T(222,120,'1','middle')+T(204,120,'2','middle')+T(186,120,'3','middle')+T2(20,40,'3 bucle','pe croșetă')),
+   d:()=>svg(Z(hookH(240,90)+loopsOn(222,90,3))+ZT(222,120,'1','middle')+ZT(204,120,'2','middle')+ZT(186,120,'3','middle')+T2(20,40,'3 bucle','pe croșetă')),
    c:'Cele trei bucle.'},
   {h:'Jeteu prin toate trei',p:'Fă jeteu și trage prin toate cele 3 bucle deodată.',
-   d:()=>svg(hookH(240,90)+loopsOn(222,90,3)+yo(240,90)+A(236,110,176,110)+T2(20,40,'jeteu, trage','prin toate 3')),
+   d:()=>svg(Z(hookH(240,90)+loopsOn(222,90,3)+yo(240,90)+A(236,110,176,110))+T2(20,40,'jeteu, trage','prin toate 3')),
    c:'O singură tragere prin toate buclele.'},
   {h:'Întoarcerea',p:'La capătul rândului fă 2 ol de întoarcere. Tiparul îți spune dacă ele se numără ca primul punct al rândului următor.',
    d:()=>svg(chainH(60,168,8,24)+[0,1,2,3,4,5,6,7].map(i=>sSST(60+i*24,136)).join('')+sOL(60+7*24+26,118)+sOL(60+7*24+26,104)+[0,1,2,3,4,5,6,7].map(i=>sSST(60+i*24,88)).join('')+T(20,172,'lanț','start','m')+T(20,140,'r. 1','start','m')+T(20,92,'r. 2','start','m')+T2(252,70,'2 ol de','întoarcere')),
@@ -1518,13 +1554,13 @@ TECH.push(
  need:['croșetă și fir','un lanț de ochiuri de exersat'],
  steps:[
   {h:'Jeteu, intră, trage o buclă',p:'Fă jeteu, introdu croșeta în ochi, fă din nou jeteu și trage o buclă. Ai 3 bucle pe croșetă. Pe lanț, primul st se lucrează în al patrulea ochi de la croșetă.',
-   d:()=>svg(hookH(240,90)+loopsOn(222,90,3)+T(222,120,'1','middle')+T(204,120,'2','middle')+T(186,120,'3','middle')+T2(20,40,'3 bucle','pe croșetă')),
+   d:()=>svg(Z(hookH(240,90)+loopsOn(222,90,3))+ZT(222,120,'1','middle')+ZT(204,120,'2','middle')+ZT(186,120,'3','middle')+T2(20,40,'3 bucle','pe croșetă')),
    c:'La fel ca la semistâlp, până aici.'},
   {h:'Jeteu prin primele 2',p:'Fă jeteu și trage doar prin primele 2 bucle, cele de lângă vârf. Rămân 2 bucle pe croșetă.',
-   d:()=>svg(hookH(240,90)+loopsOn(222,90,3)+yo(240,90)+A(236,110,196,110)+P('M226 124 L226 130 L198 130 L198 124','dim')+T2(212,150,'primele 2','','middle')),
+   d:()=>svg(Z(hookH(240,90)+loopsOn(222,90,3)+yo(240,90)+A(236,110,196,110)+P('M226 124 L226 130 L198 130 L198 124','dim'))+ZT(212,146,'primele 2','middle')),
    c:'Prima tragere: doar prin 2 bucle.'},
   {h:'Jeteu prin ultimele 2',p:'Fă din nou jeteu și trage prin cele 2 bucle rămase. Stâlpul e gata.',
-   d:()=>svg(hookH(240,90)+loopsOn(222,90,2)+yo(240,90)+A(236,110,196,110)+T2(20,40,'jeteu, trage','prin ultimele 2')),
+   d:()=>svg(Z(hookH(240,90)+loopsOn(222,90,2)+yo(240,90)+A(236,110,196,110))+T2(20,40,'jeteu, trage','prin ultimele 2')),
    c:'A doua tragere.'},
   {h:'Întoarcerea',p:'La capătul rândului fă 3 ol de întoarcere. De obicei ele țin loc de primul stâlp, deci primul st adevărat se lucrează în al doilea punct.',
    d:()=>svg(chainH(60,172,8,24)+[0,1,2,3,4,5,6,7].map(i=>sST(60+i*24,136)).join('')+sOL(60+7*24+26,128)+sOL(60+7*24+26,114)+sOL(60+7*24+26,100)+[0,1,2,3,4,5,6,7].map(i=>sST(60+i*24,78)).join('')+T(20,176,'lanț','start','m')+T(20,140,'r. 1','start','m')+T(20,82,'r. 2','start','m')+T2(236,52,'3 ol =','primul st')),
@@ -1569,17 +1605,17 @@ TECH.push(
  need:['andrelele potrivite firului','fir'],
  steps:[
   {h:'Lasă un capăt lung',p:'Capătul liber trebuie să fie de aproximativ 3 ori lățimea piesei finite. Fă un nod glisant la capătul lui și pune-l pe andrea. Nodul e primul ochi.',
-   d:()=>svg(kneedle(40,70,230,70)+E(200,76,6,11,'yarn3')+P('M198 86 C 190 120, 120 140, 40 150','yarn2')+P('M204 86 C 214 120, 250 140, 290 150','yarn2')+T2(40,172,'capătul: 3 × lățimea','')+T2(290,172,'spre ghem','','end')+T2(20,40,'nodul glisant e','primul ochi')),
+   d:()=>svg(kneedle(40,70,230,70)+kst(200,70)+P('M198 86 C 190 120, 120 140, 40 150','yarn2')+P('M204 86 C 214 120, 250 140, 290 150','yarn2')+T2(40,172,'capătul: 3 × lățimea','')+T2(290,172,'spre ghem','','end')+T2(20,40,'nodul glisant e','primul ochi')),
    c:'Andreaua cu primul ochi.'},
   {h:'Poziția de praștie',p:'Ține andreaua în mâna dreaptă. Cu mâna stângă, trece capătul liber peste degetul mare și firul de lucru peste arătător. Prinde ambele fire în palmă. Între degete se formează un V.',
-   d:()=>svg(kneedle(90,50,230,50)+E(200,56,6,11,'yarn3')+P('M200 66 L80 150','yarn2')+P('M200 66 L260 150','yarn2')+C(80,156,14,'finger')+C(260,156,14,'finger')+T2(80,122,'degetul','mare','end')+T2(310,122,'arătătorul','','end')),
+   d:()=>svg(kneedle(90,50,230,50)+kst(200,50)+P('M200 66 L80 150','yarn2')+P('M200 66 L260 150','yarn2')+C(80,156,14,'finger')+C(260,156,14,'finger')+T2(80,122,'degetul','mare','end')+T2(314,112,'arătătorul','','end')),
    c:'Schemă: cele două fire, întinse între degete.'},
   {h:'Trei mișcări pentru un ochi',p:'Cu vârful andrelei, intră pe sub firul din față al degetului mare (1). Prinde firul de pe arătător (2). Adu-l înapoi prin bucla de pe degetul mare (3). Eliberează degetul mare și strânge ușor ochiul pe andrea.',
    d:()=>svg(P('M200 66 L80 150','yarn2')+P('M200 66 L260 150','yarn2')+C(80,156,14,'finger')+C(260,156,14,'finger')+AC('M150 60 Q110 110 110 126')+T(100,108,'1','end')+AC('M120 132 Q190 150 230 118')+T(190,154,'2','middle')+AC('M226 110 Q170 90 128 124')+T(206,100,'3','middle')),
    c:'Ordinea mișcărilor, cu vârful andrelei.'},
   {h:'Repetă și numără',p:'Repetă până ai numărul de ochiuri cerut, inclusiv nodul glisant. Ochiurile trebuie să alunece ușor pe andrea, fără să fie lăsate.',
    d:()=>svgA(kneedle(20,84,300,84)+
-     [...Array(12)].map((_,i)=>`<g class="aK aK${i%6+1}">`+E(40+i*20,90,6,11,'yarn3')+`</g>`).join('')+
+     [...Array(12)].map((_,i)=>`<g class="aK aK${i%6+1}">`+kst(40+i*20,84)+`</g>`).join('')+
      T2(160,150,'ochiurile se adună unul câte unul','','middle'),190,
      'Animație: ochiurile apar pe andrea, unul după altul.'),
    c:'Ochiurile se adună pe andrea, unul după altul.'}
@@ -1593,16 +1629,16 @@ TECH.push(
  need:['andrele cu ochiurile montate','fir'],
  steps:[
   {h:'Intră din față spre spate',p:'Cu firul în spate, introdu andreaua dreaptă în primul ochi de pe andreaua stângă, din față spre spate, de la stânga la dreapta. Andrelele formează un X.',
-   d:()=>svg(leftN()+kneedle(300,170,150,74)+T2(20,150,'firul stă în spate','')+T2(206,40,'din față','spre spate')+A(204,48,168,78)),
+   d:()=>svg(leftN()+kneedle(300,170,150,74)+kfront(164,84)+T2(20,150,'firul stă în spate','')+T2(206,40,'din față','spre spate')+A(204,48,168,78)),
    c:'Andreaua dreaptă trece prin primul ochi, din față.'},
   {h:'Înfășoară firul',p:'Trece firul de lucru peste vârful andrelei drepte, în sens invers acelor de ceasornic, între cele două andrele.',
-   d:()=>svg(leftN()+kneedle(300,170,150,74)+wrap(156,74)+T2(20,150,'invers acelor','de ceasornic')),
+   d:()=>svg(leftN()+kneedle(300,170,150,74)+kfront(164,84)+wrap(156,74)+T2(20,150,'invers acelor','de ceasornic')),
    c:'Firul înfășurat pe andreaua dreaptă.'},
   {h:'Trage bucla spre față',p:'Cu vârful andrelei drepte, trage firul înfășurat prin ochi, spre tine. Pe andreaua dreaptă se formează un ochi nou.',
    d:()=>svg(leftN()+kneedle(300,120,180,60)+E(196,70,6,11,'yarn3')+AC('M160 110 Q170 70 196 58')+T2(20,150,'trage bucla','prin ochi, spre tine')),
    c:'Ochiul nou apare pe andreaua dreaptă.'},
   {h:'Lasă ochiul vechi să cadă',p:'Împinge ochiul vechi de pe vârful andrelei stângi. Ochiul nou rămâne pe andreaua dreaptă. Repetă cu următorul ochi până la capătul rândului.',
-   d:()=>svg(kneedle(20,84,160,84)+kloops(54,84,4,20)+kneedle(310,84,190,84)+E(214,90,6,11,'yarn3')+T2(80,150,'ochiuri de lucrat','','middle')+T2(214,150,'ochi lucrat','','middle')),
+   d:()=>svg(kneedle(20,84,160,84)+kloops(54,84,4,20)+kneedle(310,84,190,84)+kst(214,84)+T2(80,150,'ochiuri de lucrat','','middle')+T2(214,150,'ochi lucrat','','middle')),
    c:'Ochiurile trec, unul câte unul, de pe andreaua stângă pe cea dreaptă.'}
  ],
  errors:['Firul lăsat în față: apare un ochi în plus și o gaură.','Intri prin spatele ochiului: ochiul se răsucește.','Lucrezi pe vârful subțire al andrelei: ochiurile ies prea strânse. Formează-le pe partea groasă.']
@@ -1637,10 +1673,10 @@ TECH.push(
  need:['lucrarea pe andrele','un ac cu vârf bont, pentru capătul de fir'],
  steps:[
   {h:'Tricotează 2 ochiuri',p:'Tricotează primele două ochiuri ale rândului, pe față. Ambele sunt acum pe andreaua dreaptă.',
-   d:()=>svg(leftN(4,150)+kneedle(310,84,180,84)+E(204,90,6,11,'yarn3')+E(224,90,6,11,'yarnH')+T(224,124,'1','middle')+T(204,124,'2','middle')+T2(260,150,'2 ochiuri pe','andreaua dreaptă','middle')),
+   d:()=>svg(leftN(4,150)+kneedle(310,84,180,84)+kst(204,84)+kst(224,84,'yarnH')+T(224,124,'1','middle')+T(204,124,'2','middle')+T2(260,150,'2 ochiuri pe','andreaua dreaptă','middle')),
    c:'Ochiul evidențiat e primul lucrat.'},
   {h:'Trece primul peste al doilea',p:'Cu vârful andrelei stângi, ridică primul ochi, cel mai depărtat de vârf, peste al doilea și scoate-l de pe andrea. Rămâne un singur ochi pe andreaua dreaptă.',
-   d:()=>svg(leftN(4,150)+kneedle(310,84,180,84)+E(204,90,6,11,'yarn3')+E(224,90,6,11,'yarnH')+AC('M224 76 Q214 40 196 72')+T2(200,30,'peste al doilea,','și jos de pe andrea','middle')),
+   d:()=>svg(leftN(4,150)+kneedle(310,84,180,84)+kst(204,84)+kst(224,84,'yarnH')+AC('M224 76 Q214 40 196 72')+T2(200,30,'peste al doilea,','și jos de pe andrea','middle')),
    c:'Primul ochi trece peste al doilea.'},
   {h:'Repetă',p:'Tricotează încă un ochi și trece din nou ochiul anterior peste el. Repetă până mai rămâne un singur ochi.',d:null},
   {h:'Blochează ultimul ochi',p:'Taie firul la 15 cm, trece capătul prin ultimul ochi și strânge. Ascunde capătul în lucrare cu acul bont.',
@@ -1656,10 +1692,10 @@ TECH.push(
  need:['andrele și fir','o bucată de exersat, de 15–20 de ochiuri'],
  steps:[
   {h:'Scăderea: 2 împreună pe față',p:'Introdu andreaua dreaptă prin primele două ochiuri deodată, ca pentru un ochi pe față, și tricotează-le împreună. Două ochiuri devin unul, iar scăderea se înclină spre dreapta.',
-   d:()=>svg(leftN(5,190)+E(144,90,7,12,'yarnH')+E(164,90,7,12,'yarnH')+kneedle(300,170,132,74)+T2(40,150,'prin ambele','ochiuri deodată')),
+   d:()=>svg(leftN(5,190)+kst(144,84,'yarnH',7,12)+kst(164,84,'yarnH',7,12)+kneedle(300,170,132,74)+kfront(144,84,'yarnH',7)+kfront(164,84,'yarnH',7)+T2(40,150,'prin ambele','ochiuri deodată')),
    c:'Andreaua trece prin două ochiuri.'},
   {h:'Creșterea: două ochiuri din unul',p:'Tricotează ochiul pe față, dar nu-l lăsa să cadă de pe andreaua stângă. Tricotează-l încă o dată, de data aceasta prin spatele lui. Abia apoi lasă-l să cadă. Dintr-un ochi au ieșit două.',
-   d:()=>svg(leftN(5,190)+E(164,90,7,12,'yarnH')+kneedle(300,40,160,94)+T2(200,136,'a doua oară,','prin spate')+A(204,134,170,100)),
+   d:()=>svg(leftN(5,190)+kst(164,84,'yarnH',7,12)+kneedle(300,40,160,94)+T2(200,136,'a doua oară,','prin spate')+A(204,134,170,100)),
    c:'Același ochi, lucrat a doua oară prin spate.'},
   {h:'Citește-le în diagramă',p:'În diagramele de tricotat, fiecare pătrat e un ochi. Un pătrat gol e un ochi pe față, un punct e un ochi pe dos, o liniuță oblică e o scădere, un V e o creștere. Pătratele gri nu există: acolo s-a scăzut un ochi.',
    d:()=>svg(kgrid(24,30,['.........','...v.....','.........','.o.o.o.o.','.......-/','.........'],16)+
@@ -1982,12 +2018,12 @@ TECH.push(
  need:['două culori de fir','croșeta sau andrelele obișnuite','ac cu vârf bont, pentru capete'],
  steps:[
   {h:'La croșetat: oprește-te cu o tragere înainte',p:'Lucrează ultimul punct din culoarea veche până rămân două bucle pe croșetă. Aici te oprești.',
-   d:()=>svg(hookH(240,90)+loopsOn(222,90,2)+T(222,120,'1','middle')+T(204,120,'2','middle')+
+   d:()=>svg(Z(hookH(240,90)+loopsOn(222,90,2))+ZT(222,120,'1','middle')+ZT(204,120,'2','middle')+
      T2(20,40,'două bucle','pe croșetă')),
    c:'Punctul nu e terminat încă.'},
   {h:'Trage cu firul nou',p:'Prinde firul nou cu croșeta și trage-l prin cele două bucle. Punctul se termină, dar vârful lui e deja în culoarea nouă, deci rândul următor începe curat.',
-   d:()=>svg(hookH(240,90)+loopsOn(222,90,2)+
-     P('M258 112 C 266 84, 246 70, 236 82','yarnH')+A(240,80,232,86,'arrt')+
+   d:()=>svg(Z(hookH(240,90)+loopsOn(222,90,2)+
+     P('M258 112 C 266 84, 246 70, 236 82','yarnH')+A(240,80,232,86,'arrt'))+
      T2(20,40,'firul nou','trage prin ambele')),
    c:'Firul evidențiat e cel nou.'},
   {h:'La tricotat: pornește culoarea la capăt de rând',p:'Lasă firul vechi să atârne și începe rândul cu cel nou, ținând capetele împreună la primele două ochiuri, ca să nu se desfacă. Dungile se văd mai curat dacă schimbi mereu pe aceeași parte a lucrării.',
@@ -3999,6 +4035,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.13',l:['Firul din desenele de croșetat și tricotat are volum: margine, culoare și o linie de lumină, ca un fir adevărat.','Lanțul arată ca pe lucrare, din ochiuri înlănțuite, iar buclele de pe croșetă o înconjoară: se vede partea care trece prin spatele ei.','La tricotat, ochiurile stau pe andrea cu cele două picioare, iar unde andreaua dreaptă intră prin ochi, se vede că trece pe sub el.','Desenele cu croșeta singură pe rând sunt mărite, ca să nu mai stea mici într-un colț.']},
  {v:'7.12',l:['Croșetele, andrelele și acele se văd din nou în toate desenele. Unde stăteau perfect orizontal sau vertical, nu se desenau deloc.','Textele din desene nu mai trec peste linii, margini sau alte texte. Au fost mutate aproximativ 30 de etichete.','La proiecte, numărul bucății stă în colț și nu mai acoperă săgeata firului drept. Bucățile mici au numărul deasupra.']},
  {v:'7.11',l:['În fișa „Reglarea tensiunii”, pasul „Citește proba” avea regula inversată. Corect: buclele aței de sus pe dos înseamnă tensiune de sus prea mică, iar ața de jos urcată pe față înseamnă tensiune de sus prea mare. Titlurile din desen au fost schimbate la fel.']},
  {v:'7.10',l:['Tabelul de cusături e redesenat după capacul mașinii tale: literele A–L pe un rând, cusătura obișnuită sus, varianta elastică S.S. jos, butoniera în stânga.','Traseul aței are acum două desene: capul mașinii văzut din față, cu cele două canale și numerele 1–4 care se aprind pe rând, și un plan apropiat pe ghidaj și ac.','Două simptome din căutare trimiteau spre pași greșiți din fișa mașinii. Reparat.']},
