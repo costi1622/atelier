@@ -723,6 +723,10 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .card.pgc .ic{color:var(--mat);background:var(--acc-soft,rgba(44,106,84,.12))}
 .a3one{grid-template-columns:1fr !important;margin-bottom:0}
 
+/* conturul de tăiere pe balot, în animația așezării (7.23) */
+.d .cutR{fill:none;stroke:var(--thread);stroke-width:1.6;stroke-dasharray:5 3}
+.pl .fig{margin:8px 0 4px}
+
 </style>
 </head>
 <body>
@@ -792,7 +796,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.22';
+const APP_VER='7.23';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -2520,26 +2524,57 @@ function drawLayout(pack,W){
   const maxW=250, maxH=150;
   const s=Math.min(maxW/W, maxH/H);
   const fw=W*s, fh=H*s, x0=(320-fw)/2, y0=38;
-  let o=R(x0,y0,fw,fh,'balot');
-  o+=L(x0,y0,x0,y0+fh,'selv')+L(x0+fw,y0,x0+fw,y0+fh,'selv');
+  /* straturile desenului, ca să poată fi arătate și pe rând, în animație (7.23) */
+  const baza=R(x0,y0,fw,fh,'balot')+L(x0,y0,x0,y0+fh,'selv')+L(x0+fw,y0,x0+fw,y0+fh,'selv');
+  let piese='',ace='',contur='';
   pack.rows.forEach(r=>r.items.forEach(it=>{
     const px=x0+it.x*s, py=y0+(r.y+5)*s, pw=it.w*s, ph=it.h*s;
-    o+=R(px,py,pw,ph,'pieceL');
+    piese+=R(px,py,pw,ph,'pieceL');
     /* numărul stă în colțul de sus; la bucățile înguste, sus la mijloc, iar săgeata firului pornește sub el */
     const nr=pw>17&&ph>17, ingust=pw<34, bx=ingust?px+pw/2:px+11, by=py+11;
-    if(nr)o+=C(bx,by,8.5,'nrbg')+T(bx,by+4,String(it.idx),'middle','nr');
+    if(nr)piese+=C(bx,by,8.5,'nrbg')+T(bx,by+4,String(it.idx),'middle','nr');
     const g1=nr&&ingust?by+13:py+6, g2=py+ph-6;
     const gx=ingust||!nr?px+pw/2:Math.max(px+pw/2,px+26);
-    if(ph>26&&pw>10&&g2-g1>14)o+=A(gx,g2,gx,g1,'grain')+A(gx,g1,gx,g2,'grain');
+    if(ph>26&&pw>10&&g2-g1>14)piese+=A(gx,g2,gx,g1,'grain')+A(gx,g1,gx,g2,'grain');
+    /* două ace pe fiecare bucată destul de mare: sus în dreapta și jos în stânga */
+    if(pw>=50&&ph>=30)ace+=pin(px+pw-19,py+7,px+pw-7);
+    if(pw>=24&&ph>=40)ace+=pin(px+5,py+ph-7,px+17);
+    contur+=R(px,py,pw,ph,'cutR');
   }));
-  /* legenda mică de sub balot: semnele, desenate, nu doar spuse (7.19) */
   const ly=y0+fh+20;
-  o+=T(160,y0-20,'balot de '+W+' cm lățime','middle')
+  const txt=T(160,y0-20,'balot de '+W+' cm lățime','middle')
    +T(160,y0-6,'îți trebuie '+cm(pack.len)+' cm din el','middle','m')
    +A(56,ly+2,56,ly-12,'grain')+A(56,ly-12,56,ly+2,'grain')+T(66,ly,'firul drept','start','m')
    +L(176,ly-12,176,ly+3,'selv')+T(186,ly,'liziera','start','m')
    +T(160,ly+18,'numerele sunt cele din schema de mai sus','middle','m');
-  return svg(o,ly+28);
+  return flip([
+    [baza+txt,'întinzi materialul, cu liziera pe margini'],
+    [baza+piese+txt,'așezi tiparele, cu săgeata pe firul drept'],
+    [baza+piese+ace+txt,'le prinzi cu ace'],
+    [baza+piese+ace+contur+txt,'tai pe contur, cu materialul întins']
+  ],{h:ly+48,fix:2,eticheta:'Animație: materialul se întinde cu liziera pe margini, tiparele se așază cu săgeata pe firul drept, se prind cu ace și se taie pe contur.'});
+}
+
+/* cum se taie fusta cerc: pliat în patru și compasul din colțul pliurilor (7.23).
+   La semicerc se pliază o singură dată, iar compasul pornește din capătul de sus al pliului. */
+function cercAnim(tip){
+  const n=(x,y,s,a)=>T(x,y,s,a||'start','m');
+  if(tip==='cerc'){
+    const cx=160,cy=95,r1=20,r2=68,arc=r=>`M${cx-r} ${cy} A${r} ${r} 0 0 1 ${cx} ${cy-r}`;
+    return flip([
+      [fab(85,20,150,150),'întinzi materialul'],
+      [fab(85,20,150,75)+L(85,95,235,95,'olt'),'îl pliezi în două'],
+      [fab(85,20,75,75)+L(85,95,160,95,'olt')+L(160,20,160,95,'olt')+C(cx,cy,3.5,'dot')+n(168,108,'colțul pliurilor'),'și încă o dată, în patru'],
+      [fab(85,20,75,75)+L(85,95,160,95,'olt')+L(160,20,160,95,'olt')+P(arc(r1),'st')+P(arc(r2),'st')+L(cx,cy,cx-r2*.707,cy-r2*.707,'thr')+C(cx-r2*.707,cy-r2*.707,3,'dot')+C(cx,cy,3.5,'dot')+n(168,80,'talie')+n(168,34,'tiv')+A(166,77,cx-r1*.5,cy-r1*.9),'trasezi talia și tivul, ca un compas']
+    ],{fix:4,h:200,eticheta:'Animație: materialul se pliază în două, apoi în patru. Din colțul pliurilor, cu o ață legată de un creion, se trasează arcul taliei și arcul tivului.'});
+  }
+  const cx=160,cy=20,r1=24,r2=94,arc=r=>`M${cx-r} ${cy} A${r} ${r} 0 0 0 ${cx} ${cy+r}`,half=r=>`M${cx-r} ${cy} A${r} ${r} 0 0 0 ${cx+r} ${cy}`;
+  return flip([
+    [fab(60,20,200,150),'întinzi materialul'],
+    [fab(60,20,100,150)+L(160,20,160,170,'olt')+C(cx,cy,3.5,'dot')+n(168,34,'capătul pliului'),'îl pliezi o dată, în două'],
+    [fab(60,20,100,150)+L(160,20,160,170,'olt')+P(arc(r1),'st')+P(arc(r2),'st')+L(cx,cy,cx-r2*.707,cy+r2*.707,'thr')+C(cx-r2*.707,cy+r2*.707,3,'dot')+C(cx,cy,3.5,'dot'),'trasezi talia și tivul, ca un compas'],
+    [P(`${half(r2)} L${cx+r1} ${cy} A${r1} ${r1} 0 0 1 ${cx-r1} ${cy} Z`,'fab')+L(cx,cy+r1,cx,cy+r2,'seam')+n(cx+6,cy+r2-10,'pliul'),'desfaci: un semicerc']
+  ],{fix:3,h:200,eticheta:'Animație: materialul se pliază o dată. Din capătul de sus al pliului, cu o ață legată de un creion, se trasează arcul taliei și arcul tivului. Desfăcut, e un semicerc.'});
 }
 
 /* --- schema pieselor, desenată la scară din cotele calculate ---
@@ -2565,8 +2600,9 @@ function drawPieces(pieces){
     if(p.shape!=='donut'&&h>=44&&w>=16){const gx=w>=40?cx+4:cx,g1=y+(w>=30&&h>=30?30:8),g2=y+h-8;if(g2-g1>14)o+=A(gx,g2,gx,g1,'grain')+A(gx,g1,gx,g2,'grain')}
     /* numărul bucății, într-un cerc, plus câte bucăți sunt */
     /* în colț, în interior, dacă încape; altfel deasupra bucății */
-    const inauntru=p.shape==='donut'||(w>=30&&h>=30);
-    const bx=p.shape==='donut'?cx:inauntru?x+14:cx, bc=p.shape==='donut'?cy-8:inauntru?y+14:y-13;
+    /* la trapez, numărul stă sus la mijloc, unde latura de sus e dreaptă */
+    const trap=p.shape==='trapez', inauntru=p.shape==='donut'||(trap?p.wTop*s>=30&&h>=30:w>=30&&h>=30);
+    const bx=p.shape==='donut'||trap?cx:inauntru?x+14:cx, bc=p.shape==='donut'?cy-8:inauntru?y+15:y-13;
     o+=C(bx,bc,10,'nrbg')+T(bx,bc+4,String(i+1),'middle','nr');
     x+=w+G;
   });
@@ -2617,7 +2653,10 @@ const PROJ=[
            'Lasă fusta atârnată o zi înainte de tiv: materialul tăiat pe diagonală se lungește singur.']};
  },
  pasi:(m,o)=>[
-  {h:'Taie cercul',p:`Pliază materialul în patru și măsoară din colțul pliurilor ${cm(o.tip==='cerc'?(m.sold+2)/(2*PI)-1:(m.sold+2)/PI-1)} cm pentru gaura de la talie, apoi ${cm((o.tip==='cerc'?(m.sold+2)/(2*PI):(m.sold+2)/PI)+m.lungimeFusta+1)} cm pentru marginea de jos. Folosește o ață legată de un creion, ca un compas.`},
+  {h:'Taie cercul',p:o.tip==='cerc'
+    ?`Pliază materialul în patru și măsoară din colțul pliurilor ${cm((m.sold+2)/(2*PI)-1)} cm pentru gaura de la talie, apoi ${cm((m.sold+2)/(2*PI)+m.lungimeFusta+1)} cm pentru marginea de jos. Folosește o ață legată de un creion, ca un compas.`
+    :`Pliază materialul o dată, în două, și măsoară din capătul de sus al pliului ${cm((m.sold+2)/PI-1)} cm pentru gaura de la talie, apoi ${cm((m.sold+2)/PI+m.lungimeFusta+1)} cm pentru marginea de jos. Folosește o ață legată de un creion, ca un compas. Desfăcut, e un semicerc.`,
+   d:()=>cercAnim(o.tip),c:o.tip==='cerc'?'Pliat în patru, compasul pornește din colțul pliurilor.':'Pliat o dată, compasul pornește din capătul de sus al pliului.'},
   {h:'Închide cusăturile laterale',p:'Coase părțile una de alta, cu rezerva de 1,5 cm, apoi finisează marginile.',tech:'zigzag'},
   {h:'Pregătește betelia',p:'Coase betelia în inel, calc-o pliată în două pe lungime, cu dosul înăuntru.'},
   {h:'Prinde betelia de fustă',p:'Potrivește sferturile beteliei cu sferturile taliei și coase, întinzând ușor doar dacă e nevoie. Lasă 5 cm nedesfăcuți pentru elastic.',tech:'increturi'},
@@ -4176,6 +4215,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.23',l:['La toate proiectele, desenul cu așezarea pe balot e o animație în patru pași: întinzi materialul, așezi tiparele pe firul drept, le prinzi cu ace, tai pe contur.','La fusta cerc, pasul „Taie cercul” are o animație cu plierea și compasul, separat pentru cerc și pentru semicerc.','La fusta semicerc, textul spunea să pliezi materialul în patru. Corect e o singură dată, iar compasul pornește din capătul de sus al pliului.']},
  {v:'7.22',l:['Setări: opțiunile stau pe o grilă ordonată, iar sub mărimea textului vezi imediat cum arată textul ales. Legătura de sus duce înapoi la „Mai mult”.','Fac: grupurile de proiecte au iconițe, iar „Copiez ceva ce am deja” arată ca o acțiune, ca pe prima pagină.','„Continuă de unde ai rămas” spune totul pe un rând scurt, de exemplu „Proiect · în ultima oră · 0 din 5 pași”.','Pe carduri apare o bară de progres, de îndată ce ai exersat o fișă sau ai început un proiect.']},
  {v:'7.21',l:['Butonul de mărire s-a mutat din colțul desenului în bara legendei, jos în dreapta. Nu mai acoperă nimic din desen, nici punctele animațiilor. Mărirea merge în continuare și atingând oriunde pe desen.']},
  {v:'7.20',l:['Butonul de mărire din colțul desenelor are acum o iconiță desenată, de mărime fixă, care se vede la fel de clar pe orice telefon și în ambele teme.']},
@@ -4903,7 +4943,7 @@ function project(id){
       <p class="mm-l">Bifează pe măsură ce avansezi. Rămâne salvat.</p>
       <ol class="pl">${steps.map((s,i)=>`<li class="${st.done.includes(i)?'ok':''}">
         <label><input type="checkbox" data-s="${i}"${st.done.includes(i)?' checked':''}>
-        <span><b>${esc(s.h)}</b>${esc(s.p)}${s.tech&&byId(s.tech)?` <a href="#/t/${s.tech}">Vezi tehnica: ${esc(byId(s.tech).t)}</a>`:''}</span></label></li>`).join('')}</ol>
+        <span><b>${esc(s.h)}</b>${esc(s.p)}${s.tech&&byId(s.tech)?` <a href="#/t/${s.tech}">Vezi tehnica: ${esc(byId(s.tech).t)}</a>`:''}</span></label>${s.d?`<figure class="fig">${s.d()}<figcaption><b>Pasul ${i+1}</b>${esc(s.c||'')}</figcaption></figure>`:''}</li>`).join('')}</ol>
       <div class="seg"><a class="btn pri" href="#/pas/p/${p.id}/0">Mod pas cu pas</a>
        <button class="btn" id="reset">Șterge bifele</button></div></details>`;
     rez.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{st.W=+b.dataset.w;save();render()});
