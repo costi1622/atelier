@@ -441,6 +441,11 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .d text.numJ{fill:var(--ink);font:600 10px "Source Sans 3",sans-serif;stroke-width:3px}
 .d .butonPres{fill:var(--panel);stroke:var(--ink);stroke-width:1.6}
 
+/* ---------- capacul de sus ---------- */
+.d text.tabS{font:600 8px "Source Sans 3",sans-serif;fill:var(--ink);stroke-width:2.5px}
+.d .tabLin{fill:none;stroke:var(--ink);stroke-width:1}
+.d .punctJ{fill:var(--thread);stroke:var(--panel);stroke-width:1.4}
+
 /* ---------- zona suveicii, după fotografii ---------- */
 .d .compart{fill:var(--gap);stroke:var(--ink);stroke-width:1.2;opacity:.45}
 .d .placaJ{fill:url(#metal);stroke:var(--ink);stroke-width:1.2}
@@ -714,7 +719,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.8';
+const APP_VER='7.9';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -2116,6 +2121,36 @@ TECH.push(
      T(160,196,'masa de lucru se scoate, dedesubt e brațul liber','middle','m')+
      T(292,166,'volan','middle','m'),214),
    c:'Mașina ta, văzută din față. Cele trei butoane de pe panoul verde, în ordinea de pe mașină.'},
+  {h:'Capacul de sus: tabelul de cusături',p:'Pe capac sunt trecute toate cusăturile, cu litera fiecăreia. Coloana din stânga arată cusătura așa cum iese, cea din dreapta varianta ei elastică, marcată S.S. Sus de tot e butoniera, cu mențiunea „1 STEP”. Când un tipar îți cere o cusătură, cauți simbolul pe capac și pui selectorul pe litera lui.',
+   d:()=>svg(
+     R(20,30,280,150,'corpAlb',6)+
+     R(150,44,132,124,'placaSus',3)+
+     T(216,40,'tabelul de cusături','middle','m')+
+     R(200,52,14,12,'ol',2)+T(238,62,'1 STEP','start','tabS')+T(238,72,'BUTTONHOLE','start','tabS')+
+     'ABCDEFGHIJKL'.split('').map((l,i)=>T(160,80+i*8,l,'start','tabS')+
+       zigH(78+i*8,176,208,2.2,5,'tabLin')+zigH(78+i*8,222,258,2.2,3.4,'tabLin')).join('')+
+     T(192,180,'obișnuită','middle','m')+T(268,180,'elastică','middle','m')+
+     /* mosoare și bobinator */
+     C(70,72,9,'mosor')+C(104,72,9,'mosor')+T(87,54,'mosoare','middle','m')+
+     C(70,120,12,'buton')+T(70,146,'bobinator','middle','m')+
+     /* ghidajele numerotate */
+     R(112,104,26,7,'placaJ',2)+T(125,126,'1','middle')+
+     R(112,132,26,7,'placaJ',2)+T(125,154,'3','middle'),192),
+   c:'Capacul de sus, privit de deasupra.'},
+  {h:'Traseul aței, după numerele de pe mașină',p:'Mașina are traseul marcat cu patru numere. 1 și 3 sunt pe capacul de sus, 2 și 4 pe capul mașinii, lângă ac. Le urmezi în ordine, cu piciorușul ridicat, ca ața să intre între discurile de tensiune. Dacă sari peste unul, cel mai des apare cuibul de ață pe dos.',
+   d:()=>svg(
+     P('M20 40 L300 40 L300 78 L20 78 Z','corpAlb')+
+     P('M20 78 L120 78 L120 176 L20 176 Z','corpAlb')+
+     E(250,28,12,6,'mosor')+L(250,34,250,40,'tija')+
+     /* traseul */
+     P('M250 34 C 210 34, 196 44, 176 52','atarJ')+C(176,52,5,'punctJ')+T(176,34,'1','middle')+
+     P('M176 52 C 140 62, 112 74, 96 96','atarJ')+C(96,96,5,'punctJ')+T(88,72,'tensiune','end','m')+
+     P('M96 96 C 84 74, 76 60, 68 52','atarJ')+C(68,52,5,'punctJ')+T(68,34,'2','middle')+
+     P('M68 52 C 62 74, 60 88, 62 104','atarJ')+C(62,104,5,'punctJ')+T(40,104,'3','end')+
+     P('M62 104 C 64 124, 68 134, 70 146','atarJ')+C(70,146,5,'punctJ')+T(48,146,'4','end')+
+     P('M70 146 L70 162','atarJ')+L(70,162,70,176,'acJ')+
+     T(160,196,'1 și 3 pe capac, 2 și 4 pe capul mașinii','middle','m'),206),
+   c:'Traseul aței, de la mosor până la ac.'},
   {h:'Bobina se pune din față, nu de sus',p:'Deschide ușa din față a brațului liber. În mijloc se vede suveica, prinsă în inelul cârligului. O scoți trăgând de clapeta din mijlocul ei. Pui bobina înăuntru, treci ața prin fantă și pe sub arcul de tensiune, apoi o împingi la loc, cu clapeta ridicată, până se așază și se aude clicul. Dacă nu intră complet, nu forța: rotește volanul puțin și încearcă din nou. Cele două brațe negre de lângă inel nu se ating decât la curățat.',
    d:()=>svg(
      P('M24 40 L296 40 L296 176 L24 176 Z','corpAlb')+
@@ -3849,6 +3884,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.9',l:['Fișa mașinii are două desene noi: capacul de sus cu tabelul de cusături și traseul aței, cu numerele 1 până la 4 marcate pe mașină.']},
  {v:'7.8',l:['Zona suveicii e desenată acum după fotografiile mașinii tale: ușa din față, inelul cârligului, suveica cu clapetă și cele două brațe negre.','Pictogramele din bara de jos au fost redesenate, în același stil cu restul.']},
  {v:'7.7',l:['Insignele de pe Acasă ieșeau gri și mici. Reparat: verzi și de aceeași mărime peste tot.','Mașina din fișa Janome e desenată acum după fotografiile mașinii tale: panoul verde, cele trei butoane în ordinea reală, scala de tensiune, volanul alb, mosorul și bobinatorul.','Butonul de presiune are desenul lui, văzut din stânga, cu pozițiile 1, 2 și 3.']},
  {v:'7.6',l:['Insignele de pe Acasă sunt aliniate cu textul de lângă ele.','Bara de progres apare doar când ai bifat ceva, iar sub ea scrie clar câte tehnici ai exersat.']},
