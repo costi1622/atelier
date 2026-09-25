@@ -19,7 +19,7 @@
   --line:#CBD3CE; --line-f:#808D85; --mat:#2C6A54; --mat-soft:#E3EFE9; --thread:#C0283F; --amber:#8A5D0A;
   --fab:#D9E5EF; --fabS:#7FA3C2; --fab2:#F0DDB4; --fab2S:#C0913A;
   --tape:#8795A3; --yarn:#9C4E7C; --yarnH:#E0A21A; --hook:#6E7C86; --gap:#B9C3CA;
-  --metalHi:#D7DEE3; --metalLit:#EEF2F5; --yarnD:#5E2447; --yarnLit:#E6B8D3; --yarnHD:#8A5A00; --yarnHLit:#FFEBB0; --yarnHi:#C173A0; --janome:#1E5140; --janomeD:#17402F;
+  --metalHi:#D7DEE3; --metalLit:#EEF2F5; --fabD:#4E7394; --fabLit:#EAF2F8; --fab2D:#8C6322; --fab2Lit:#FBEBC6; --yarnD:#5E2447; --yarnLit:#E6B8D3; --yarnHD:#8A5A00; --yarnHLit:#FFEBB0; --yarnHi:#C173A0; --janome:#1E5140; --janomeD:#17402F;
   --s1:4px; --s2:8px; --s3:12px; --s4:18px; --s5:28px; --s6:44px;
   --c-masina:#2C6A54; --c-mana:#8A5D0A; --c-croset:#9C4E7C; --c-tricot:#2F6690; --c-stiut:#7A4A3A;
   --bgdot:rgba(44,106,84,.16); --bgweave:rgba(31,43,51,.035); --bgglow:rgba(44,106,84,.13); --bgedge:rgba(192,40,63,.14);
@@ -37,7 +37,7 @@
     --line:#2F3B44; --line-f:#6A7984; --mat:#72B99B; --mat-soft:#1E3129; --thread:#FF6F86; --amber:#E0B45A;
     --fab:#2A3B4B; --fabS:#6E93B4; --fab2:#4A3F2A; --fab2S:#C9A15A;
     --tape:#6D7D8C; --yarn:#D38DB7; --yarnH:#F2C14E; --hook:#9AA8B1; --gap:#3A4852;
-    --metalHi:#7E8D98; --metalLit:#D5DDE3; --yarnD:#6E3558; --yarnLit:#F7DCEB; --yarnHD:#8F6A10; --yarnHLit:#FFF1C4; --yarnHi:#E7AFD0; --janome:#1E5140; --janomeD:#17402F;
+    --metalHi:#7E8D98; --metalLit:#D5DDE3; --fabD:#3B5872; --fabLit:#A9C4DB; --fab2D:#7A5B25; --fab2Lit:#EAD3A0; --fabD:#3B5872; --fabLit:#A9C4DB; --fab2D:#7A5B25; --fab2Lit:#EAD3A0; --yarnD:#6E3558; --yarnLit:#F7DCEB; --yarnHD:#8F6A10; --yarnHLit:#FFF1C4; --yarnHi:#E7AFD0; --janome:#1E5140; --janomeD:#17402F;
     --bgdot:rgba(114,185,155,.13); --bgweave:rgba(255,255,255,.03); --bgglow:rgba(114,185,155,.10); --bgedge:rgba(255,111,134,.14);
   }
 }
@@ -46,7 +46,7 @@
   --line:#2F3B44; --line-f:#6A7984; --mat:#72B99B; --mat-soft:#1E3129; --thread:#FF6F86; --amber:#E0B45A;
   --fab:#2A3B4B; --fabS:#6E93B4; --fab2:#4A3F2A; --fab2S:#C9A15A;
   --tape:#6D7D8C; --yarn:#D38DB7; --yarnH:#F2C14E; --hook:#9AA8B1; --gap:#3A4852;
-  --metalHi:#7E8D98; --metalLit:#D5DDE3; --yarnD:#6E3558; --yarnLit:#F7DCEB; --yarnHD:#8F6A10; --yarnHLit:#FFF1C4; --yarnHi:#E7AFD0; --janome:#1E5140; --janomeD:#17402F;
+  --metalHi:#7E8D98; --metalLit:#D5DDE3; --fabD:#3B5872; --fabLit:#A9C4DB; --fab2D:#7A5B25; --fab2Lit:#EAD3A0; --yarnD:#6E3558; --yarnLit:#F7DCEB; --yarnHD:#8F6A10; --yarnHLit:#FFF1C4; --yarnHi:#E7AFD0; --janome:#1E5140; --janomeD:#17402F;
   --c-masina:#72B99B; --c-mana:#E0B45A; --c-croset:#D38DB7; --c-tricot:#7FB2DA; --c-stiut:#C79A86;
   --bgdot:rgba(114,185,155,.13); --bgweave:rgba(255,255,255,.03); --bgglow:rgba(114,185,155,.10); --bgedge:rgba(255,111,134,.14);
 }
@@ -598,8 +598,8 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .d text{font:600 12.5px "Source Sans 3",system-ui,sans-serif;fill:var(--ink);
   paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
 .d text.m{font-weight:400;fill:var(--muted)}
-.d .fab{fill:url(#weave);stroke:var(--ink);stroke-width:1.6;filter:url(#soft)}
-.d .rev{fill:url(#hatch);stroke:var(--ink);stroke-width:1.5}
+.d .fab{fill:url(#weave);stroke:var(--ink);stroke-width:1.4;stroke-linejoin:round;filter:url(#soft)}
+.d .rev{fill:url(#hatch);stroke:var(--ink);stroke-width:1.4;stroke-linejoin:round}
 .d .ol{fill:none;stroke:var(--ink);stroke-width:1.6}
 .d .olt{fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round}
 .d .seam{fill:none;stroke:var(--ink);stroke-width:1.2;stroke-dasharray:5 4;opacity:.65}
@@ -638,7 +638,7 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .d .lay{fill:none;stroke:var(--fabS);stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round}
 .d .lay2{fill:none;stroke:var(--fab2S);stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round}
 .d .stx{stroke:var(--thread);stroke-width:2}
-.d .ndl{stroke:var(--hook);stroke-width:2.8;stroke-linecap:round}
+.d .ndl{stroke:var(--hook);stroke-width:3.6;stroke-linecap:round}
 .d .ndle{fill:var(--panel);stroke:var(--ink);stroke-width:1.2}
 .d .btn{fill:url(#weave2);stroke:var(--ink);stroke-width:1.6;filter:url(#soft)}
 .d .tooth{stroke:var(--fab2S);stroke-width:5;stroke-linecap:round}
@@ -697,6 +697,12 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
   .d.anim .aFa,.d.anim .aFc{display:none}
   .d.anim .aFs{display:inline}
 }
+
+/* materialul în secțiune, cu volum (vezi YV în lib.js, 7.15) */
+.d .lO{fill:none;stroke:var(--fabD);stroke-width:7.4;stroke-linecap:round;stroke-linejoin:round}
+.d .lO2{fill:none;stroke:var(--fab2D);stroke-width:7.4;stroke-linecap:round;stroke-linejoin:round}
+.d .lL{fill:none;stroke:var(--fabLit);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
+.d .lL2{fill:none;stroke:var(--fab2Lit);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
 
 </style>
 </head>
@@ -767,7 +773,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.14';
+const APP_VER='7.15';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -775,12 +781,21 @@ const TECH=[];
    Toate desenele au viewBox 320×190 (sau h dat). Culorile vin din clase CSS,
    deci merg automat în modul luminos și întunecat. */
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const R=(x,y,w,h,c,rx=0)=>`<rect class="${c}" x="${x}" y="${y}" width="${w}" height="${h}"${rx?` rx="${rx}"`:''}/>`;
+/* materialul are margini de tăietură: ușor neregulate, nu tras cu rigla (7.15).
+   Neregularitatea e fixă pentru aceeași bucată, calculată din coordonate. */
+const rnd=k=>{const v=Math.sin(k*12.9898)*43758.5453;return v-Math.floor(v)};
+function cutEdge(x1,y1,x2,y2,seed){const L0=Math.hypot(x2-x1,y2-y1),n=Math.max(1,Math.round(L0/16)),nx=-(y2-y1)/L0,ny=(x2-x1)/L0;let d='';
+  for(let i=1;i<=n;i++){const t=i/n,tm=(i-.5)/n,o=(rnd(seed+i)-.5)*1.8;
+    d+=` Q${(x1+(x2-x1)*tm+nx*o).toFixed(1)} ${(y1+(y2-y1)*tm+ny*o).toFixed(1)} ${(x1+(x2-x1)*t).toFixed(1)} ${(y1+(y2-y1)*t).toFixed(1)}`}return d}
+const R=(x,y,w,h,c,rx=0)=>{
+  if((c==='fab'||c==='rev')&&!rx&&w>20&&h>20){const sd=x*7+y*13+w*3+h;
+    return `<path class="${c}" d="M${x} ${y}${cutEdge(x,y,x+w,y,sd)}${cutEdge(x+w,y,x+w,y+h,sd+50)}${cutEdge(x+w,y+h,x,y+h,sd+100)}${cutEdge(x,y+h,x,y,sd+150)} Z"/>`}
+  return `<rect class="${c}" x="${x}" y="${y}" width="${w}" height="${h}"${rx?` rx="${rx}"`:''}/>`};
 /* uneltele de metal (croșetă, andrea, ace) se desenează plin, cu o linie de lumină deasupra.
    Nu cu gradient: la o linie perfect orizontală sau verticală, gradientul calculat după
    dreptunghiul liniei are înălțimea zero și Chrome nu mai desenează nimic. */
-const TUB={hook:[1.3,'tubH'],kn:[1.5,'tubK'],ndl:[.7,'tubN'],acJ:[.6,'tubN']};
-const L=(x1,y1,x2,y2,c)=>{const l=`<line class="${c}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`,t=TUB[c];
+const TUB={hook:[1.3,'tubH'],kn:[1.5,'tubK'],ndl:[.9,'tubN'],acJ:[.6,'tubN']};
+const L=(x1,y1,x2,y2,c)=>{if(YV[c])return vol('line',c,`x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"`);const l=`<line class="${c}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`,t=TUB[c];
   if(!t)return l;const d=Math.hypot(x2-x1,y2-y1)||1,ox=(y2-y1)/d*t[0],oy=-(x2-x1)/d*t[0];
   /* lumina stă pe partea de sus a unealtei, indiferent de sensul în care e desenată */
   const s=oy>0||(oy===0&&ox>0)?-1:1;
@@ -789,7 +804,9 @@ const L=(x1,y1,x2,y2,c)=>{const l=`<line class="${c}" x1="${x1}" y1="${y1}" x2="
 
 /* firul are volum: margine închisă, culoarea firului, linie de lumină în mijloc.
    Orice formă cu o clasă de fir (yarn, yarn2, yarn3, yarnH) primește automat cele trei straturi. */
-const YV={yarn:['yO yO7','yL yL7'],yarn2:['yO yO4','yL yL4'],yarn3:['yO yO3','yL yL3'],yarnH:['yOH','yLH']};
+const YV={yarn:['yO yO7','yL yL7'],yarn2:['yO yO4','yL yL4'],yarn3:['yO yO3','yL yL3'],yarnH:['yOH','yLH'],
+  /* materialul în secțiune are și el margine și lumină, ca o fâșie de stofă (7.15) */
+  lay:['lO','lL'],lay2:['lO2','lL2']};
 const vol=(tag,c,att)=>YV[c]?`<${tag} class="${YV[c][0]}" ${att}/><${tag} class="${c}" ${att}/><${tag} class="${YV[c][1]}" ${att}/>`:`<${tag} class="${c}" ${att}/>`;
 const P=(d,c)=>vol('path',c,`d="${d}"`);
 const C=(x,y,r,c)=>vol('circle',c,`cx="${x}" cy="${y}" r="${r}"`);
@@ -820,7 +837,7 @@ const stx=(x,y1,y2)=>L(x,y1,x,y2,'stx')+C(x,y1,2,'dot')+C(x,y2,2,'dot');
 /* ac de mână: vârf la (x,y), orientat după unghi (grade) */
 function needle(x,y,ang=0,len=64){const r=ang*Math.PI/180,dx=Math.cos(r),dy=Math.sin(r);
   const x2=x-dx*len,y2=y-dy*len;
-  return L(x,y,x2,y2,'ndl')+E(x2+dx*6,y2+dy*6,4,1.6,'ndle',ang)}
+  return L(x,y,x2,y2,'ndl')+E(x2+dx*7,y2+dy*7,5,2,'ndle',ang)}
 /* rând de împunsături: vizibil (față) / ascuns (dos), alternativ */
 function run(x1,x2,y,on=14,off=10){let o='';for(let x=x1;x<x2;x+=on+off){o+=L(x,y,Math.min(x+on,x2),y,'thr');if(x+on<x2)o+=L(x+on,y,Math.min(x+on+off,x2),y,'hid')}return o}
 
@@ -880,6 +897,9 @@ function svgA(inner,h=190,eticheta){
   return `<svg viewBox="0 0 320 ${h}" class="d${animOn()?' anim':''}" role="img"${eticheta?` aria-label="${esc(eticheta)}"`:' aria-hidden="true" focusable="false"'}>${inner}</svg>`;
 }
 
+/* material încrețit, în secțiune: n jumătăți de val între x0 și x1, cu amplitudinea a */
+function wave(x0,x1,y,a,n,c='lay'){const s=(x1-x0)/n;let d=`M${x0} ${y}`;for(let i=0;i<n;i++){const x=x0+i*s;d+=` Q${(x+s/2).toFixed(1)} ${i%2?y+a:y-a} ${(x+s).toFixed(1)} ${y}`}return P(d,c)}
+
 /* ================= animație pe cadre =================
    flip() arată patru stări pe rând, ca o carte cu imagini: fiecare cadru stă aproximativ
    2 secunde, apoi vine următorul. Cadrele sunt desene întregi, fără text; sub ele apare
@@ -903,13 +923,20 @@ TECH.push(
  need:['maneta sau butonul de mers înapoi al mașinii','un rest de material pentru probă'],
  steps:[
   {h:'Pornește la 1 cm de margine',p:'Înțeapă acul la aproximativ 1 cm sub marginea tăiată și coboară piciorușul. Dacă pornești chiar de pe margine, mașina poate trage materialul în placa acului.',
-   d:()=>svg(fab(70,18,180,160)+seamV(160,18,178)+C(160,40,4,'dot')+dimV(92,18,40)+T2(100,30,'1 cm','')+T2(176,80,'acul pornește','de aici')+A(174,76,164,46)+T(160,12,'marginea tăiată','middle','m'),190),
+   d:()=>svg(fab(60,18,200,160)+seamV(160,18,178)+C(160,40,4,'dot')+dimV(92,18,40)+T2(100,30,'1 cm','')+T2(176,80,'acul pornește','de aici')+A(174,76,164,46)+T(160,12,'marginea tăiată','middle','m'),190),
    c:'Piesa văzută de sus, linia punctată e cusătura.'},
   {h:'Coase înapoi până la margine',p:'Ține apăsată maneta de mers înapoi și coase 3–4 împunsături, până aproape de margine.',
-   d:()=>svg(fab(70,18,180,160)+seamV(160,18,178)+L(160,40,160,22,'thr')+A(160,40,160,24,'arrt')+T2(176,40,'înapoi','3–4 împunsături')),
+   d:()=>svg(fab(60,18,200,160)+seamV(160,18,178)+L(160,40,160,22,'thr')+A(160,40,160,24,'arrt')+T2(176,40,'înapoi','3–4 împunsături')),
    c:'Primele împunsături merg spre margine.'},
   {h:'Continuă înainte peste ele',p:'Eliberează maneta și coase înainte, peste împunsăturile de întărire, apoi mai departe pe toată cusătura.',
-   d:()=>svg(fab(70,18,180,128)+L(156,40,156,22,'thr')+L(164,22,164,140,'st')+A(186,52,186,124)+T2(196,64,'înainte,','peste întărire')+T2(160,164,'în realitate cele două','se suprapun','middle')),
+   d:()=>{const B=()=>fab(60,18,200,128)+seamV(160,18,146);
+     return flip([
+       [B()+C(160,40,4,'dot')+dimV(92,18,40),'pornești la 1 cm de margine'],
+       [B()+L(160,40,160,22,'thr')+A(160,40,160,24,'arrt'),'coși înapoi până la margine'],
+       [B()+L(156,40,156,22,'thr')+L(164,22,164,140,'st')+A(186,52,186,124),'înainte, peste întărire'],
+       [B()+L(156,40,156,22,'thr')+L(164,22,164,146,'st')+L(160,22,160,40,'thr'),'capătul e prins, cusătura continuă']
+     ],{fix:3,h:196,sus:T2(196,64,'înainte,','peste întărire')+T2(160,164,'în realitate cele două','se suprapun','middle'),
+       eticheta:'Animație: pornești la 1 cm de margine, coși înapoi până la margine, apoi înainte peste întărire și cusătura continuă.'})},
    c:'Desenate alăturat ca să se vadă, în realitate cad una peste alta.'},
   {h:'La capăt, la fel',p:'Când ajungi la capătul cusăturii, coase 3–4 împunsături înapoi și apoi din nou înainte până la capăt. Ridică acul, ridică piciorușul și taie ațele.',
    d:()=>svg(fab(60,12,200,150)+L(160,12,160,152,'st')+L(152,152,152,132,'thr')+A(152,152,152,134,'arrt')+L(168,132,168,152,'thr')+T(160,178,'marginea de jos','middle','m')+T2(172,100,'înapoi, apoi','din nou înainte')),
@@ -1090,7 +1117,14 @@ TECH.push(
    d:()=>svg(fab(20,24,280,50)+L(90,24,90,40,'mk')+L(160,24,160,40,'mk')+L(230,24,230,40,'mk')+fab(80,120,160,40)+L(120,120,120,136,'mk')+L(160,120,160,136,'mk')+L(200,120,200,136,'mk')+A(90,80,120,114)+A(160,80,160,114)+A(230,80,200,114)+T(310,56,'piesa lungă','end','m')+T(250,150,'talia','start','m')),
    c:'Semnele de pe piesa lungă se potrivesc cu cele de pe talie.'},
   {h:'Trage ațele de jos',p:'Trage deodată cele două ațe de jos, de la bobină, de la ambele capete spre mijloc. Împinge materialul pe ață până se potrivește lungimea, apoi distribuie cutele uniform. Înfășoară capetele de ață în jurul unui ac.',
-   d:()=>svg(P('M20 70 Q30 56 40 70 Q50 84 60 70 Q70 56 80 70 Q90 84 100 70 Q110 56 120 70 Q130 84 140 70 Q150 56 160 70 Q170 84 180 70 Q190 56 200 70 Q210 84 220 70 Q230 56 240 70 Q250 84 260 70 Q270 56 280 70','lay')+P('M280 64 Q296 60 306 48','thr')+P('M280 72 Q298 72 308 62','thr')+A(20,110,110,110)+A(300,110,210,110)+T2(160,140,'trage ațele de la bobină,','de la ambele capete','middle')),
+   d:()=>{const fire=x=>P(`M${x} 64 Q${x+16} 60 ${x+26} 48`,'thr')+P(`M${x} 72 Q${x+18} 72 ${x+28} 62`,'thr');
+     return flip([
+       [P('M20 70 L280 70','lay')+L(24,64,280,64,'st')+L(24,74,280,74,'st')+fire(280),'două rânduri de împunsături lungi'],
+       [wave(20,280,70,5,26)+fire(280)+A(20,110,70,110,'arrt')+A(300,110,250,110,'arrt'),'tragi ațele de la bobină'],
+       [wave(20,280,70,14,26)+fire(280)+A(20,110,110,110)+A(300,110,210,110),'materialul se adună'],
+       [wave(60,240,70,14,26)+fire(240)+fab(60,120,180,30)+L(105,120,105,132,'mk')+L(150,120,150,132,'mk')+L(195,120,195,132,'mk'),'potrivești pe talie, încrețit egal']
+     ],{fix:3,h:196,sus:T2(160,140,'trage ațele de la bobină,','de la ambele capete','middle'),
+       eticheta:'Animație: două rânduri de împunsături lungi, tragi ațele de la bobină, materialul se adună, apoi încrețitura se potrivește pe lățimea taliei.'})},
    c:'Cutele se strâng pe cele două ațe.'},
   {h:'Coase cu încrețitura deasupra',p:'Coase la 1,5 cm, cu piesa încrețită deasupra, ca să vezi cutele. Ține-le drepte cu vârful unui ac, să nu intre strâmbe sub picioruș.',
    d:()=>svg(fab(20,90,280,80)+P('M20 60 Q30 46 40 60 Q50 74 60 60 Q70 46 80 60 Q90 74 100 60 Q110 46 120 60 Q130 74 140 60 Q150 46 160 60 Q170 74 180 60 Q190 46 200 60 Q210 74 220 60 Q230 46 240 60 Q250 74 260 60 Q270 46 280 60 Q290 74 300 60','lay')+L(20,100,300,100,'st')+T2(24,140,'cusătura la 1,5 cm,','sub cele două rânduri')),
@@ -1324,7 +1358,14 @@ TECH.push(
    d:()=>svg(fab(20,40,280,110)+seamH(95,40,280)+C(60,95,3,'ol')+C(84,95,3.5,'dot')+T(60,80,'A','middle')+T(84,80,'B','middle')+T2(40,130,'ieși în B,','la un pas după A')),
    c:'A e începutul liniei.'},
   {h:'Intră înapoi, ieși înainte',p:'Intră înapoi în A. Pe sub material, mergi doi pași înainte și ieși în C, adică un pas după B.',
-   d:()=>svg(fab(20,40,280,110)+seamH(95,40,280)+L(60,95,84,95,'thr')+P('M60 99 Q84 118 108 99','hid')+C(108,95,3.5,'dot')+T(60,80,'A','middle')+T(84,80,'B','middle')+T(108,80,'C','middle')+T2(140,128,'pe sub material,','doi pași înainte')),
+   d:()=>{const B=()=>fab(20,40,280,110)+seamH(95,40,280)+T(60,80,'A','middle')+T(84,80,'B','middle')+T(108,80,'C','middle')+T(132,80,'D','middle');
+     return flip([
+       [B()+C(60,95,3,'ol')+C(84,95,3.5,'dot'),'ieși în B, un pas după A'],
+       [B()+C(84,95,3.5,'dot')+AC('M84 88 Q72 80 62 90','arrt')+C(60,95,3.5,'dot'),'intri înapoi, în A'],
+       [B()+L(60,95,84,95,'thr')+P('M60 99 Q84 118 108 99','hid')+C(108,95,3.5,'dot'),'pe sub material, ieși în C'],
+       [B()+L(60,95,84,95,'thr')+L(84,95,108,95,'thr')+P('M84 99 Q108 118 132 99','hid')+C(132,95,3.5,'dot'),'înapoi în B, ieși în D, și tot așa']
+     ],{fix:3,h:196,sus:T2(140,128,'pe sub material,','doi pași înainte'),
+       eticheta:'Animație: ieși în B, intri înapoi în A, pe sub material ieși în C, apoi înapoi în B și ieși în D. Fiecare împunsătură se întoarce un pas și merge doi.'})},
    c:'Punctat: traseul aței pe dos.'},
   {h:'Repetă: înapoi în punctul anterior',p:'Intră înapoi în B, lipit de împunsătura făcută, și ieși un pas mai încolo. Continuă așa pe toată linia.',
    d:()=>svg(T(20,30,'fața','start','m')+fab(20,36,280,50)+L(40,61,64,61,'thr')+L(64,61,88,61,'thr')+L(88,61,112,61,'thr')+L(112,61,136,61,'thr')+L(136,61,160,61,'thr')+C(64,61,1.2,'symf')+C(88,61,1.2,'symf')+C(112,61,1.2,'symf')+C(136,61,1.2,'symf')+
@@ -1363,7 +1404,14 @@ TECH.push(
  steps:[
   {h:'Pornește de pe margine',p:'Ascunde nodul între straturi sau pe dos și ieși pe marginea materialului.',d:null},
   {h:'Intră la 5 mm, cu ața sub vârful acului',p:'Înțeapă din față la aproximativ 5 mm de margine și 5 mm mai încolo. Scoate acul pe sub margine, trecând ața pe sub vârful lui.',
-   d:()=>svg(fab(20,40,280,100)+L(20,140,300,140,'olt')+blanket(60,2)+needle(104,154,90,50)+P('M104 140 Q116 170 132 160 Q144 150 126 140','thr')+T2(150,172,'ața trece pe sub','vârful acului')+T2(160,84,'5 mm de margine','','middle')),
+   d:()=>{const B=()=>fab(20,40,280,100)+L(20,140,300,140,'olt');
+     return flip([
+       [B()+blanket(60,1)+P('M82 140 C 94 138, 104 112, 104 80','thr')+needle(104,118,90,50),'înțepi din față, la 5 mm de margine'],
+       [B()+blanket(60,2)+needle(104,154,90,50)+P('M104 140 Q116 170 132 160 Q144 150 126 140','thr'),'ața trece pe sub vârful acului'],
+       [B()+blanket(60,2)+P('M104 140 Q124 146 150 128','thr')+A(132,150,158,134,'arrt'),'tragi, se formează un „L”'],
+       [B()+blanket(60,4),'repeți, la același pas']
+     ],{fix:2,h:204,sus:T2(150,172,'ața trece pe sub','vârful acului')+T2(160,84,'5 mm de margine','','middle'),
+       eticheta:'Animație: acul înțeapă din față la 5 mm de margine, iese pe sub margine cu ața pe sub vârf, ața se trage și formează un L, apoi se repetă la același pas.'})},
    c:'Marginea materialului e jos.'},
   {h:'Trage și repetă',p:'Trage ața până se așază pe margine. Se formează un „L”: un picior vertical și unul pe margine. Repetă la pași egali.',
    d:()=>svg(fab(20,40,280,100)+L(20,140,300,140,'olt')+blanket(40,10,24)+T2(160,84,'aceeași înălțime,','același pas','middle')),
@@ -4098,6 +4146,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.15',l:['Încă patru animații pe cadre: împunsătura înapoi, punctul feston, întărirea la mașină și încrețiturile.','Materialul are margini de tăietură, nu mai pare tras cu rigla, iar în secțiuni straturile au volum, ca niște fâșii de stofă.','Acul de mână e mai gros, cu urechea mai mare.']},
  {v:'7.14',l:['Patru animații noi, în patru cadre, cu legenda fiecărei mișcări: punctul nedesfăcut, ochiul pe față, ochiul pe dos și închiderea ochiurilor.','Ochiul pe față și ochiul pe dos au câte un pas nou la final, „în mișcare”, care leagă cele patru mișcări.','Dacă ai oprit mișcarea din Setări, rămâne desenul obișnuit.']},
  {v:'7.13',l:['Firul din desenele de croșetat și tricotat are volum: margine, culoare și o linie de lumină, ca un fir adevărat.','Lanțul arată ca pe lucrare, din ochiuri înlănțuite, iar buclele de pe croșetă o înconjoară: se vede partea care trece prin spatele ei.','La tricotat, ochiurile stau pe andrea cu cele două picioare, iar unde andreaua dreaptă intră prin ochi, se vede că trece pe sub el.','Desenele cu croșeta singură pe rând sunt mărite, ca să nu mai stea mici într-un colț.']},
  {v:'7.12',l:['Croșetele, andrelele și acele se văd din nou în toate desenele. Unde stăteau perfect orizontal sau vertical, nu se desenau deloc.','Textele din desene nu mai trec peste linii, margini sau alte texte. Au fost mutate aproximativ 30 de etichete.','La proiecte, numărul bucății stă în colț și nu mai acoperă săgeata firului drept. Bucățile mici au numărul deasupra.']},
