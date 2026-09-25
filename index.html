@@ -15,7 +15,7 @@
 <style>
 :root{
   --fs:1;
-  --paper:#F6F7F4; --panel:#FFFFFF; --grid:#D3DDD7; --ink:#1F2B33; --muted:#5A6770;
+  --zoomIco:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231F2B33' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7'/%3E%3C/svg%3E"); --paper:#F6F7F4; --panel:#FFFFFF; --grid:#D3DDD7; --ink:#1F2B33; --muted:#5A6770;
   --line:#CBD3CE; --line-f:#808D85; --mat:#2C6A54; --mat-soft:#E3EFE9; --thread:#C0283F; --amber:#8A5D0A;
   --fab:#D9E5EF; --fabS:#7FA3C2; --fab2:#F0DDB4; --fab2S:#C0913A;
   --tape:#8795A3; --yarn:#9C4E7C; --yarnH:#E0A21A; --hook:#6E7C86; --gap:#B9C3CA;
@@ -33,7 +33,7 @@
   :root:not([data-theme="light"]) .sec-tricot{--acc-soft:rgba(127,178,218,.14)}
   :root:not([data-theme="light"]) .sec-stiut{--acc-soft:rgba(199,154,134,.14)}
   :root:not([data-theme="light"]){
-    --paper:#12181C; --panel:#1A2228; --grid:#2A363E; --ink:#E4EAEE; --muted:#9AA8B1;
+    --zoomIco:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E4EAEE' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7'/%3E%3C/svg%3E"); --paper:#12181C; --panel:#1A2228; --grid:#2A363E; --ink:#E4EAEE; --muted:#9AA8B1;
     --line:#2F3B44; --line-f:#6A7984; --mat:#72B99B; --mat-soft:#1E3129; --thread:#FF6F86; --amber:#E0B45A;
     --fab:#2A3B4B; --fabS:#6E93B4; --fab2:#4A3F2A; --fab2S:#C9A15A;
     --tape:#6D7D8C; --yarn:#D38DB7; --yarnH:#F2C14E; --hook:#9AA8B1; --gap:#3A4852;
@@ -42,7 +42,7 @@
   }
 }
 :root[data-theme="dark"]{
-  --paper:#12181C; --panel:#1A2228; --grid:#2A363E; --ink:#E4EAEE; --muted:#9AA8B1;
+  --zoomIco:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E4EAEE' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7'/%3E%3C/svg%3E"); --paper:#12181C; --panel:#1A2228; --grid:#2A363E; --ink:#E4EAEE; --muted:#9AA8B1;
   --line:#2F3B44; --line-f:#6A7984; --mat:#72B99B; --mat-soft:#1E3129; --thread:#FF6F86; --amber:#E0B45A;
   --fab:#2A3B4B; --fabS:#6E93B4; --fab2:#4A3F2A; --fab2S:#C9A15A;
   --tape:#6D7D8C; --yarn:#D38DB7; --yarnH:#F2C14E; --hook:#9AA8B1; --gap:#3A4852;
@@ -556,8 +556,8 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .zsvg svg{display:block;width:100%;height:auto}
 .zbox p{margin:10px 2px 0;color:var(--muted);font-size:calc(15px*var(--fs))}
 .fig.zoomable{cursor:zoom-in;position:relative}
-.fig.zoomable::after{content:'⤢';position:absolute;top:6px;right:6px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;
-  border-radius:50%;background:var(--paper);border:1px solid var(--line);color:var(--ink);font-size:15px;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.fig.zoomable::after{content:'';position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:50%;
+  background:var(--paper) var(--zoomIco) center/20px 20px no-repeat;border:1px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.16)}
 /* pe telefon, desenele folosesc aproape toată lățimea ecranului (7.19) */
 @media (max-width:559px){.fig{margin-left:calc(-1*var(--s2));margin-right:calc(-1*var(--s2))}}
 
@@ -776,7 +776,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.19';
+const APP_VER='7.20';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -4160,6 +4160,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.20',l:['Butonul de mărire din colțul desenelor are acum o iconiță desenată, de mărime fixă, care se vede la fel de clar pe orice telefon și în ambele teme.']},
  {v:'7.19',l:['La proiecte, bucățile de pe balot arată ca tiparele de hârtie așezate pe material, iar sub balot e o legendă mică cu firul drept și liziera. În schema bucăților apare și firul drept.','Textele din desene sunt puțin mai mari, iar pe telefon desenele folosesc aproape toată lățimea ecranului.','Butonul de mărire din colțul desenelor se vede mai bine.']},
  {v:'7.18',l:['Desenele din „Știut” sunt refăcute: texte care nu mai ating marginile, tricotul care nu mai iese din desen, săgeți și etichete mai clare la testul de întindere.','„Cum citești desenele” explică semnele noi: săgeata roșie și cea neagră, marginea tăiată și muchia pliată, firul drept, uneltele și punctele animațiilor.','În tema întunecată, straturile din secțiuni se văd mai bine.']},
  {v:'7.17',l:['Desenele de tricotat sunt în prim-plan: ochiurile și andrelele sunt mai mari, iar capetele andrelelor ies din desen, ca într-o fotografie de aproape.','La împunsătura înapoi, feston și cusătura înainte, detaliul stă în mijlocul desenului, nu într-un colț.','Toate săgețile care arată o mișcare sunt roșii, iar cele negre doar arată spre ceva.']},
