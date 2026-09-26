@@ -1,10 +1,10 @@
 /* Atelier: service worker.
    ATENȚIE: cache-urile sunt comune pe tot domeniul (costi1622.github.io), deci și cu Nivelo.
    Aici ștergem DOAR cache-urile care încep cu „atelier-”. */
-const VER='7.29';
+const VER='7.30';
 const CACHE='atelier-v'+VER;
 const FONTS='atelier-fonts';
-const SHELL=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','icon-maskable-512.png'];
+const SHELL=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','icon-maskable-512.png','sc-invat.png','sc-fac.png','sc-copiez.png'];
 
 self.addEventListener('install',e=>{
   /* fișier cu fișier, nu addAll: un fișier lipsă nu trebuie să blocheze instalarea */

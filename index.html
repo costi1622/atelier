@@ -808,6 +808,17 @@ svg.d.fl .aFd,svg.d.fl .aFs{display:none}
 .zfull .flc{border-top:1px solid var(--line)}
 @media print{.flc{display:none}}
 
+/* verificarea generală (7.30): nimic nu mai iese din ecran pe telefoane mici sau cu textul mărit */
+.mm-r{flex-wrap:wrap}
+.mm-r span{flex:1 1 9em;min-width:0;overflow-wrap:anywhere}
+.mm-r input{width:5em;max-width:40vw}
+.pn{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.pn a{overflow-wrap:anywhere;min-width:0}
+.sumar{max-width:100%;box-sizing:border-box}
+.sumar-w{flex-wrap:wrap;row-gap:4px}
+.seg.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,6.2em),1fr))}
+.seg.g2 .btn,.seg.g3 .btn{min-width:0;overflow-wrap:anywhere}
+
 </style>
 </head>
 <body>
@@ -877,7 +888,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.29';
+const APP_VER='7.30';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -3965,6 +3976,8 @@ function pozaMica(file){
 }
 
 const copieById=id=>(S.copii||[]).find(c=>c.id===id);
+/* dimensiunile reperului se scriu exact, nu rotunjite la jumătate de centimetru: A4 are 29,7 cm (7.30) */
+const cmExact=n=>String(Math.round(n*100)/100).replace('.',',');
 function copieNoua(){
   const id='c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   S.copii=S.copii||[];
@@ -4094,7 +4107,7 @@ function copie(id){
      <section class="set"><h2>2. Reperul</h2>
       <p>Alege obiectul cunoscut din poză, apoi atinge-i cele patru colțuri, unul după altul, de jur împrejur. Din ele scot și scara, și înclinarea pozei.</p>
       <div class="seg">${REPERE.map(r=>`<button class="btn${c.ref&&c.ref.k===r.k?' pri':''}" data-rep="${r.k}">${esc(r.l)}</button>`).join('')}</div>
-      ${c.ref?`<p class="ok-l">Reper ales: ${esc(REPERE.find(r=>r.k===c.ref.k).l)}, ${cm(c.ref.W)} × ${cm(c.ref.H)} cm.
+      ${c.ref?`<p class="ok-l">Reper ales: ${esc(REPERE.find(r=>r.k===c.ref.k).l)}, ${esc(`${cmExact(c.ref.W)} × ${cmExact(c.ref.H)} cm`)}.
         ${R?'Cele patru colțuri sunt puse.':'Mai trebuie atinse colțurile.'}</p>`:''}
       <div class="seg"><button class="btn${R?'':' pri'}" id="setRef" ${c.ref?'':'disabled'}>${R?'Pune din nou colțurile':'Atinge cele patru colțuri'}</button>
         <button class="btn" id="cauta" ${c.ref?'':'disabled'}>Caută reperul singur</button></div>
@@ -4108,9 +4121,9 @@ function copie(id){
       ${c.masuri.length&&R?`<table class="tb"><tbody>${c.masuri.map((m,i)=>`<tr>
         <td>${esc(m.n)}${m.real?`<small>știut: ${cm(m.real)} cm, diferență ${(Math.abs(val(m)-m.real)/m.real*100).toFixed(0)}%</small>`:''}</td>
         <td><b>${cm(val(m))} cm</b></td>
-        <td><button class="icb" data-ver="${i}" aria-label="Verifică ${esc(m.n)}">✓</button>
-            <button class="icb dgr" data-delm="${i}" aria-label="Șterge ${esc(m.n)}">🗑</button></td></tr>`).join('')}</tbody></table>
-        <p class="mm-l">Butonul ✓ îți compară măsura cu o valoare pe care o știi deja, ca să vezi cât de bine a ieșit.</p>`:''}
+        <td><button class="icb" data-ver="${i}" aria-label="Verifică ${esc(m.n)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+            <button class="icb dgr" data-delm="${i}" aria-label="Șterge ${esc(m.n)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/></svg></button></td></tr>`).join('')}</tbody></table>
+        <p class="mm-l">Butonul cu bifă îți compară măsura cu o valoare pe care o știi deja, ca să vezi cât de bine a ieșit.</p>`:''}
      </section>
      ${c.masuri.length&&R?fisa(c.masuri.map(m=>({n:m.n,cm:val(m)})),c,R):''}
      <section class="set"><h2>Numele copiei</h2>
@@ -4534,6 +4547,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.30',l:['Contorul de rânduri se găsea doar dacă știai adresa lui. Acum e în „Mai mult” și sus în secțiunile Croșetat și Tricotat.','Copia de siguranță include și contoarele de rânduri.','Pe telefoanele mici și cu textul mărit, nimic nu mai iese din ecran: Setări, câmpurile de măsuri, butoanele de la finalul fișelor.','Căutarea găsește și cuvinte scrise pe jumătate, de exemplu „increturi”.','La copiere din poză, foaia A4 apare cu dimensiunile exacte, 29,7 × 21 cm.']},
  {v:'7.29',l:['Animațiile nu mai fug singure. Când ajungi la desen, trec o dată prin pași, câte 3,5 secunde, apoi se opresc pe ultimul.','Sub desen ai butoane: înapoi, înainte, cele patru puncte, pe care le poți atinge ca să sari direct la un pas, și pornire sau pauză. Poți și glisa cu degetul pe desen.','Aceleași butoane apar și când mărești desenul, pornind de la pasul la care erai.']},
  {v:'7.28',l:['Pașii de proiect care nu aveau desen au primit unul: betelia, elasticul prin tunel, toartele pliate în patru, colțurile de geantă, pătratul cu X, răscroielile, clinii, sferturile potrivite și altele. 32 de desene noi, iar acum 153 din cei 162 de pași de proiect au desen.']},
  {v:'7.27',l:['Pe telefon, tabelul „De tăiat” e o listă de carduri: bucata, dimensiunile și câte bucăți, fără coloane înghesuite.','La fusta cerc, schema arată exact bucata care se taie, sfert sau jumătate, cu pliurile marcate, iar animația „Taie cercul” e mai mare.','Dacă o măsură nu pare în regulă, de exemplu șoldul mai mic decât talia, apare un avertisment discret sub câmp.','Manechinul de pe pagina proiectului e mai mic și stă la mijloc până alegi un câmp.','Titlurile din „Material și mercerie” au mărimea potrivită, iar bara de sus spune „balot” lângă lățimi.']},
@@ -4604,7 +4618,8 @@ if(FIRST_RUN){S.settings.lastVer=APP_VER;save()}
 /* ================= căutare ================= */
 const norm=s=>String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ş/g,'s').replace(/ţ/g,'t');
 TECH.forEach(t=>{t._q=norm([t.t,t.tags,t.intro,...t.steps.map(s=>s.h+' '+s.p)].join(' '))});
-const matches=(hay,q)=>norm(q).split(/\s+/).filter(Boolean).every(w=>hay.includes(w));
+/* fiecare cuvânt trebuie găsit; la cuvintele lungi ajung primele 5 litere, ca „increturi” să găsească „încrețituri” (7.30) */
+const matches=(hay,q)=>norm(q).split(/\s+/).filter(Boolean).every(w=>hay.includes(w)||(w.length>=7&&hay.includes(w.slice(0,5))));
 
 
 /* ================= ferestre proprii (fără prompt și confirm) ================= */
@@ -4779,6 +4794,7 @@ function maiMult(){
    <section class="sec"><div class="sec-h"><h2>Datele mele</h2></div><ul class="list">
     ${rand('#/persoane','Persoane și măsuri',S.people.length?S.people.map(x=>esc(x.nume)).join(', '):'niciuna salvată',0,'persoane')}
     ${rand('#/copii','Copiile din poză',`${(S.copii||[]).length} ${(S.copii||[]).length===1?'copie salvată':'copii salvate'}`,0,'poza')}
+    ${rand('#/contoare','Contor de rânduri',(S.contoare||[]).length?`${S.contoare.length} ${S.contoare.length===1?'contor':'contoare'}`:'pentru croșetat și tricotat',0,'contor')}
     ${rand('#/setari','Copie de siguranță',lb?`ultima ${cand(lb)}`:'nu ai salvat încă niciuna',!lb||zile>30,'backup')}
    </ul></section>
    <section class="sec"><div class="sec-h"><h2>Aplicația</h2></div><ul class="list">
@@ -4872,7 +4888,9 @@ function sectiune(id){
   app.innerHTML=`<div class="view"><a class="back" href="#/tehnici">← Învăț</a>
    <header class="head sec-${s.id}"><div class="meta"><span class="ic">${SIC[s.id]}</span>
    <span>${all.length} ${all.length===1?'fișă':'fișe'}</span><span>${nd} exersate</span></div>
-   <h1>${esc(s.t)}</h1></header>${randuri(all)}</div>`;
+   <h1>${esc(s.t)}</h1></header>
+   ${s.id==='croset'||s.id==='tricot'?`<section class="a3s a3one" aria-label="Unealtă"><a class="a3" href="#/contoare">${ic('contor')}<span class="txt"><b>Contor de rânduri</b><span>numeri rândurile cât lucrezi</span></span></a></section>`:''}
+   ${randuri(all)}</div>`;
 }
 /* iconițele grupurilor de proiecte, în același stil cu cele ale secțiunilor (7.22) */
 const GIC={
@@ -5019,7 +5037,7 @@ function legend(){
 /* ================= setări și copie de siguranță ================= */
 function stamp(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}`}
 async function exportData(msg){
-  const data=JSON.stringify({app:'atelier',ver:APP_VER,saved:new Date().toISOString(),fav:S.fav,done:S.done,notes:S.notes,people:S.people,proj:S.proj,copii:(S.copii||[]).map(c=>Object.assign({},c,{poza:0}))},null,1);
+  const data=JSON.stringify({app:'atelier',ver:APP_VER,saved:new Date().toISOString(),fav:S.fav,done:S.done,notes:S.notes,people:S.people,proj:S.proj,contoare:S.contoare||[],copii:(S.copii||[]).map(c=>Object.assign({},c,{poza:0}))},null,1);
   const name=`Atelier_notite_${stamp()}.json`;
   try{const f=new File([data],name,{type:'application/json'});
     if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:name});S.settings.lastBackup=Date.now();save();msg('Copia a fost trimisă.');return}}
@@ -5042,6 +5060,8 @@ function importData(file,msg){
       (o.people||[]).forEach(p=>{if(p&&p.id&&!persById(p.id))S.people.push(p)});
       (o.copii||[]).forEach(x=>{if(x&&x.id&&!copieById(x.id))(S.copii=S.copii||[]).push(x)});
       Object.entries(o.proj||{}).forEach(([k,v])=>{if(!S.proj[k])S.proj[k]=v});
+      /* contoarele de rânduri (7.30): se adaugă cele care lipsesc, iar la cele comune rămâne numărul mai mare */
+      (o.contoare||[]).forEach(c=>{if(!c||!c.id)return;const x=(S.contoare=S.contoare||[]).find(y=>y.id===c.id);if(!x)S.contoare.push(c);else if((c.n||0)>(x.n||0))x.n=c.n});
       const ok=save();
       msg(ok?(n?`Am adăugat notițe la ${n} ${n===1?'fișă':'fișe'}. Nimic din ce aveai nu s-a șters.`:'Copia nu conține notițe noi. Favoritele și exersatele au fost unite.'):'Nu am putut salva. Memoria browserului e plină sau blocată.',!ok)}
     catch(e){msg('Fișierul nu e o copie Atelier. Alege un fișier Atelier_notite_….json.',1)}};
