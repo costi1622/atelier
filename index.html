@@ -784,6 +784,12 @@ a.btn{text-decoration:none}
   .pt td:last-child{margin-top:4px;font-weight:600}
 }
 
+/* desenele pașilor de proiect (7.28) */
+.d .fabEO{fill:url(#weave);fill-rule:evenodd;stroke:var(--ink);stroke-width:1.4;filter:url(#soft)}
+.d .el{stroke:var(--hook);stroke-width:5;stroke-linecap:round}
+.d .vat{stroke:var(--line);stroke-width:12;stroke-linecap:round;opacity:.9}
+.d .stR{fill:none;stroke:var(--thread);stroke-width:1.8;stroke-dasharray:4 2.5}
+
 </style>
 </head>
 <body>
@@ -853,7 +859,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.27';
+const APP_VER='7.28';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -3642,6 +3648,221 @@ PROJ.push(
 }
 );
 
+/* ================= desenele pașilor de proiect (7.28) =================
+   Pașii care nu au o tehnică potrivită primesc aici un desen, după titlul pasului.
+   Titlurile se repetă între proiecte (de exemplu „Bagă elasticul”), deci un desen servește mai multe proiecte.
+   figPas() din app.js și modul pas cu pas le caută în PSD când pasul nu are desen propriu. */
+
+/* un ac de siguranță, culcat, cu capul în (x,y) */
+const acSig=(x,y)=>L(x,y-3,x+26,y-3,'ndl')+L(x+2,y+3,x+22,y+3,'ndl')+E(x+27,y,4,5,'ndle')+C(x,y,3.2,'pinh');
+
+/* betelia: cusută în inel, apoi pliată în două pe lungime */
+function dBetelie(v){
+  const inel=P('M26 96 a64 38 0 1 0 128 0 a64 38 0 1 0 -128 0 Z M46 96 a44 22 0 1 0 88 0 a44 22 0 1 0 -88 0 Z','fabEO')
+    +L(90,118,90,134,'st')+T2(90,160,'cusută în inel','','middle');
+  const sec=P('M188 70 L286 70 Q304 70 304 87 Q304 104 286 104 L188 104','lay')
+    +(v==='elastic'?L(196,87,282,87,'el')+T2(188,140,'elasticul','intră în tunel'):
+      v==='suprapunere'?dimH(128,188,226)+T2(188,150,'3 cm în plus,','pentru copcă'):T2(188,132,'pliată în două,','cu dosul înăuntru'))
+    +T(188,56,'în secțiune','start','m');
+  return svg(inel+sec,176);
+}
+/* elasticul sau șnurul tras prin tunel, cu acul de siguranță în față */
+function dElastic(v){
+  const snur=v==='snur';
+  return svg(fab(20,40,280,110)+L(20,64,300,64,'st')+L(20,90,34,90,'st')+L(66,90,300,90,'st')
+    +L(40,77,150,77,snur?'thr':'el')+acSig(150,77)+A(196,77,236,77,'arrt')
+    +T2(40,122,'deschiderea','de 3–4 cm')+T2(186,122,'acul de siguranță',snur?'trage șnurul':'trage elasticul')
+    +T(20,30,'tunelul de sus, văzut de pe dos','start','m'),168);
+}
+/* fâșia pliată în patru: marginile tăiate stau ascunse, iar cusătura trece pe ambele laturi */
+function dFasie(){
+  return svg(P('M70 62 L252 62 Q272 62 272 84 Q272 106 252 106 L70 106','lay')
+    +P('M70 62 Q56 62 56 71 Q56 80 70 80 L170 80','lay')+P('M70 106 Q56 106 56 97 Q56 88 70 88 L170 88','lay')
+    +stx(66,54,114)+stx(262,54,114)+dimH(128,56,66)+T2(56,148,'la 2 mm','de margine')
+    +T2(170,148,'marginile tăiate,','ascunse înăuntru')+T(56,40,'fâșia în secțiune','start','m'),176);
+}
+/* colțul de geantă: tai pătratul, deschizi colțul, cusăturile una peste alta, coși drept */
+function dColtCutie(){
+  return svg(fab(24,34,112,112)+L(130,34,130,146,'st')+L(24,140,130,140,'st')+R(98,108,38,38,'cut')+dimH(160,98,136)
+    +T2(24,24,'1. tai pătratul','','start')
+    +P('M240 40 L292 108 L278 126 L202 126 L188 108 Z','fab')+L(240,40,240,126,'st')+L(204,118,276,118,'stR')
+    +T2(186,24,'2. deschizi colțul','','start')+T2(312,150,'cusături suprapuse,','coși drept peste ele','end'),184);
+}
+/* toarta sau panglica prinsă cu un pătrat cu X, la distanțe egale de mijloc */
+function dPatratX(){
+  const t=x=>R(x,20,30,74,'card')+R(x+3,70,24,20,'stR')+L(x+3,70,x+27,90,'stR')+L(x+27,70,x+3,90,'stR');
+  return svg(fab(30,60,260,86)+seamV(160,60,146)+t(80)+t(210)+dimH(116,95,160)+dimH(116,160,225)
+    +T2(160,168,'la aceeași distanță de mijloc,','cu un pătrat cu X','middle'),190);
+}
+/* colțul unei perne: tai oblic, fără să atingi cusătura, apoi întorci */
+function dColturiPerna(){
+  return svg(fab(40,24,200,130)+L(58,24,58,136,'st')+L(58,136,240,136,'st')
+    +P('M40 122 L54 154 L40 154 Z','cut')+L(40,120,72,154,'cutR')
+    +T2(96,70,'tai colțul oblic,','la 2–3 mm de cusătură')+A(94,76,60,128)
+    +T2(250,60,'apoi','întorci','start'),168);
+}
+/* piesa pliată în două: gâtul pornește din pliu, răscroiala din umăr */
+function dRascroiala(v){
+  const sort=v==='sort';
+  const piece=sort?'M60 40 L130 40 L220 100 L220 170 L60 170 Z':'M60 62 Q100 60 112 30 L170 30 Q176 64 204 80 L204 170 L60 170 Z';
+  return svg(P(piece,'fab')+L(60,sort?40:62,60,170,'olt')+T2(20,120,'pliul','','start')
+    +(sort?T2(190,64,'un singur','colț oblic'):T2(84,24,'gâtul','','middle')+T2(212,52,'răscroiala','brațului'))
+    +T2(84,194,'tai prin ambele straturi deodată','','start'),204);
+}
+/* tăierea bucăților drepte: marchezi cu creta, măsori de două ori, tai o dată */
+function dTaie(){
+  return svg(fab(20,30,280,130)+R(44,50,120,90,'cutR')+R(184,50,96,90,'cutR')+dimH(152,44,164)+dimV(292,50,140)
+    +T2(160,20,'marchezi cu creta pe dos, tai pe linie','','middle'),172);
+}
+/* șablonul de clin, un trapez, și așezarea alternativă a clinilor */
+function dClin(v){
+  if(v==='asezare'){
+    const tr=(x,sus)=>P(sus?`M${x} 40 L${x+36} 40 L${x+52} 150 L${x-16} 150 Z`:`M${x-16} 40 L${x+52} 40 L${x+36} 150 L${x} 150 Z`,'pieceL');
+    return svg(R(20,30,280,130,'balot')+tr(44,1)+tr(108,0)+tr(172,1)+tr(236,0)+T2(160,178,'alternativ: pierzi mai puțin','','middle'),190);
+  }
+  return svg(P('M176 30 L236 30 L282 160 L130 160 Z','card')+L(206,40,206,150,'seam')+A(206,146,206,48,'grain')+A(206,48,206,146,'grain')
+    +dimH(20,176,236)+dimH(176,130,282)+dimV(300,30,160)+T2(16,70,'trei măsuri:','lățimea de sus,')+T(16,98,'lățimea de jos,','start','m')+T(16,112,'înălțimea','start','m'),190);
+}
+/* tiparul fustei drepte: dreptunghi cu linia șoldului */
+function dTiparDrept(){
+  return svg(R(110,20,100,160,'card')+L(110,64,210,64,'mk')+T2(220,68,'linia','șoldului')+dimH(190,110,210)+dimV(96,20,180)
+    +T2(220,30,'talia','')+T(160,206,'după măsurile tale','middle','m'),214);
+}
+/* șablonul bavetei, pe carton */
+function dSablonBaveta(){
+  return svg(P('M100 40 Q160 20 220 40 Q232 44 232 60 L232 150 Q232 170 212 170 L108 170 Q88 170 88 150 L88 60 Q88 44 100 40 Z','card')
+    +P('M130 34 Q160 84 190 34','cut')+T2(244,60,'răscroiala','gâtului')+T2(244,150,'colțuri','rotunjite'),190);
+}
+/* lângă fermoar: materialul întors și tighelul la 2 mm de muchie */
+function dTighelFermoar(){
+  return svg(L(30,94,150,94,'tape')+zigH(94,60,150,3,4,'zz')+P('M300 84 L162 84 Q150 84 150 92 Q150 100 162 100 L220 100','lay')
+    +stx(170,70,114)+dimH(128,150,170)+T2(180,138,'la 2 mm','de muchie')+T2(30,70,'fermoarul','')+T(180,60,'materialul, întors','start','m'),162);
+}
+/* suportul de oale: straturile, matlasarea, egalizarea */
+function dSendvis(){
+  return svg(L(40,50,280,50,'lay')+L(40,70,280,70,'vat')+L(40,88,280,88,'vat')+L(40,108,280,108,'lay')
+    +T(40,40,'fața','start','m')+T(40,126,'spatele','start','m')+T2(40,146,'două straturi de vatelină la mijloc,','fețele în afară')
+    +T(280,40,'în secțiune','end','m'),176);
+}
+function dMatlasare(){
+  let l='';for(let k=-3;k<=3;k++){const o=k*32;l+=L(Math.max(40,40+o),Math.max(30,30-o),Math.min(180,180+o),Math.min(170,170-o),'st')}
+  return svg(fab(40,30,140,140)+l+T2(196,70,'în diagonală,','la 4–5 cm')+T2(196,120,'pornești','din colț'),190);
+}
+function dEgalizeaza(){
+  return svg(fab(60,26,150,150)+P('M66 30 L210 30','cutR')+L(66,30,66,172,'cutR')+R(212,20,16,162,'tape')+T2(236,60,'rigla','')+T2(236,110,'tai drept,','pe linie'),190);
+}
+/* fața de pernă plic: bucata mare și cea mică se suprapun la spate */
+function dPlic(){
+  return svg(fab(40,30,170,130)+rev(52,40,100,110)+rev(120,40,80,110)+R(120,40,32,110,'cut')
+    +T2(40,176,'spatele, cu fața în jos, peste față','')+T2(216,80,'bucățile','se suprapun')+A(214,92,154,96),196);
+}
+/* un fir tras din țesătură arată linia dreaptă */
+function dFir(){
+  return svg(fab(20,40,280,110)+L(20,96,300,96,'gap')+L(20,96,300,96,'cutR')+T2(30,130,'un fir tras din țesătură,','tai pe urma lui')+L(24,86,24,106,'mk'),166);
+}
+/* fața de masă atârnă o zi, apoi tai ce s-a lăsat */
+function dAtarna(){
+  return svg(R(60,40,200,10,'tape')+L(80,50,80,150,'stand')+L(240,50,240,150,'stand')
+    +P('M50 40 L270 40 L276 120 Q240 128 200 122 Q160 116 120 126 Q84 132 44 120 Z','fab')+L(46,114,274,114,'cutR')
+    +T2(160,170,'a doua zi, tai surplusul pe linie','','middle'),184);
+}
+/* fusta prinsă de corsaj: sferturile se potrivesc */
+function dSferturi(){
+  const q=[70,130,190,250];
+  return svg(fab(50,24,220,56)+fab(40,98,240,70)+q.map(x=>L(x,70,x,84,'mk')+L(x,92,x,106,'mk')+pin(x-8,88,x+8)).join('')
+    +T2(160,196,'sferturile potrivite, prinse cu ace','','middle')+T(50,16,'corsajul','start','m')+T(284,140,'fusta','start','m'),206);
+}
+/* pantalonii de casă: decupajul turului, într-un singur colț */
+function dTur(){
+  return svg(P('M90 20 L180 20 L180 60 Q180 90 210 96 L230 96 L230 180 L90 180 Z','fab')+R(180,20,50,76,'cut')
+    +dimH(12,180,230)+dimV(242,20,96)+T2(20,110,'decupajul,','doar sus, pe o parte')+A(150,100,190,70),196);
+}
+/* burduful închis în inel, cu colțurile marcate */
+function dBurduf(v){
+  const colt=v==='colturi';
+  return svg(P('M40 90 a120 50 0 1 0 240 0 a120 50 0 1 0 -240 0 Z M60 90 a100 36 0 1 0 200 0 a100 36 0 1 0 -200 0 Z','fabEO')
+    +L(120,124,200,124,'tape')+zigH(124,124,196,2,4,'zz')
+    +(colt?[[40,90],[280,90],[160,40],[160,140]].map(([x,y])=>L(x-5,y,x+5,y,'mk')).join('')+T2(160,168,'patru crestături, la colțurile pernei','','middle')
+          :T2(160,168,'banda cu fermoar, cap la cap cu burduful','','middle')),184);
+}
+/* coșul: marginea răsfrântă spre exterior */
+function dCos(){
+  return svg(P('M80 60 L240 60 L230 170 L90 170 Z','fab')+P('M76 60 L244 60 L240 100 L80 100 Z','card')+L(76,60,244,60,'olt')
+    +dimV(262,60,100)+T2(274,84,'8 cm','','start')+T2(16,40,'marginea','întoarsă în afară')+A(40,56,80,70),186);
+}
+/* capul mânecii: rotunjit, cu mijlocul marcat */
+function dManeca(){
+  return svg(P('M70 110 Q110 40 160 36 Q210 40 250 110 L226 176 L94 176 Z','fab')+L(160,30,160,44,'mk')+A(160,160,160,62,'grain')+A(160,62,160,160,'grain')
+    +T2(170,24,'mijlocul capului','')+T2(16,60,'mai abruptă','spre margini')+A(60,76,86,92),192);
+}
+/* scaunul, măsurat pe el */
+function dScaun(){
+  return svg(L(100,40,100,170,'stand')+L(100,110,200,110,'stand')+L(200,110,200,170,'stand')+R(96,36,10,78,'card')+R(100,104,104,10,'card')
+    +dimH(126,100,204)+dimV(84,36,110)+T2(214,122,'adâncimea','șezutului')+T2(8,40,'înălțimea','spătarului'),184);
+}
+/* exteriorul și căptușeala, una în alta, cu o deschidere în căptușeală */
+function dUnaInAlta(){
+  return svg(P('M60 30 L60 150 Q60 164 74 164 L246 164 Q260 164 260 150 L260 30','lay')+P('M76 30 L76 140 Q76 150 86 150 L130 150 M180 150 L234 150 Q244 150 244 140 L244 30','lay2')
+    +L(60,30,260,30,'st')+T2(160,186,'coși gura, apoi întorci prin deschidere','','middle')+T2(130,132,'deschiderea','','start'),198);
+}
+
+const PSD={
+ 'Pregătește betelia':{d:()=>dBetelie(),c:'Betelia cusută în inel și pliată în două.'},
+ 'Betelia și elasticul':{d:()=>dBetelie('elastic'),c:'Betelia pliată devine tunelul elasticului.'},
+ 'Pune manșetele':{d:()=>dBetelie(),c:'Manșeta, ca o betelie mică: inel, apoi pliată în două.'},
+ 'Închide lateralele și pune betelia':{d:()=>dBetelie('suprapunere'),c:'Betelia întărită, cu suprapunerea pentru copcă.'},
+ 'Bagă elasticul':{d:()=>dElastic(),c:'Acul de siguranță trage elasticul prin tunel.'},
+ 'Tunelul și elasticul':{d:()=>dElastic(),c:'Tunelul cusut, cu elasticul tras prin el.'},
+ 'Trage șnururile':{d:()=>dElastic('snur'),c:'Acul de siguranță trage șnurul prin tunel.'},
+ 'Fă toartele':{d:()=>dFasie(),c:'Toarta pliată în patru, cusută pe ambele laturi.'},
+ 'Fă panglicile':{d:()=>dFasie(),c:'Panglica pliată în patru, cusută lângă margine.'},
+ 'Pregătește toartele':{d:()=>dFasie(),c:'Toarta pliată în patru, cusută pe ambele laturi.'},
+ 'Fă bretelele':{d:()=>dFasie(),c:'Bretea pliată în patru, cusută pe ambele laturi.'},
+ 'Fă și prinde bretelele':{d:()=>dFasie(),c:'Bretea pliată în patru, cusută pe ambele laturi.'},
+ 'Prinde bucla':{d:()=>dFasie(),c:'Bucla, o fâșie pliată în patru și cusută.'},
+ 'Fă colțurile':{d:()=>dColtCutie(),c:'Colțul tăiat, deschis și cusut drept.'},
+ 'Prinde toartele':{d:()=>dPatratX(),c:'Toartele, la distanțe egale de mijloc, prinse cu un pătrat cu X.'},
+ 'Prinde panglicile de talie':{d:()=>dPatratX(),c:'Panglicile prinse cu un pătrat cu X.'},
+ 'Probează și fixează bretelele':{d:()=>dPatratX(),c:'Bretelele fixate cu un pătrat cu X.'},
+ 'Prinde banda și bretelele':{d:()=>dPatratX(),c:'Bretelele prinse la distanțe egale de mijloc.'},
+ 'Taie colțurile și întoarce':{d:()=>dColturiPerna(),c:'Colțul tăiat oblic, ca să iasă ascuțit după întoarcere.'},
+ 'Întoarce prin fermoar':{d:()=>dColturiPerna(),c:'Colțurile tăiate oblic, înainte de întoarcere.'},
+ 'Marchează gâtul și răscroielile':{d:()=>dRascroiala(),c:'Piesa pliată în două: gâtul pornește din pliu.'},
+ 'Taie gâtul și răscroielile':{d:()=>dRascroiala(),c:'Piesa pliată în două: gâtul pornește din pliu.'},
+ 'Taie piesele și răscroielile':{d:()=>dRascroiala(),c:'Piesa pliată în două: gâtul pornește din pliu.'},
+ 'Taie corpul și răscroielile':{d:()=>dRascroiala(),c:'Piesa pliată în două: gâtul pornește din pliu.'},
+ 'Taie corpul și colțurile':{d:()=>dRascroiala('sort'),c:'Corpul pliat în două, cu colțul oblic tăiat deodată.'},
+ 'Taie cele două dreptunghiuri':{d:()=>dTaie(),c:'Bucățile marcate cu creta, înainte de tăiere.'},
+ 'Taie dreptunghiurile':{d:()=>dTaie(),c:'Bucățile marcate cu creta, înainte de tăiere.'},
+ 'Taie cele patru bucăți':{d:()=>dTaie(),c:'Bucățile marcate cu creta, înainte de tăiere.'},
+ 'Taie bucățile':{d:()=>dTaie(),c:'Bucățile marcate cu creta, înainte de tăiere.'},
+ 'Taie tot dintr-odată':{d:()=>dTaie(),c:'Bucățile marcate cu creta, înainte de tăiere.'},
+ 'Taie perechile':{d:()=>dTaie(),c:'Bucățile marcate cu creta, înainte de tăiere.'},
+ 'Fă șablonul de clin':{d:()=>dClin(),c:'Șablonul de clin: un trapez, cu firul drept pe mijloc.'},
+ 'Taie 4 clini':{d:()=>dClin('asezare'),c:'Clinii așezați alternativ pe material.'},
+ 'Desenează tiparul':{d:()=>dTiparDrept(),c:'Tiparul pe hârtie, cu linia șoldului marcată.'},
+ 'Fă un șablon':{d:()=>dSablonBaveta(),c:'Șablonul bavetei, pe carton.'},
+ 'Deschide și calcă':{d:()=>dTighelFermoar(),c:'Tighelul la 2 mm de muchie, lângă fermoar.'},
+ 'Coase lângă muchie':{d:()=>dTighelFermoar(),c:'Tighelul la 2 mm de muchie, lângă fermoar.'},
+ 'Fă sendvișul':{d:()=>dSendvis(),c:'Straturile suportului, în secțiune.'},
+ 'Matlasează':{d:()=>dMatlasare(),c:'Liniile de matlasare, în diagonală.'},
+ 'Egalizează':{d:()=>dEgalizeaza(),c:'Marginile tăiate drept, cu rigla.'},
+ 'Așază bucățile':{d:()=>dPlic(),c:'Cele trei bucăți, una peste alta, înainte de cusut.'},
+ 'Taie drept, pe fir':{d:()=>dFir(),c:'Firul tras arată linia perfect dreaptă.'},
+ 'Trasează cercul':{d:()=>cercAnim('cerc'),c:'Pliat în patru, compasul pornește din colțul pliurilor.'},
+ 'Lasă să atârne o zi, apoi egalizează':{d:()=>dAtarna(),c:'Marginea care s-a lăsat, egalizată a doua zi.'},
+ 'Prinde fusta de corsaj':{d:()=>dSferturi(),c:'Sferturile fustei potrivite cu ale corsajului.'},
+ 'Taie decupajul turului':{d:()=>dTur(),c:'Decupajul turului, într-un singur colț de sus.'},
+ 'Închide burduful în inel':{d:()=>dBurduf(),c:'Burduful închis în inel, cu banda de fermoar.'},
+ 'Marchează colțurile':{d:()=>dBurduf('colturi'),c:'Colțurile pernei, crestate pe burduf.'},
+ 'Răsfrânge marginea':{d:()=>dCos(),c:'Marginea de sus, întoarsă spre exterior.'},
+ 'Taie mânecile':{d:()=>dManeca(),c:'Mâneca, cu capul rotunjit și mijlocul marcat.'},
+ 'Măsoară scaunul pe el, nu din memorie':{d:()=>dScaun(),c:'Măsurile scaunului, luate pe el.'},
+ 'Unește exteriorul cu căptușeala':{d:()=>dUnaInAlta(),c:'Exteriorul în căptușeală, cu deschiderea pentru întors.'},
+ 'Spală materialul':{d:()=>techFig('materiale').d(),c:'Din fișa „Materialele”: materialul se strânge la prima spălare.'},
+ 'Coase exteriorul și căptușeala':{d:()=>dUnaInAlta(),c:'Exteriorul și căptușeala, cu deschiderea în căptușeală.'}
+};
+
 /* ================= COPIEZ CEVA CE AM DEJA =================
    Poza stă în IndexedDB, pe telefon. Măsurile se iau de pe poză,
    pornind de la un obiect cu dimensiune cunoscută, pus lângă lucru. */
@@ -4130,7 +4351,7 @@ function pasCuPas(tip,id,idx){
     titlu=p.t;inapoi='#/p/'+id;
     let st;try{st=p.pasi(per?per.m:{},pState(p,per).opts)}catch(e){st=[]}
     /* desenul pasului: al lui, dacă are, altfel desenul principal al tehnicii folosite (7.24) */
-    pasi=st.map((s,k)=>{const f=!s.d&&s.tech&&techFig(s.tech);return {h:s.h,p:s.p,tech:s.tech,n:k,d:s.d||(f&&f.d),c:s.d?s.c:(f?`Din fișa „${f.t}”. ${f.c}`:'')}});}
+    pasi=st.map((s,k)=>{const ps=!s.d&&PSD[s.h],f=!s.d&&!ps&&s.tech&&techFig(s.tech);return {h:s.h,p:s.p,tech:s.tech,n:k,d:s.d||(ps&&ps.d)||(f&&f.d),c:s.d?s.c:ps?ps.c:(f?`Din fișa „${f.t}”. ${f.c}`:'')}});}
   if(!pasi.length){location.hash=inapoi;return}
   const k=Math.min(i,pasi.length-1), s=pasi[k];
   const bifat=tip==='p'?(()=>{const p=projById(id),per=activePerson(),st=S.proj[pKey(p,per)];
@@ -4295,6 +4516,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.28',l:['Pașii de proiect care nu aveau desen au primit unul: betelia, elasticul prin tunel, toartele pliate în patru, colțurile de geantă, pătratul cu X, răscroielile, clinii, sferturile potrivite și altele. 32 de desene noi, iar acum 153 din cei 162 de pași de proiect au desen.']},
  {v:'7.27',l:['Pe telefon, tabelul „De tăiat” e o listă de carduri: bucata, dimensiunile și câte bucăți, fără coloane înghesuite.','La fusta cerc, schema arată exact bucata care se taie, sfert sau jumătate, cu pliurile marcate, iar animația „Taie cercul” e mai mare.','Dacă o măsură nu pare în regulă, de exemplu șoldul mai mic decât talia, apare un avertisment discret sub câmp.','Manechinul de pe pagina proiectului e mai mic și stă la mijloc până alegi un câmp.','Titlurile din „Material și mercerie” au mărimea potrivită, iar bara de sus spune „balot” lângă lățimi.']},
  {v:'7.26',l:['Manechinul de la măsuri are umeri, iar textele stau lângă el, nu peste el. Măsurile „de la umăr” pornesc acum chiar de la umăr, iar la braț apare un braț desenat separat.','Pe pagina cu măsuri, manechinul rămâne sus cât derulezi prin câmpuri, deci vezi linia și la ultimele măsuri.','Mărirea unui desen se deschide pe tot ecranul. Mărești cu + și −, cu două degete sau cu o atingere dublă, iar desenul se mută trăgând de el.','În modul pas cu pas, săgețile sunt mai mari și desenate, iar „ecran aprins” are un bec și încape pe un rând.','Numerele nu se mai despart de unități la capăt de rând, de exemplu „9 mm”.','„Persoane și măsuri” te duce înapoi de unde ai venit, iar scurtăturile de pe iconiță au iconițe.']},
  {v:'7.25',l:['Ecranul de pornire e verde în întregime, cu iconița la mijloc, în locul unui pătrat verde pe fundal alb.']},
@@ -4434,6 +4656,9 @@ function techFig(id){const t=byId(id);if(!t)return null;
   return {d:t.steps[k].d,c:t.steps[k].c||'',t:t.t,id,k}}
 function figPas(s,i){
   if(s.d)return `<figure class="fig">${s.d()}<figcaption><b>Pasul ${i+1}</b>${esc(s.c||'')}</figcaption></figure>`;
+  /* desenul pasului, din biblioteca pașilor de proiect (proiecte_desene.js) */
+  const ps=typeof PSD!=='undefined'&&PSD[s.h];
+  if(ps)return `<figure class="fig">${ps.d()}<figcaption><b>Pasul ${i+1}</b>${esc(ps.c)}</figcaption></figure>`;
   const f=s.tech&&techFig(s.tech);
   return f?`<figure class="fig figt">${f.d()}<figcaption><b>Din fișa „${esc(f.t)}”</b>${esc(f.c)}</figcaption></figure>`:'';
 }
