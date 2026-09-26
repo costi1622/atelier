@@ -831,6 +831,13 @@ svg.d.fl .aFd,svg.d.fl .aFs{display:none}
 .mk-ic svg .f{fill:var(--muted);fill-opacity:.15}
 .ptc td{vertical-align:middle}
 
+/* copiez ceva ce am deja, modelul nou (7.32) */
+.tipuri{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:8px}
+.tipb{width:100%;min-height:72px;text-align:left;padding:10px 12px;border:1.5px solid var(--line-f,var(--line));border-radius:12px;background:var(--panel);color:var(--ink);cursor:pointer;font:inherit}
+.tipb b{display:block}.tipb span{display:block;color:var(--muted);font-size:calc(14px*var(--fs));margin-top:2px}
+.lnk{border:0;background:none;padding:0;color:var(--mat);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
+.cop-img{display:block;max-width:100%;max-height:40vh;margin:8px auto;border-radius:8px;border:1.5px solid var(--ink)}
+
 </style>
 </head>
 <body>
@@ -900,7 +907,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.31';
+const APP_VER='7.32';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -3990,34 +3997,37 @@ function pozaMica(file){
 const copieById=id=>(S.copii||[]).find(c=>c.id===id);
 /* dimensiunile reperului se scriu exact, nu rotunjite la jumătate de centimetru: A4 are 29,7 cm (7.30) */
 const cmExact=n=>String(Math.round(n*100)/100).replace('.',',');
-function copieNoua(){
+function copieNoua(veche){
   const id='c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   S.copii=S.copii||[];
-  S.copii.unshift({id,nume:'',data:new Date().toISOString().slice(0,10),ref:null,masuri:[],tip:'',poza:0});
+  /* modelul nou (7.32): obiect ales + măsuri cu metrul; cel vechi, doar la cerere: măsurat din poză */
+  S.copii.unshift(veche?{id,nume:'',data:new Date().toISOString().slice(0,10),ref:null,masuri:[],tip:'',poza:0}
+    :{id,nou:1,nume:'',data:new Date().toISOString().slice(0,10),tip:'',m:{},done:[],W:140,poza:0,masuri:[]});
   save();return id;
 }
 
 /* ---------- lista ---------- */
 function copii(){
   /* copiile începute și lăsate goale (fără poză, reper, măsuri sau nume) nu mai rămân în listă (7.31) */
-  const goale=(S.copii||[]).filter(c=>!c.poza&&!c.ref&&!c.masuri.length&&!c.nume);
+  const goale=(S.copii||[]).filter(c=>!c.poza&&!c.ref&&!(c.masuri||[]).length&&!c.nume&&!(c.nou&&c.tip));
   if(goale.length){S.copii=S.copii.filter(c=>!goale.includes(c));save()}
   const l=S.copii||[];
   app.innerHTML=`<div class="view"><a class="back" href="#/proiecte">← Fac</a>
    <header class="head"><h1>Copiez ceva ce am deja</h1></header>
-   <p class="intro">Faci o poză unei lucrări gata făcute, pui lângă ea o foaie A4 sau un card, iar aplicația îți spune cât măsoară fiecare parte și cât material îți trebuie ca să o refaci.</p>
+   <p class="intro">Ai o lucrare gata făcută și vrei încă una la fel? Alegi ce este, o măsori cu metrul, iar aplicația îți dă bucățile de tăiat, materialul și pașii, cu desene.</p>
    <div class="seg"><button class="btn pri" id="nou">Începe o copie</button></div>
    ${l.length?`<ul class="list" style="margin-top:18px">${l.map(c=>`<li><a class="row" href="#/copie/${c.id}">
-     <span class="row-t">${esc(c.nume||'Copie fără nume')}<small>${esc(c.data)}, ${c.masuri.length} ${c.masuri.length===1?'măsură':'măsuri'}</small></span>
+     <span class="row-t">${esc(c.nume||(c.nou&&c.tip?copTip(c.tip).l:'Copie fără nume'))}<small>${esc(c.data)}, ${c.nou?(c.tip?copTip(c.tip).dims.filter(d=>c.m[d[0]]>0).map(d=>cm(c.m[d[0]])).join(' × ')+(Object.keys(c.m).length?' cm':'fără măsuri'):'obiect neales'):`măsurată din poză, ${c.masuri.length} ${c.masuri.length===1?'măsură':'măsuri'}`}</small></span>
      ${c.poza?`<span class="marks mk-ic" aria-hidden="true">${I24.poza}</span>`:''}</a></li>`).join('')}</ul>`
-   :ecranGol('foaie','Nicio copie începută. Fotografiezi o lucrare gata făcută, cu o foaie A4 alături, și afli cât măsoară fiecare parte.')}
-   <section class="box"><h2>Cum iese exact</h2><ul>
-     <li>Așază lucrarea întinsă pe o suprafață plată, fără cute.</li>
-     <li>Pune reperul lângă ea, în același plan, nu peste ea.</li>
-     <li>Fotografiază drept de sus, din mijloc, nu oblic. Din unghi, măsurile ies cu 10 până la 20% greșite.</li>
-     <li>Umple cadrul cu lucrarea, ca să ai pixeli destui.</li>
-   </ul></section></div>`;
+   :ecranGol('foaie','Nicio copie începută. Alegi ce copiezi, o măsori cu metrul și primești bucățile și pașii.')}
+   <section class="box"><h2>Cum măsori</h2><ul>
+     <li>Întinde lucrarea pe masă, fără cute.</li>
+     <li>Măsoară cu metrul de croitorie, de la o cusătură la alta, pe lucrarea gata făcută. Rezervele le adaugă aplicația.</li>
+     <li>La obiectele cu fund, măsoară fundul pe lățimea lui, de la o margine la alta.</li>
+   </ul></section>
+   <p class="mm-l" style="margin-top:18px">Nu ai obiectul la îndemână, doar o poză? <button class="lnk" id="dinPoza">Măsor din poză</button></p></div>`;
   document.getElementById('nou').onclick=()=>{location.hash='#/copie/'+copieNoua()};
+  document.getElementById('dinPoza').onclick=()=>{location.hash='#/copie/'+copieNoua(true)};
 }
 
 
@@ -4102,6 +4112,7 @@ let TAP=null;      /* {mod:'reper'|'masura', puncte:[]} */
 let DRAG=null;     /* {tip:'reper'|'masura', i, k} */
 function copie(id){
   const c=copieById(id); if(!c){location.hash='#/copii';return}
+  if(c.nou){copieModel(c);return}
   /* copii făcute cu reperul vechi, din două puncte: reperul se ia din nou, măsurile rămân */
   if(c.ref&&(!c.ref.pts||!REPERE.find(r=>r.k===c.ref.k))){c.ref=null;save()}
   app.innerHTML=`<div class="view"><a class="back" href="#/copii">← Toate copiile</a>
@@ -4334,6 +4345,149 @@ function fisa(M,c,R){
    <ul>${['tiv-dublu','zigzag','intarire','buzunar-aplicat'].filter(byId).map(t=>`<li><a href="#/t/${t}">${esc(byId(t).t)}</a></li>`).join('')}</ul>
    <p>Dacă e un obiect din lista de proiecte (fustă, poșetă, șorț, față de pernă, săculeț), deschide direct proiectul: acolo primești bucățile exacte și pașii.</p>
   </section>`;
+}
+
+/* ================= copiez ceva ce am deja, modelul nou (7.32) =================
+   Trei pași: ce copiezi, măsori cu metrul pe un desen, primești proiectul gata calculat
+   (bucățile, așezarea pe balot, materialul, pașii de bifat, cu desene).
+   Calculul e cel al proiectelor din „Fac”: dimensiunile măsurate intră ca opțiuni ale proiectului potrivit.
+   Copiile vechi, măsurate din poză, se deschid în continuare cu ecranul vechi (copie.js). */
+
+/* un obiect din două bucăți dreptunghiulare, pentru tot ce nu are proiect propriu */
+const PROJ_DREPT={id:'_drept',t:'Ceva din două bucăți',
+  calc(m,o){return {piese:[{shape:'rect',name:'fața și spatele',w:r05(o.lat+2*RC),h:r05(o.inalt+2*RC),qty:2,note:'cu 1,5 cm rezervă pe fiecare margine'}],
+    mercerie:['ață în culoarea materialului'],note:['Lasă o deschidere de 5–6 cm pe o latură, ca să poți întoarce lucrarea pe față.']}},
+  pasi(m,o){return [
+    {h:'Taie cele două dreptunghiuri',p:`Două bucăți de ${cm(o.lat+2*RC)} × ${cm(o.inalt+2*RC)} cm, cu firul drept pe înălțime.`},
+    {h:'Coase fața pe față',p:'Pune bucățile fața pe față și coase de jur împrejur, la 1,5 cm de margine. Lasă deschiși 5–6 cm pe o latură și întărește la ambele capete.',tech:'intarire'},
+    {h:'Taie colțurile și întoarce',p:'Taie colțurile oblic, fără să atingi cusătura, apoi întoarce pe față prin deschidere și împinge colțurile cu un bețișor.'},
+    {h:'Închide deschiderea',p:'Calcă, cu rezervele deschiderii îndoite înăuntru, apoi închide deschiderea cu cusătura scară, de mână.',tech:'cusatura-scara'},
+    {h:'Tighel pe margine',p:'Dacă vrei marginea mai fermă, coase de jur împrejur la 3 mm de muchie.'}]}};
+
+const COPIE_T=[
+ {k:'drept',l:'Ceva din două bucăți',h:'semn de carte, husă plată, trusă simplă',proj:null,dims:[['lat','Lățimea',4,150,20],['inalt','Înălțimea',4,150,30]]},
+ {k:'saculet',l:'Săculeț cu șnur',h:'pentru jucării, cadouri, papuci',proj:'saculet',dims:[['lat','Lățimea',10,60,32],['inalt','Înălțimea',10,70,38]]},
+ {k:'tote',l:'Poșetă tote',h:'geantă simplă, cu două toarte',proj:'poseta-tote',dims:[['lat','Lățimea',18,55,35],['inalt','Înălțimea',18,55,38],['fund','Adâncimea fundului',2,20,10],['torti','Lungimea unei toarte',25,120,65]],fix:{capt:'nu',inchidere:'nu'}},
+ {k:'geanta',l:'Geantă cu fermoar',h:'cu fund și toarte',proj:'geanta-fermoar',dims:[['lat','Lățimea',18,50,34],['inalt','Înălțimea',14,45,30],['fund','Adâncimea fundului',4,20,10],['torti','Lungimea unei toarte',30,120,60]]},
+ {k:'penar',l:'Penar sau trusă',h:'cu fermoar și fund',proj:'penar',dims:[['lung','Lungimea',12,32,21],['inalt','Înălțimea',5,16,9],['fund','Adâncimea fundului',3,12,6]]},
+ {k:'perna',l:'Față de pernă pătrată',h:'cu fermoar',proj:'perna-fermoar',dims:[['p','Latura pernei',25,80,45]]},
+ {k:'canapea',l:'Husă de pernă groasă',h:'de canapea sau de scaun',proj:'husa-perna-canapea',dims:[['L','Lungimea',30,90,55],['l','Lățimea',30,90,55],['gros','Grosimea',5,25,12]]},
+ {k:'masa',l:'Față de masă',h:'dreptunghiulară',proj:'fata-masa',dims:[['L','Lungimea feței de masă',40,400,180],['l','Lățimea feței de masă',40,300,140]],fix:{cadere:0}},
+ {k:'masar',l:'Față de masă rotundă',h:'sau un șervet rotund',proj:'fata-masa-rotunda',dims:[['diam','Diametrul',40,300,160]],fix:{cadere:0}},
+ {k:'cos',l:'Coș din material',h:'cu fund pătrat',proj:'cos-depozitare',dims:[['lat','Latura fundului',18,50,30],['inalt','Înălțimea',15,50,32]],fix:{mansh:0,manere:'nu'}}
+];
+const copTip=k=>COPIE_T.find(t=>t.k===k);
+const copProj=T=>T.proj?projById(T.proj):PROJ_DREPT;
+function copOpts(T,m){
+  const p=copProj(T),o={};
+  (p.opts||[]).forEach(x=>o[x.k]=x.input?x.def:x.v[0][0]);
+  Object.assign(o,T.fix||{});
+  T.dims.forEach(([k,,,,d])=>o[k]=m[k]>0?m[k]:d);
+  return o;
+}
+
+/* ---------- desenul obiectului, cu săgeata dimensiunii alese aprinsă ---------- */
+function copFig(k,active){
+  const ar=(key,x1,y1,x2,y2,lx,ly,an='middle')=>{const on=key===active;
+    return (on?A(x1,y1,x2,y2,'arrt')+A(x2,y2,x1,y1,'arrt'):dimLine(x1,y1,x2,y2))+(on?T(lx,ly,(copTip(k).dims.find(d=>d[0]===key)||[,''])[1].toLowerCase(),an):'')};
+  const cutie=(x,y,w,h,d,cls='fab')=>P(`M${x} ${y} L${x+d} ${y-d*.6} L${x+w+d} ${y-d*.6} L${x+w} ${y} Z`,'card')
+    +P(`M${x+w} ${y} L${x+w+d} ${y-d*.6} L${x+w+d} ${y+h-d*.6} L${x+w} ${y+h} Z`,'card')+R(x,y,w,h,cls);
+  let o='';
+  switch(k){
+    case 'drept': o=R(100,30,120,150,'fab')+ar('lat',100,194,220,194,160,212)+ar('inalt',236,30,236,180,246,110,'start');break;
+    case 'saculet': o=P('M96 50 L224 50 L224 184 L96 184 Z','fab')+L(96,70,224,70,'st')+P('M150 60 Q140 26 128 20 M170 60 Q180 26 192 20','thr')
+      +ar('lat',96,200,224,200,160,218)+ar('inalt',240,50,240,184,250,120,'start');break;
+    case 'tote': case 'geanta': o=cutie(80,70,140,120,40)+P('M112 70 Q150 10 188 70','lay2')
+      +(k==='geanta'?L(90,64,214,64,'tape'):'')+ar('lat',80,206,220,206,150,224)+ar('inalt',64,70,64,190,6,140,'start')
+      +ar('fund',226,194,262,172,236,216)+ar('torti',112,52,188,52,150,40);break;
+    case 'penar': o=cutie(50,90,190,70,50)+L(62,86,262,60,'tape')+ar('lung',50,176,240,176,145,194)+ar('inalt',34,90,34,160,6,80,'start')+ar('fund',246,168,292,138,236,194);break;
+    case 'perna': o=P('M90 40 Q160 30 230 40 Q240 110 230 180 Q160 190 90 180 Q80 110 90 40 Z','fab')+ar('p',90,200,230,200,160,218);break;
+    case 'canapea': o=cutie(70,80,160,90,50)+ar('L',70,186,230,186,150,204)+ar('l',236,178,282,148,246,200)+ar('gros',54,80,54,170,6,64,'start');break;
+    case 'masa': o=R(50,40,220,140,'fab')+ar('L',50,196,270,196,160,214)+ar('l',286,40,286,180,160,214);break;
+    case 'masar': o=C(160,112,86,'fab')+ar('diam',74,112,246,112,160,220);break;
+    case 'cos': o=cutie(90,80,120,110,44)+L(90,80,210,80,'olt')+ar('lat',90,206,210,206,150,224)+ar('inalt',74,80,74,190,6,70,'start');break;
+  }
+  return svg(o+(active?'':T(160,16,'atinge un câmp de mai jos','middle','m')),232);
+}
+/* cotă discretă, pe orice direcție */
+const dimLine=(x1,y1,x2,y2)=>{const d=Math.hypot(x2-x1,y2-y1)||1,nx=-(y2-y1)/d*4,ny=(x2-x1)/d*4;
+  return L(x1,y1,x2,y2,'dim')+L(x1-nx,y1-ny,x1+nx,y1+ny,'dim')+L(x2-nx,y2-ny,x2+nx,y2+ny,'dim')};
+
+let COP_ACTIV=null;
+function copieModel(c){
+  const T=c.tip?copTip(c.tip):null;
+  app.innerHTML=`<div class="view"><a class="back" href="#/copii">← Toate copiile</a>
+   <header class="head"><h1>${esc(c.nume||(T?T.l:'Copie nouă'))}</h1></header>
+   <section class="set"><h2>1. Ce copiezi?</h2>
+    ${T?`<p class="ok-l">${esc(T.l)}, ${esc(T.h)}. <button class="lnk" id="altTip">Schimbă</button></p>`
+      :`<ul class="tipuri">${COPIE_T.map(t=>`<li><button class="tipb" data-tip="${t.k}"><b>${esc(t.l)}</b><span>${esc(t.h)}</span></button></li>`).join('')}</ul>`}
+   </section>
+   ${T?`<section class="set"><h2>2. Măsori cu metrul</h2>
+    <p class="mm-l">Măsoară lucrarea gata făcută, fără rezerve: aplicația le adaugă singură.</p>
+    <figure class="fig figm" id="copFig">${copFig(T.k,COP_ACTIV)}</figure>
+    <div class="mm">${T.dims.map(([k,l,mn,mx])=>`<label class="mm-r"><span>${esc(l)}<small>între ${mn} și ${mx} cm</small></span>
+      <input type="number" inputmode="decimal" min="${mn}" max="${mx}" step="0.5" data-cm="${k}" value="${c.m[k]!=null?String(c.m[k]).replace('.',','):''}"><b>cm</b></label>`).join('')}</div>
+    <div id="copPoza"></div>
+   </section>
+   <section class="set" id="copRez"></section>
+   <section class="set"><h2>Numele copiei</h2>
+    <div class="seg"><button class="btn" id="ren">${c.nume?'Redenumește':'Dă-i un nume'}</button>
+     <button class="btn dgr" id="sterge">Șterge copia</button></div></section>`:''}
+  </div>`;
+  app.querySelectorAll('[data-tip]').forEach(b=>b.onclick=()=>{c.tip=b.dataset.tip;c.m={};c.done=[];save();COP_ACTIV=null;copieModel(c);bindZoom()});
+  const alt=document.getElementById('altTip');
+  if(alt)alt.onclick=async()=>{if(!Object.keys(c.m||{}).length||await confirma('Schimbi obiectul?','Măsurile scrise se șterg.','Schimbă')){c.tip='';c.m={};c.done=[];save();copieModel(c)}};
+  if(!T)return;
+  const fig=document.getElementById('copFig');
+  const arata=k=>{COP_ACTIV=k;fig.innerHTML=copFig(T.k,k)};
+  app.querySelectorAll('[data-cm]').forEach(inp=>{
+    inp.addEventListener('focus',()=>arata(inp.dataset.cm));
+    inp.addEventListener('input',()=>{const v=parseFloat(String(inp.value).replace(',','.'));
+      const d=T.dims.find(x=>x[0]===inp.dataset.cm);
+      if(isFinite(v)&&v>=d[2]&&v<=d[3])c.m[d[0]]=v;else delete c.m[d[0]];save();rezultat()});
+  });
+  document.getElementById('ren').onclick=async()=>{const n=await intreaba('Numele copiei','De exemplu: săculețul Irinei',c.nume);if(n){c.nume=n;save();copieModel(c)}};
+  document.getElementById('sterge').onclick=async()=>{if(await confirma('Ștergi copia?','Se șterg măsurile, bifele și poza ei.')){
+    await idbDel('copie_'+c.id);S.copii=S.copii.filter(z=>z.id!==c.id);save();location.hash='#/copii'}};
+  pozaRef();rezultat();
+
+  /* poza lucrării originale, doar ca ajutor de memorie */
+  async function pozaRef(){
+    const w=document.getElementById('copPoza');const poza=c.poza?await idbGet('copie_'+c.id):null;
+    w.innerHTML=`<h3 class="sub3">Poza lucrării, dacă vrei</h3>
+      ${poza?`<img class="cop-img" src="${poza.data}" alt="Lucrarea originală">`:'<p class="mm-l">O poză a lucrării pe care o copiezi, ca să te uiți la detalii cât coși.</p>'}
+      <div class="seg"><button class="btn" id="cpPoza">${poza?'Altă poză':'Adaugă o poză'}</button>${poza?'<button class="btn dgr" id="cpSterg">Șterge poza</button>':''}</div>
+      <input type="file" id="cpF" accept="image/*" hidden>`;
+    const f=document.getElementById('cpF');
+    document.getElementById('cpPoza').onclick=()=>f.click();
+    f.onchange=async()=>{if(!f.files[0])return;try{const p=await pozaMica(f.files[0]);await idbPut('copie_'+c.id,p);c.poza=1;save();pozaRef()}catch(e){}};
+    const sd=document.getElementById('cpSterg');if(sd)sd.onclick=async()=>{await idbDel('copie_'+c.id);c.poza=0;save();pozaRef()};
+  }
+  function rezultat(){
+    const box=document.getElementById('copRez');
+    const lipsa=T.dims.filter(([k])=>!(c.m[k]>0));
+    if(lipsa.length){box.innerHTML=`<h2>3. Ce tai și cum coși</h2><p class="empty">Scrie ${lipsa.map(d=>d[1].toLowerCase()).join(', ')} și îți calculez bucățile, materialul și pașii.</p>`;return}
+    const p=copProj(T),o=copOpts(T,c.m),W=c.W||140;
+    let r,steps;try{r=p.calc({},o,W);steps=p.pasi({},o)}catch(e){box.innerHTML='<p class="msg err">Nu pot calcula cu aceste măsuri.</p>';return}
+    const nec=fabricNeed(r.piese,W);c.done=c.done||[];
+    box.innerHTML=`<h2>3. Ce tai și cum coși</h2>
+     <div class="sumar"><b>${esc(T.l)}</b><span class="sumar-w" role="group" aria-label="Lățimea balotului"><span class="sumar-l">balot</span>${[90,110,140,150].map(w=>
+       `<button class="wch${W===w?' on':''}" data-cw="${w}">${w}</button>`).join('')}<i>cm</i></span>
+       <span class="sumar-m">${nec.prea?'nu încape':cm(nec.len)+' cm material'}</span></div>
+     <figure class="fig">${drawPieces(r.piese)}<figcaption><b>De tăiat</b>Bucățile, cu rezervele de cusătură adăugate.</figcaption></figure>
+     ${nec.prea?`<p class="msg err">Bucata „${esc(nec.prea)}” e mai lată decât ${W} cm. Alege un balot mai lat.</p>`:`<figure class="fig">${drawLayout(nec,W)}<figcaption><b>Așezarea</b>Pe balotul de ${W} cm.</figcaption></figure>
+     <p class="big">Îți trebuie aproximativ <b>${cm(nec.len)} cm</b> de material.</p>`}
+     <table class="pt"><thead><tr><th>Bucata</th><th>Dimensiuni</th><th>Buc.</th></tr></thead><tbody>${r.piese.map(x=>`<tr><td>${esc(x.name)}${x.note?`<small>${esc(x.note)}</small>`:''}</td>
+       <td>${esc(x.shape==='donut'?`rază ${cm(x.r)} și ${cm(x.R)} cm`:x.shape==='trapez'?`${cm(x.wTop)} sus / ${cm(x.w)} jos × ${cm(x.h)} cm`:`${cm(x.w)} × ${cm(x.h)} cm`)}</td><td>${x.qty}<span class="pt-u"> buc.</span></td></tr>`).join('')}</tbody></table>
+     ${r.mercerie&&r.mercerie.length?`<h3 class="sub3">Mercerie</h3><ul>${r.mercerie.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
+     ${r.note&&r.note.length?`<h3 class="sub3">De reținut</h3><ul>${r.note.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
+     <h3 class="sub3">Pașii</h3><p class="mm-l">Bifează pe măsură ce avansezi. Rămâne salvat.</p>
+     <ol class="pl">${steps.map((s,i)=>`<li class="${c.done.includes(i)?'ok':''}"><label><input type="checkbox" data-cs="${i}"${c.done.includes(i)?' checked':''}>
+       <span><b>${esc(s.h)}</b>${esc(s.p)}${s.tech&&byId(s.tech)?` <a href="#/t/${s.tech}">Vezi tehnica: ${esc(byId(s.tech).t)}</a>`:''}</span></label>${figPas(s,i)}</li>`).join('')}</ol>`;
+    box.querySelectorAll('[data-cw]').forEach(b=>b.onclick=()=>{c.W=+b.dataset.cw;save();rezultat()});
+    box.querySelectorAll('[data-cs]').forEach(x=>x.onchange=()=>{const i=+x.dataset.cs;c.done=x.checked?[...new Set([...c.done,i])]:c.done.filter(z=>z!==i);save();rezultat()});
+    bindZoom();
+  }
 }
 
 /* ================= CĂUTARE DUPĂ SIMPTOM =================
@@ -4579,6 +4733,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.32',l:['„Copiez ceva ce am deja” e mult mai simplu: alegi ce copiezi, de exemplu un săculeț, o poșetă sau o față de pernă, îl măsori cu metrul pe un desen care îți arată unde, și primești bucățile de tăiat, așezarea pe material, cât material îți trebuie și pașii de bifat, cu desene.','Poți adăuga o poză a lucrării originale, ca să te uiți la detalii cât coși.','Măsuratul din poză, cu foaia A4, a rămas pentru când nu ai obiectul la îndemână, jos pe pagina copiilor.']},
  {v:'7.31',l:['Copierea din poză te duce pas cu pas. Sub poză scrie mereu ce urmează, cu un buton „Arată-mi”.','Când alegi reperul, de exemplu foaia A4, aplicația îl caută singură pe poză. Dacă nu-l găsește, te duce la poză și îți spune pe rând ce colț să atingi.','Poza nu mai umple tot ecranul, deci pașii de dedesubt se văd. Instrucțiunea stă chiar pe poză.','Copiile începute și lăsate goale nu mai rămân în listă.']},
  {v:'7.30',l:['Contorul de rânduri se găsea doar dacă știai adresa lui. Acum e în „Mai mult” și sus în secțiunile Croșetat și Tricotat.','Copia de siguranță include și contoarele de rânduri.','Pe telefoanele mici și cu textul mărit, nimic nu mai iese din ecran: Setări, câmpurile de măsuri, butoanele de la finalul fișelor.','Căutarea găsește și cuvinte scrise pe jumătate, de exemplu „increturi”.','La copiere din poză, foaia A4 apare cu dimensiunile exacte, 29,7 × 21 cm.']},
  {v:'7.29',l:['Animațiile nu mai fug singure. Când ajungi la desen, trec o dată prin pași, câte 3,5 secunde, apoi se opresc pe ultimul.','Sub desen ai butoane: înapoi, înainte, cele patru puncte, pe care le poți atinge ca să sari direct la un pas, și pornire sau pauză. Poți și glisa cu degetul pe desen.','Aceleași butoane apar și când mărești desenul, pornind de la pasul la care erai.']},
@@ -4747,7 +4902,7 @@ function bunVenit(){
    <header class="head"><h1>Bun venit în Atelier</h1><p class="sub">Manualul și proiectele tale de cusut, croșetat și tricotat. Merge fără internet, iar tot ce notezi rămâne pe telefon.</p></header>
    ${pan(dT,'1. Caut o tehnică','Fiecare tehnică are pași scurți și desene. Le poți marca drept favorite sau exersate și poți nota trucurile tale.','#/tehnici','Deschide Învăț')}
    ${pan(dP,'2. Încep un proiect','Alegi un proiect, scrii măsurile o singură dată și primești bucățile de tăiat, așezarea pe material și pașii de bifat.','#/proiecte','Deschide Fac')}
-   ${pan(dC,'3. Copiez din poză','Faci o poză unei lucrări gata făcute, cu o foaie A4 alături, și afli dimensiunile ei și cât material îți trebuie.','#/copii','Deschide copierea')}
+   ${pan(dC,'3. Copiez ceva ce am deja','Alegi ce copiezi, de exemplu un săculeț sau o față de pernă, îl măsori cu metrul și primești bucățile de tăiat, materialul și pașii.','#/copii','Deschide copierea')}
    <div class="seg"><a class="btn pri" href="#/" id="introGata">Am înțeles</a></div></div>`;
   S.settings.intro=1;save();
 }
@@ -4802,7 +4957,7 @@ function acasa(){
    <section class="a3s" aria-label="Ce vrei să faci">
     <a class="a3" href="#/tehnici">${ic('tehnica')}<span class="txt"><b>Caut o tehnică</b><span>cum se face ceva anume</span></span></a>
     <a class="a3" href="#/proiecte">${ic('proiect')}<span class="txt"><b>Încep un proiect</b><span>calculat cu măsurile tale</span></span></a>
-    <a class="a3" href="#/copii">${ic('poza')}<span class="txt"><b>Copiez din poză</b><span>măsor o lucrare gata făcută</span></span></a>
+    <a class="a3" href="#/copii">${ic('poza')}<span class="txt"><b>Copiez ceva ce am deja</b><span>îl măsor și primesc pașii</span></span></a>
    </section>
    ${fav.length?`<section class="sec"><div class="sec-h"><h2>Favoritele tale</h2><span>${fav.length}</span></div>
      <ul class="list">${fav.slice(0,5).map(t=>`<li><a class="row" href="#/t/${t.id}">
@@ -4945,7 +5100,7 @@ function projects(){
   app.innerHTML=`<div class="view">${mast('Fac','De la măsurile tale la bucățile de tăiat și pașii de urmat.')}
    <div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16" y1="16" x2="21" y2="21"/></svg>
    <input id="pq" type="search" placeholder="Caută, de exemplu „fustă”" value="${esc(PQ)}" aria-label="Caută un proiect"></div>
-   <section class="a3s a3one" aria-label="Copiere"><a class="a3" href="#/copii">${ic('poza')}<span class="txt"><b>Copiez ceva ce am deja</b><span>o poză cu o foaie A4 alături îți dă dimensiunile și materialul</span></span></a></section>
+   <section class="a3s a3one" aria-label="Copiere"><a class="a3" href="#/copii">${ic('poza')}<span class="txt"><b>Copiez ceva ce am deja</b><span>îl măsori cu metrul și primești bucățile și pașii</span></span></a></section>
    ${per?`<p class="who">Măsurile folosite: <b>${esc(per.nume)}</b>. Le schimbi din <a href="#/persoane">Persoane</a>.</p>`:''}
    <div id="pres" aria-live="polite"></div></div>`;
   const q=document.getElementById('pq');
