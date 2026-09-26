@@ -281,7 +281,9 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
   padding:var(--s2) 0;min-height:48px}
 .fold>summary::-webkit-details-marker{display:none}
 .fold>summary h2{margin:0;font-size:calc(21px*var(--fs))}
-.fold>summary::after{content:'▾';color:var(--muted);font-size:18px;transition:transform .18s}
+.fold>summary::after{content:'';flex:none;width:22px;height:22px;background:var(--muted);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .18s}
 .fold[open]>summary::after{transform:rotate(180deg)}
 @media (prefers-reduced-motion:reduce){.fold>summary::after{transition:none}}
 
@@ -392,11 +394,11 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .mm-p{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}
 .mm-p span{grid-column:1;color:var(--muted);font-size:calc(15px*var(--fs))}
 .mm-p button{grid-row:1/3;grid-column:2;min-height:44px;padding:8px 12px}
-.tb{width:100%;border-collapse:collapse;margin-top:12px}
-.tb th{text-align:left;font-family:Bitter,Georgia,serif;font-size:calc(15px*var(--fs));border-bottom:1.5px solid var(--ink);padding:6px 6px 6px 0}
-.tb td{border-bottom:1px dashed var(--line);padding:8px 6px 8px 0;vertical-align:top}
-.tb td:last-child{text-align:right}
-.tb small{display:block;color:var(--muted);font-size:calc(14px*var(--fs))}
+.pt{width:100%;border-collapse:collapse;margin-top:12px}
+.pt th{text-align:left;font-family:Bitter,Georgia,serif;font-size:calc(15px*var(--fs));border-bottom:1.5px solid var(--ink);padding:6px 6px 6px 0}
+.pt td{border-bottom:1px dashed var(--line);padding:8px 6px 8px 0;vertical-align:top}
+.pt td:last-child{text-align:right;white-space:nowrap}
+.pt small{display:block;color:var(--muted);font-size:calc(14px*var(--fs))}
 .big{font-size:calc(19px*var(--fs));margin:12px 0 4px}
 .pl{list-style:none;padding:0;margin:8px 0 14px;counter-reset:pl}
 .pl li{border-bottom:1px dashed var(--line)}
@@ -527,7 +529,7 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .loupe::after{content:'';position:absolute;inset:50% auto auto 50%;width:14px;height:14px;margin:-7px 0 0 -7px;
   border:2px solid var(--thread);border-radius:50%}
 .warn{margin:10px 0 0;padding:10px 12px;border-left:4px solid var(--amber);background:var(--panel);color:var(--ink);border-radius:0 8px 8px 0}
-.tb small{display:block;color:var(--muted);font-size:calc(13px*var(--fs))}
+.pt small{display:block;color:var(--muted);font-size:calc(13px*var(--fs))}
 .ph-ov .phM{stroke:var(--thread);stroke-width:5;stroke-linecap:round}
 .ph-ov .phDotRef{fill:var(--mat);stroke:#fff;stroke-width:2.5}
 .ph-ov .phDot{fill:var(--thread);stroke:#fff;stroke-width:2.5}
@@ -568,7 +570,7 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
   body::before,body::after,.tabs,#bara,.chips,.search,.actions,.gear,.back,.foot,.news,.pn,#updbar,.fig.zoomable figcaption::after{display:none !important}
   body{background:#fff;color:#000;font-size:11pt}
   .wrap{max-width:none;padding:0}
-  .fig,.step,.box,.tb tr{break-inside:avoid}
+  .fig,.step,.box,.pt tr{break-inside:avoid}
   .fig{border-color:#000}
   a[href^="#"]{text-decoration:none;color:#000}
 }
@@ -766,6 +768,22 @@ body.zf-on{overflow:hidden}
 /* butoanele mici cu iconiță desenată, nu din font (7.26) */
 .icb svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
 
+/* pagina de proiect (7.27) */
+.sub3{font-size:calc(17px*var(--fs));margin:var(--s4) 0 var(--s1)}
+a.btn{text-decoration:none}
+.sumar-l{color:var(--muted);margin-right:6px;font-size:calc(14px*var(--fs))}
+.mm-warn{margin:-2px 0 8px;padding:8px 12px;border-left:4px solid var(--thread);background:var(--panel);color:var(--ink);font-size:calc(14.5px*var(--fs));border-radius:0 8px 8px 0}
+.figm svg{max-height:30vh}
+@media (max-width:559px){
+  .pt thead{display:none}
+  .pt tr{display:grid;grid-template-columns:1fr auto;column-gap:12px;border-bottom:1px dashed var(--line);padding:8px 0}
+  .pt td{border:0;padding:0}
+  .pt td:first-child{grid-column:1/-1;font-weight:600}
+  .pt td:first-child small{font-weight:400}
+  .pt td:nth-child(2){margin-top:4px}
+  .pt td:last-child{margin-top:4px;font-weight:600}
+}
+
 </style>
 </head>
 <body>
@@ -835,7 +853,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.26';
+const APP_VER='7.27';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -2600,13 +2618,14 @@ function drawLayout(pack,W){
 function cercAnim(tip){
   const n=(x,y,s,a)=>T(x,y,s,a||'start','m');
   if(tip==='cerc'){
-    const cx=160,cy=95,r1=20,r2=68,arc=r=>`M${cx-r} ${cy} A${r} ${r} 0 0 1 ${cx} ${cy-r}`;
+    /* la pașii 3 și 4, pătratul pliat e desenat mărit, ca arcele să se vadă bine */
+    const cx=240,cy=160,r1=36,r2=128,arc=r=>`M${cx-r} ${cy} A${r} ${r} 0 0 1 ${cx} ${cy-r}`,Q=()=>fab(100,20,140,140)+L(100,160,240,160,'olt')+L(240,20,240,160,'olt');
     return flip([
-      [fab(85,20,150,150),'întinzi materialul'],
-      [fab(85,20,150,75)+L(85,95,235,95,'olt'),'îl pliezi în două'],
-      [fab(85,20,75,75)+L(85,95,160,95,'olt')+L(160,20,160,95,'olt')+C(cx,cy,3.5,'dot')+n(168,108,'colțul pliurilor'),'și încă o dată, în patru'],
-      [fab(85,20,75,75)+L(85,95,160,95,'olt')+L(160,20,160,95,'olt')+P(arc(r1),'st')+P(arc(r2),'st')+L(cx,cy,cx-r2*.707,cy-r2*.707,'thr')+C(cx-r2*.707,cy-r2*.707,3,'dot')+C(cx,cy,3.5,'dot')+n(168,80,'talie')+n(168,34,'tiv')+A(166,77,cx-r1*.5,cy-r1*.9),'trasezi talia și tivul, ca un compas']
-    ],{fix:4,h:200,eticheta:'Animație: materialul se pliază în două, apoi în patru. Din colțul pliurilor, cu o ață legată de un creion, se trasează arcul taliei și arcul tivului.'});
+      [fab(80,14,160,160),'întinzi materialul'],
+      [fab(80,54,160,80)+L(80,134,240,134,'olt'),'îl pliezi în două'],
+      [Q()+C(cx,cy,4,'dot')+n(170,180,'colțul pliurilor','middle'),'și încă o dată, în patru'],
+      [Q()+P(arc(r1),'st')+P(arc(r2),'st')+L(cx,cy,cx-r2*.707,cy-r2*.707,'thr')+C(cx-r2*.707,cy-r2*.707,3.5,'dot')+C(cx,cy,4,'dot')+n(250,128,'talie')+n(250,40,'tiv'),'trasezi talia și tivul, ca un compas']
+    ],{fix:4,h:204,eticheta:'Animație: materialul se pliază în două, apoi în patru. Din colțul pliurilor, cu o ață legată de un creion, se trasează arcul taliei și arcul tivului.'});
   }
   const cx=160,cy=20,r1=24,r2=94,arc=r=>`M${cx-r} ${cy} A${r} ${r} 0 0 0 ${cx} ${cy+r}`,half=r=>`M${cx-r} ${cy} A${r} ${r} 0 0 0 ${cx+r} ${cy}`;
   return flip([
@@ -2622,14 +2641,28 @@ function cercAnim(tip){
    ca să nu se suprapună niciodată etichetele. */
 function drawPieces(pieces){
   const vis=pieces.filter(p=>!p.hide), G=26, TOP=30, HMAX=112;
-  const wOf=p=>p.shape==='donut'?2*p.R:p.w, hOf=p=>p.shape==='donut'?2*p.R:p.h;
+  /* la fusta cerc se desenează exact bucata care se taie: sfert, jumătate sau cerc întreg (7.27) */
+  const frac=p=>p.shape!=='donut'?1:(p.cutH&&p.cutH<1.5*(p.R+.01))?((p.cutW&&p.cutW<1.5*(p.R+.01))?4:2):1;
+  const wOf=p=>p.shape==='donut'?(frac(p)===4?p.R:2*p.R):p.w, hOf=p=>p.shape==='donut'?(frac(p)===1?2*p.R:p.R):p.h;
   const sumW=vis.reduce((a,p)=>a+wOf(p),0), maxH=Math.max(...vis.map(hOf));
   const s=Math.min((300-G*(vis.length-1))/sumW, HMAX/maxH);
   let x=10+(300-(sumW*s+G*(vis.length-1)))/2, o='';
   vis.forEach((p,i)=>{
     const w=wOf(p)*s, h=hOf(p)*s, y=TOP+(HMAX-h)/2, cx=x+w/2, cy=y+h/2;
+    let dbx=cx, dby=cy-8;
     if(p.shape==='donut'){
-      o+=C(cx,cy,w/2,'fab')+C(cx,cy,p.r*s,'cut')+L(cx,cy,cx+w/2,cy,'dim');
+      const Rs=p.R*s, rs=p.r*s, f=frac(p), mid=(Rs+rs)/2;
+      if(f===4){ /* sfert: colțul pliurilor sus în stânga */
+        o+=P(`M${x+rs} ${y} L${x+Rs} ${y} A${Rs} ${Rs} 0 0 1 ${x} ${y+Rs} L${x} ${y+rs} A${rs} ${rs} 0 0 0 ${x+rs} ${y} Z`,'fab')
+          +L(x,y,x+Rs,y,'olt')+L(x,y,x,y+Rs,'olt');
+        dbx=x+mid*.707; dby=y+mid*.707;
+      }else if(f===2){ /* jumătate: pliul sus */
+        o+=P(`M${cx-Rs} ${y} A${Rs} ${Rs} 0 0 0 ${cx+Rs} ${y} L${cx+rs} ${y} A${rs} ${rs} 0 0 1 ${cx-rs} ${y} Z`,'fab')+L(cx-Rs,y,cx+Rs,y,'olt');
+        dbx=cx; dby=y+mid;
+      }else{
+        o+=C(cx,cy,w/2,'fab')+C(cx,cy,rs,'cut')+L(cx+rs,cy,cx+w/2,cy,'dim');
+        dbx=cx; dby=cy-mid;
+      }
     }else if(p.shape==='trapez'){
       const wt=p.wTop*s;
       o+=P(`M${cx-wt/2} ${y} L${cx+wt/2} ${y} L${cx+w/2} ${y+h} L${cx-w/2} ${y+h} Z`,'fab');
@@ -2642,7 +2675,7 @@ function drawPieces(pieces){
     /* în colț, în interior, dacă încape; altfel deasupra bucății */
     /* la trapez, numărul stă sus la mijloc, unde latura de sus e dreaptă */
     const trap=p.shape==='trapez', inauntru=p.shape==='donut'||(trap?p.wTop*s>=30&&h>=30:w>=30&&h>=30);
-    const bx=p.shape==='donut'||trap?cx:inauntru?x+14:cx, bc=p.shape==='donut'?cy-8:inauntru?y+15:y-13;
+    const bx=p.shape==='donut'?dbx:trap?cx:inauntru?x+14:cx, bc=p.shape==='donut'?dby:inauntru?y+15:y-13;
     o+=C(bx,bc,10,'nrbg')+T(bx,bc+4,String(i+1),'middle','nr');
     x+=w+G;
   });
@@ -4262,6 +4295,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.27',l:['Pe telefon, tabelul „De tăiat” e o listă de carduri: bucata, dimensiunile și câte bucăți, fără coloane înghesuite.','La fusta cerc, schema arată exact bucata care se taie, sfert sau jumătate, cu pliurile marcate, iar animația „Taie cercul” e mai mare.','Dacă o măsură nu pare în regulă, de exemplu șoldul mai mic decât talia, apare un avertisment discret sub câmp.','Manechinul de pe pagina proiectului e mai mic și stă la mijloc până alegi un câmp.','Titlurile din „Material și mercerie” au mărimea potrivită, iar bara de sus spune „balot” lângă lățimi.']},
  {v:'7.26',l:['Manechinul de la măsuri are umeri, iar textele stau lângă el, nu peste el. Măsurile „de la umăr” pornesc acum chiar de la umăr, iar la braț apare un braț desenat separat.','Pe pagina cu măsuri, manechinul rămâne sus cât derulezi prin câmpuri, deci vezi linia și la ultimele măsuri.','Mărirea unui desen se deschide pe tot ecranul. Mărești cu + și −, cu două degete sau cu o atingere dublă, iar desenul se mută trăgând de el.','În modul pas cu pas, săgețile sunt mai mari și desenate, iar „ecran aprins” are un bec și încape pe un rând.','Numerele nu se mai despart de unități la capăt de rând, de exemplu „9 mm”.','„Persoane și măsuri” te duce înapoi de unde ai venit, iar scurtăturile de pe iconiță au iconițe.']},
  {v:'7.25',l:['Ecranul de pornire e verde în întregime, cu iconița la mijloc, în locul unui pătrat verde pe fundal alb.']},
  {v:'7.24',l:['La proiecte, sub pașii care folosesc o tehnică apare direct desenul ei, și în modul pas cu pas. Nu mai trebuie să sari la fișă în mijlocul lucrului.','Pagină nouă, „Cum folosești aplicația”, cu trei desene: căutat o tehnică, început un proiect, copiat din poză. O găsești în „Mai mult”, iar la prima deschidere e propusă pe Acasă.','Iconiță nouă pentru aplicația instalată, în stilul desenelor. Ține apăsat pe iconiță și ai scurtături spre Învăț, Fac și copierea din poză.']},
@@ -4901,7 +4935,7 @@ function persoana(id){
    <div class="seg"><button class="btn" id="ren">Redenumește</button>
     ${S.settings.pers===x.id?'<span class="btn pri" aria-current="true">Persoana aleasă</span>'
       :'<button class="btn" id="alege">Calculează cu ea</button>'}</div>
-   <figure class="fig figm" id="bodyFig">${bodyFig(ACTIVE_M)}<figcaption><b>Unde se măsoară</b>Atinge un câmp și îți arăt linia pe manechin.</figcaption></figure>
+   <figure class="fig figm" id="bodyFig">${bodyFig(ACTIVE_M)}</figure>
    <div class="mm">${MASURI.map(m=>`<label class="mm-r"><span>${esc(m.l)}<small>${esc(m.h)}</small></span>
      <input type="number" inputmode="decimal" step="0.5" min="${m.min}" max="${m.max}" data-m="${m.k}"
        value="${x.m[m.k]||''}" aria-label="${esc(m.l)} în cm"><b>cm</b></label>`).join('')}</div>
@@ -4909,10 +4943,11 @@ function persoana(id){
    <div class="seg"><button class="btn dgr" id="sterge">Șterge persoana</button></div></div>`;
   const bf=document.getElementById('bodyFig');
   const showM=k=>{ACTIVE_M=k;if(bf)bf.firstChild.outerHTML=bodyFig(k)};
+  arataVerif(x.m);
   app.querySelectorAll('[data-m]').forEach(inp=>{
     inp.addEventListener('focus',()=>showM(inp.dataset.m));
     inp.addEventListener('input',()=>{const v=parseFloat(String(inp.value).replace(',','.'));
-      if(isFinite(v)&&v>0)x.m[inp.dataset.m]=v; else delete x.m[inp.dataset.m]; save()});
+      if(isFinite(v)&&v>0)x.m[inp.dataset.m]=v; else delete x.m[inp.dataset.m]; save();arataVerif(x.m)});
   });
   document.getElementById('ren').onclick=async()=>{const n=await intreaba('Redenumește','Numele sau porecla',x.nume);
     if(n){x.nume=n;save();persoana(id)}};
@@ -4943,8 +4978,24 @@ function formPath(cx){
 const BODY={form:formPath(150),cx:214,talie:128,sold:160,bust:96,umar:44,tiv:206};
 /* textul lung se împarte pe rânduri scurte, ca să nu treacă peste manechin */
 function rupe(t,max){const w=String(t).split(' '),r=[];let c='';w.forEach(x=>{if((c+' '+x).trim().length>max&&c){r.push(c);c=x}else c=(c+' '+x).trim()});if(c)r.push(c);return r}
+/* verificări de bun-simț la măsuri (7.27): nu opresc nimic, doar atrag atenția sub câmp */
+const VERIF=[
+ ['sold','talie',(s,t)=>s<t,'Șoldul e de obicei mai mare decât talia. Verifică măsura.'],
+ ['bust','talie',(b,t)=>b<t,'Bustul e de obicei mai mare decât talia. Verifică măsura.'],
+ ['lungimeBluza','lungimeRochie',(bl,r)=>bl>r,'Bluza iese mai lungă decât rochia. Verifică măsurile.'],
+ ['umarTalie','lungimeBluza',(u,bl)=>u>bl,'De la umăr la talie iese mai mult decât toată bluza. Verifică măsurile.'],
+ ['talieSold','lungimeFusta',(ts,f)=>ts>f,'De la talie la șold iese mai mult decât toată fusta. Verifică măsurile.'],
+ ['talieSold','lungimePantalon',(ts,p)=>ts>p,'De la talie la șold iese mai mult decât tot pantalonul. Verifică măsurile.']
+];
+function arataVerif(m){
+  document.querySelectorAll('.mm-warn').forEach(e=>e.remove());
+  VERIF.forEach(([a,b,rau,txt])=>{if(!(m[a]>0&&m[b]>0)||!rau(m[a],m[b]))return;
+    const inp=document.querySelector(`[data-m="${a}"]`);if(!inp)return;
+    const p=document.createElement('p');p.className='mm-warn';p.setAttribute('role','status');p.textContent=txt;
+    inp.closest('.mm-r').after(p)});
+}
 function bodyFig(active){
-  const B=BODY, cx=B.cx, mm=MASURI.find(z=>z.k===active), f=mm&&mm.fig;
+  const B=BODY, mm=MASURI.find(z=>z.k===active), f=mm&&mm.fig, cx=mm?B.cx:160;
   const skirt=`M${cx-28} ${B.talie} C ${cx-44} ${B.talie+26}, ${cx-52} ${B.tiv-16}, ${cx-56} ${B.tiv} L ${cx+56} ${B.tiv} C ${cx+52} ${B.tiv-16}, ${cx+44} ${B.talie+26}, ${cx+28} ${B.talie} Z`;
   const lat=y=>{if(y<60)return 42; if(y<110)return 41; if(y<140)return 28; if(y<175)return 42; return 38};
   let o=L(cx,188,cx,214,'stand')+P(`M${cx-22} 218 L${cx+22} 218`,'stand');
@@ -5002,7 +5053,7 @@ function project(id){
         ${S.people.map(x=>`<button class="btn${per&&x.id===per.id?' pri':''}" data-per="${x.id}">${esc(x.nume)}</button>`).join('')}
         <button class="btn" id="addp">+ Altă persoană</button>
         <a class="btn" href="#/persoane">Gestionează</a></div>
-        <figure class="fig figm" id="bodyFig">${bodyFig(ACTIVE_M)}<figcaption><b>Unde se măsoară</b>Atinge un câmp și îți arăt linia pe manechin.</figcaption></figure>
+        <figure class="fig figm" id="bodyFig">${bodyFig(ACTIVE_M)}</figure>
         <div class="mm">${need.map(k=>{const mm=MASURI.find(z=>z.k===k);
           return `<label class="mm-r"><span>${esc(mm.l)}<small>${esc(mm.h)}</small></span>
             <input type="number" inputmode="decimal" step="0.5" min="${mm.min}" max="${mm.max}" data-m="${k}" value="${per&&per.m[k]||''}" aria-label="${esc(mm.l)} în cm"><b>cm</b></label>`}).join('')}</div>`;
@@ -5040,7 +5091,8 @@ function project(id){
   });
   app.querySelectorAll('[data-m]').forEach(inp=>inp.addEventListener('input',()=>{
     let pp=activePerson(); if(!pp){addPerson('Eu');pp=activePerson()}
-    pp.m[inp.dataset.m]=num(inp.value);save();render()}));
+    pp.m[inp.dataset.m]=num(inp.value);save();arataVerif(pp.m);render()}));
+  {const pp=activePerson();if(pp)arataVerif(pp.m)}
 
   function render(){
     const per=activePerson(), st=pState(p,per);
@@ -5053,25 +5105,25 @@ function project(id){
     const m=per?per.m:{}, r=p.calc(m,st.opts,st.W);
     const nec=fabricNeed(r.piese,st.W);
     rez.innerHTML=`<div class="sumar"><b>${esc(per?per.nume:'fără măsuri')}</b>
-       <span class="sumar-w" role="group" aria-label="Lățimea balotului">${[90,110,140,150].map(w=>
+       <span class="sumar-w" role="group" aria-label="Lățimea balotului"><span class="sumar-l">balot</span>${[90,110,140,150].map(w=>
          `<button class="wch${st.W===w?' on':''}" data-w="${w}">${w}</button>`).join('')}<i>cm</i></span>
        <span class="sumar-m">${nec.prea?'nu încape':cm(nec.len)+' cm material'}</span></div>
      <details class="fold" open><summary><h2>De tăiat</h2></summary>
       <figure class="fig">${drawPieces(r.piese)}<figcaption><b>Schema</b>Bucățile, la scară, cu cotele calculate din măsurile tale.</figcaption></figure>
       ${nec.prea?'':`<figure class="fig">${drawLayout(nec,st.W)}<figcaption><b>Așezarea</b>O variantă de așezare pe balot, la lățimea de ${st.W} cm. Săgețile verzi arată firul drept.</figcaption></figure>`}
-      <table class="tb"><thead><tr><th>Bucata</th><th>Dimensiuni</th><th>Buc.</th></tr></thead><tbody>
+      <table class="pt"><thead><tr><th>Bucata</th><th>Dimensiuni</th><th>Buc.</th></tr></thead><tbody>
       ${r.piese.map(x=>`<tr><td>${esc(x.name)}${x.note?`<small>${esc(x.note)}</small>`:''}</td>
-        <td>${x.shape==='donut'?`rază interioară ${cm(x.r)} cm, rază exterioară ${cm(x.R)} cm`:
+        <td>${esc(x.shape==='donut'?`rază interioară ${cm(x.r)} cm, rază exterioară ${cm(x.R)} cm`:
              x.shape==='trapez'?`${cm(x.wTop)} sus / ${cm(x.w)} jos × ${cm(x.h)} cm`:
-             `${cm(x.w)} × ${cm(x.h)} cm`}</td><td>${x.qty}</td></tr>`).join('')}
+             `${cm(x.w)} × ${cm(x.h)} cm`)}</td><td>${x.qty}<span class="pt-u"> buc.</span></td></tr>`).join('')}
       </tbody></table></details>
      <details class="fold"><summary><h2>Material și mercerie</h2></summary>
       <p class="mm-l">Lățimea balotului se schimbă din bara de sus.</p>
-      <p class="big">${nec.prea?'Nu încape pe această lățime':`Îți trebuie aproximativ <b>${cm(nec.len)} cm</b>, adică ${(nec.len/100).toFixed(2).replace('.',',')} m`}</p>
+      <p class="big">${nec.prea?'Nu încape pe această lățime':`Îți trebuie aproximativ <b>${cm(nec.len)} cm</b>, adică ${(nec.len/100).toFixed(2).replace('.',',')}\u00A0m`}</p>
       ${nec.prea?`<p class="msg err">Bucata „${esc(nec.prea)}” e mai lată decât ${st.W} cm. Alege un material mai lat sau o croială mai domoală.</p>`:
         `<p>Calculul include 8% pentru potrivit și 10 cm siguranță. Dacă materialul are model care trebuie potrivit sau fir cu direcție, ia cu 20% mai mult. Bucățile marcate opțional nu sunt socotite.</p>`}
-      <h2 style="margin-top:16px">Mercerie</h2><ul>${r.mercerie.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
-      ${r.note.length?`<h2 style="margin-top:var(--s4)">De reținut</h2><ul>${r.note.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
+      <h3 class="sub3">Mercerie</h3><ul>${r.mercerie.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      ${r.note.length?`<h3 class="sub3">De reținut</h3><ul>${r.note.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
      </details>`;
     const steps=p.pasi(m,st.opts);
     pasi.innerHTML=`<details class="fold" open><summary><h2>Pașii</h2></summary>
