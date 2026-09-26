@@ -727,6 +727,16 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .d .cutR{fill:none;stroke:var(--thread);stroke-width:1.6;stroke-dasharray:5 3}
 .pl .fig{margin:8px 0 4px}
 
+/* desenul tehnicii, arătat sub pasul de proiect (7.24): puțin mai mic, cu fundal discret */
+.pl .figt{max-width:440px}
+.pl .figt figcaption b{font-family:inherit;font-weight:700}
+
+/* pagina de bun venit (7.24) */
+.intro-p{margin:0 0 var(--s5);padding:0 0 var(--s4);border-bottom:1px dashed var(--line)}
+.intro-p h2{font-size:calc(21px*var(--fs));margin:var(--s3) 0 var(--s1)}
+.intro-p p{margin:0 0 var(--s3)}
+.alert.intro .seg{margin-top:var(--s2)}
+
 </style>
 </head>
 <body>
@@ -796,7 +806,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.23';
+const APP_VER='7.24';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -2107,7 +2117,7 @@ TECH.push(
  errors:['Tensiunea reglată pe lucrare, nu pe o probă: rămân găuri de la descusut.','Schimbată cu trepte mari: treci de la o extremă la alta.','Învinuiești tensiunea când de fapt ața de sus nu e pusă corect: verifică întâi drumul aței.','Șurubul bobinei desfăcut mult: pierzi reglajul din fabrică și îl refaci greu.']
 },
 
-{id:'materiale',sec:'stiut',t:'Materialele: ce trebuie să știi înainte de croit',lvl:'u',time:'de citit o dată',
+{id:'materiale',fig:3,sec:'stiut',t:'Materialele: ce trebuie să știi înainte de croit',lvl:'u',time:'de citit o dată',
  tags:'material țesătură tricot bumbac in poliester vâscoză intră la apă se destramă se întinde fir drept spălare',
  intro:'Trei întrebări hotărăsc cum croiești: se destramă, se întinde, intră la apă? Răspunsurile se află în cinci minute, cu un rest de material în mână.',
  need:['un rest din materialul pe care vrei să-l folosești','o riglă','acces la mașina de spălat, pentru proba de intrare la apă'],
@@ -4050,7 +4060,8 @@ function pasCuPas(tip,id,idx){
     const per=activePerson();
     titlu=p.t;inapoi='#/p/'+id;
     let st;try{st=p.pasi(per?per.m:{},pState(p,per).opts)}catch(e){st=[]}
-    pasi=st.map((s,k)=>({h:s.h,p:s.p,tech:s.tech,n:k}));}
+    /* desenul pasului: al lui, dacă are, altfel desenul principal al tehnicii folosite (7.24) */
+    pasi=st.map((s,k)=>{const f=!s.d&&s.tech&&techFig(s.tech);return {h:s.h,p:s.p,tech:s.tech,n:k,d:s.d||(f&&f.d),c:s.d?s.c:(f?`Din fișa „${f.t}”. ${f.c}`:'')}});}
   if(!pasi.length){location.hash=inapoi;return}
   const k=Math.min(i,pasi.length-1), s=pasi[k];
   const bifat=tip==='p'?(()=>{const p=projById(id),per=activePerson(),st=S.proj[pKey(p,per)];
@@ -4215,6 +4226,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.24',l:['La proiecte, sub pașii care folosesc o tehnică apare direct desenul ei, și în modul pas cu pas. Nu mai trebuie să sari la fișă în mijlocul lucrului.','Pagină nouă, „Cum folosești aplicația”, cu trei desene: căutat o tehnică, început un proiect, copiat din poză. O găsești în „Mai mult”, iar la prima deschidere e propusă pe Acasă.','Iconiță nouă pentru aplicația instalată, în stilul desenelor. Ține apăsat pe iconiță și ai scurtături spre Învăț, Fac și copierea din poză.']},
  {v:'7.23',l:['La toate proiectele, desenul cu așezarea pe balot e o animație în patru pași: întinzi materialul, așezi tiparele pe firul drept, le prinzi cu ace, tai pe contur.','La fusta cerc, pasul „Taie cercul” are o animație cu plierea și compasul, separat pentru cerc și pentru semicerc.','La fusta semicerc, textul spunea să pliezi materialul în patru. Corect e o singură dată, iar compasul pornește din capătul de sus al pliului.']},
  {v:'7.22',l:['Setări: opțiunile stau pe o grilă ordonată, iar sub mărimea textului vezi imediat cum arată textul ales. Legătura de sus duce înapoi la „Mai mult”.','Fac: grupurile de proiecte au iconițe, iar „Copiez ceva ce am deja” arată ca o acțiune, ca pe prima pagină.','„Continuă de unde ai rămas” spune totul pe un rând scurt, de exemplu „Proiect · în ultima oră · 0 din 5 pași”.','Pe carduri apare o bară de progres, de îndată ce ai exersat o fișă sau ai început un proiect.']},
  {v:'7.21',l:['Butonul de mărire s-a mutat din colțul desenului în bara legendei, jos în dreapta. Nu mai acoperă nimic din desen, nici punctele animațiilor. Mărirea merge în continuare și atingând oriunde pe desen.']},
@@ -4342,6 +4354,39 @@ function backupBanner(){
 }
 function bkBtn(){const b=document.getElementById('bkLater');
   if(b)b.onclick=()=>{S.settings.bkAmanat=Date.now();save();b.closest('.alert').remove()}}
+/* desenul principal al unei tehnici, pentru pașii de proiect care o folosesc (7.24):
+   primul pas al fișei care are desen */
+function techFig(id){const t=byId(id);if(!t)return null;
+  /* o fișă poate alege alt pas decât primul, cu fig: indexul pasului */
+  const k=t.fig!=null&&t.steps[t.fig]&&t.steps[t.fig].d?t.fig:t.steps.findIndex(s=>s.d);if(k<0)return null;
+  return {d:t.steps[k].d,c:t.steps[k].c||'',t:t.t,id,k}}
+function figPas(s,i){
+  if(s.d)return `<figure class="fig">${s.d()}<figcaption><b>Pasul ${i+1}</b>${esc(s.c||'')}</figcaption></figure>`;
+  const f=s.tech&&techFig(s.tech);
+  return f?`<figure class="fig figt">${f.d()}<figcaption><b>Din fișa „${esc(f.t)}”</b>${esc(f.c)}</figcaption></figure>`:'';
+}
+/* ================= bun venit (7.24) =================
+   La prima deschidere, pe Acasă apare o invitație scurtă. Pagina se poate deschide oricând din „Mai mult”. */
+function introCard(){
+  if(S.settings.intro||areDate()||Object.keys(S.done).length)return '';
+  return `<section class="alert intro" aria-label="Prima dată aici"><h2>Prima dată în Atelier?</h2>
+    <p>Vezi în trei desene cum se folosește.</p>
+    <div class="seg"><a class="btn pri" href="#/bunvenit">Arată-mi</a><button class="btn" id="introNu">Nu acum</button></div></section>`;
+}
+function bunVenit(){
+  const dT=svg(fab(40,24,240,96)+seamH(72,56,264)+L(56,72,160,72,'st')+needle(172,72,-20,60)+P('M160 72 C 164 90, 150 108, 136 104','thr'),136);
+  const dP=svg(R(40,24,240,100,'balot')+L(40,24,40,124,'selv')+L(280,24,280,124,'selv')+R(56,36,86,76,'pieceL')+R(152,36,54,40,'pieceL')+R(152,84,112,28,'pieceL')
+    +A(99,104,99,46,'grain')+A(99,46,99,104,'grain')+A(179,70,179,42,'grain')+A(179,42,179,70,'grain'),142);
+  const dC=svg(R(100,10,120,128,'ol',16)+L(146,18,174,18,'ol')+R(110,26,48,68,'card',1)+T(134,64,'A4','middle','m')+P('M178 30 L198 30 L208 94 L168 94 Z','fab')+dimH(108,168,208),148);
+  const pan=(d,h,p,href,lab)=>`<section class="intro-p"><figure class="fig">${d}</figure><h2>${h}</h2><p>${p}</p><a class="btn" href="${href}">${lab}</a></section>`;
+  app.innerHTML=`<div class="view"><a class="back" href="#/">← Acasă</a>
+   <header class="head"><h1>Bun venit în Atelier</h1><p class="sub">Manualul și proiectele tale de cusut, croșetat și tricotat. Merge fără internet, iar tot ce notezi rămâne pe telefon.</p></header>
+   ${pan(dT,'1. Caut o tehnică','Fiecare tehnică are pași scurți și desene. Le poți marca drept favorite sau exersate și poți nota trucurile tale.','#/tehnici','Deschide Învăț')}
+   ${pan(dP,'2. Încep un proiect','Alegi un proiect, scrii măsurile o singură dată și primești bucățile de tăiat, așezarea pe material și pașii de bifat.','#/proiecte','Deschide Fac')}
+   ${pan(dC,'3. Copiez din poză','Faci o poză unei lucrări gata făcute, cu o foaie A4 alături, și afli dimensiunile ei și cât material îți trebuie.','#/copii','Deschide copierea')}
+   <div class="seg"><a class="btn pri" href="#/" id="introGata">Am înțeles</a></div></div>`;
+  S.settings.intro=1;save();
+}
 function continua(){
   const R=S.recent||{}, items=[];
   if(R.t&&byId(R.t.id)){const t=byId(R.t.id);
@@ -4389,7 +4434,7 @@ function acasa(){
   const nT=TECH.length, nD=TECH.filter(t=>S.done[t.id]).length;
   const fav=TECH.filter(t=>S.fav[t.id]), per=activePerson();
   app.innerHTML=`<div class="view">${mast('Atelier','Manualul și proiectele tale de cusut, croșetat și tricotat.')}
-   ${backupBanner()}${continua()}
+   ${backupBanner()}${introCard()}${continua()}
    <section class="a3s" aria-label="Ce vrei să faci">
     <a class="a3" href="#/tehnici">${ic('tehnica')}<span class="txt"><b>Caut o tehnică</b><span>cum se face ceva anume</span></span></a>
     <a class="a3" href="#/proiecte">${ic('proiect')}<span class="txt"><b>Încep un proiect</b><span>calculat cu măsurile tale</span></span></a>
@@ -4407,6 +4452,7 @@ function acasa(){
    ${per?`<p class="who">Proiectele se calculează acum cu măsurile <b>${esc(per.nume)}</b>.</p>`:''}
    </div>`;
   newsBtn();bkBtn();
+  const inu=document.getElementById('introNu');if(inu)inu.onclick=()=>{S.settings.intro=1;save();inu.closest('.intro').remove()};
 }
 function maiMult(){
   const lb=S.settings.lastBackup, zile=lb?Math.round((Date.now()-lb)/864e5):null;
@@ -4424,6 +4470,7 @@ function maiMult(){
     ${rand('#/noutati','Ce e nou',`versiunea ${APP_VER}`,0,'nou')}
    </ul></section>
    <section class="sec"><div class="sec-h"><h2>Ajutor</h2></div><ul class="list">
+    ${rand('#/bunvenit','Cum folosești aplicația','cele trei feluri, pe scurt',0,'tehnica')}
     ${rand('#/legenda','Cum citești desenele','semnele folosite în toate figurile',0,'legenda')}
     ${rand('#/t/depanare','Depanarea mașinii','ce verifici când ceva nu merge',0,'depanare')}
     ${rand('#/t/janome-1522','Mașina ta, Janome 1522GN','reglajele ei, pas cu pas',0,'masina2')}
@@ -4943,7 +4990,7 @@ function project(id){
       <p class="mm-l">Bifează pe măsură ce avansezi. Rămâne salvat.</p>
       <ol class="pl">${steps.map((s,i)=>`<li class="${st.done.includes(i)?'ok':''}">
         <label><input type="checkbox" data-s="${i}"${st.done.includes(i)?' checked':''}>
-        <span><b>${esc(s.h)}</b>${esc(s.p)}${s.tech&&byId(s.tech)?` <a href="#/t/${s.tech}">Vezi tehnica: ${esc(byId(s.tech).t)}</a>`:''}</span></label>${s.d?`<figure class="fig">${s.d()}<figcaption><b>Pasul ${i+1}</b>${esc(s.c||'')}</figcaption></figure>`:''}</li>`).join('')}</ol>
+        <span><b>${esc(s.h)}</b>${esc(s.p)}${s.tech&&byId(s.tech)?` <a href="#/t/${s.tech}">Vezi tehnica: ${esc(byId(s.tech).t)}</a>`:''}</span></label>${figPas(s,i)}</li>`).join('')}</ol>
       <div class="seg"><a class="btn pri" href="#/pas/p/${p.id}/0">Mod pas cu pas</a>
        <button class="btn" id="reset">Șterge bifele</button></div></details>`;
     rez.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{st.W=+b.dataset.w;save();render()});
@@ -5053,6 +5100,7 @@ function route(){
   else if(h==='#/mai-mult')maiMult();
   else if(h.startsWith('#/p/'))project(decodeURIComponent(h.slice(4)));
   else if(h==='#/legenda')legend();
+  else if(h==='#/bunvenit')bunVenit();
   else if(h==='#/proiecte')projects();
   else if(h==='#/persoane')persoane();
   else if(h.startsWith('#/persoana/'))persoana(h.slice(11));
