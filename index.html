@@ -737,6 +737,35 @@ body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))}
 .intro-p p{margin:0 0 var(--s3)}
 .alert.intro .seg{margin-top:var(--s2)}
 
+/* manechinul (7.26): punctul umărului și desenul lipit sus cât completezi câmpurile */
+.d .mDot{fill:var(--muted)}
+.figm{position:sticky;top:0;z-index:5;background:var(--paper);padding-top:4px}
+.figm svg{max-height:36vh;width:auto;max-width:100%;margin:0 auto;display:block}
+.figm figcaption{padding-top:6px;padding-bottom:6px;min-height:0}
+
+/* mărirea pe tot ecranul (7.26) */
+.zfull{position:fixed;inset:0;z-index:70;background:var(--paper);display:flex;flex-direction:column}
+body.zf-on{overflow:hidden}
+.zf-top{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top,0px)) 10px 8px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+.zf-cap{flex:1;margin:0;color:var(--muted);font-size:calc(14.5px*var(--fs));line-height:1.35}
+.zf-sc{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;display:flex;align-items:safe center;justify-content:safe center;
+  background-color:var(--panel);background-image:radial-gradient(circle,var(--grid) 1.1px,transparent 1.4px);background-size:14px 14px}
+.zf-in{width:100%;flex:none;margin:auto}
+.zf-in svg{display:block;width:100%;height:auto}
+@media (orientation:landscape){.zf-in.zk1{width:auto}.zf-in.zk1 svg{max-height:calc(100dvh - 130px);width:auto;margin:0 auto}}
+.zf-bar{display:flex;align-items:center;justify-content:center;gap:18px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--panel)}
+.zf-k{min-width:56px;text-align:center;color:var(--muted);font-variant-numeric:tabular-nums}
+.zf-b{width:48px;height:48px;border-radius:50%;border:1.5px solid var(--line-f,var(--line));background:var(--paper);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);flex:none}
+.zf-b svg{width:24px;height:24px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round}
+
+/* modul pas cu pas: săgeți și bec desenate (7.26) */
+.pm-b svg{width:34px;height:34px;stroke:currentColor;stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.pm-w{display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.pm-w svg{width:20px;height:20px;stroke:var(--mat);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* butoanele mici cu iconiță desenată, nu din font (7.26) */
+.icb svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
 </style>
 </head>
 <body>
@@ -806,14 +835,15 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.25';
+const APP_VER='7.26';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
 /* ================= diagram helpers =================
    Toate desenele au viewBox 320×190 (sau h dat). Culorile vin din clase CSS,
    deci merg automat în modul luminos și întunecat. */
-const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+/* numărul rămâne lipit de unitate: „9 mm” nu se mai rupe la capăt de rând (7.26) */
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/(\d) (mm|cm|m|g|kg|ml|buc\.|ochiuri|rânduri|ture)(?![\p{L}])/gu,'$1\u00A0$2');
 /* materialul are margini de tăietură: ușor neregulate, nu tras cu rigla (7.15).
    Neregularitatea e fixă pentru aceeași bucată, calculată din coordonate. */
 const rnd=k=>{const v=Math.sin(k*12.9898)*43758.5453;return v-Math.floor(v)};
@@ -4050,6 +4080,12 @@ async function reAprinde(){
 }
 
 /* ================= modul „lângă mașină” ================= */
+/* iconițele modului pas cu pas, desenate, de mărime fixă (7.26) */
+const PMI={
+ st:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>',
+ dr:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>',
+ bec:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17h6M10 20.4h4M12 3.4a6 6 0 0 0-3.6 10.8c.8.6 1.2 1.4 1.2 2.3v.5h4.8v-.5c0-.9.4-1.7 1.2-2.3A6 6 0 0 0 12 3.4z"/></svg>'
+};
 function pasCuPas(tip,id,idx){
   const i=Math.max(0,+idx||0);
   let titlu='',pasi=[],inapoi='#/';
@@ -4079,16 +4115,16 @@ function pasCuPas(tip,id,idx){
       ${tip==='p'?`<button class="btn${bifat?' pri':''}" id="pmBif">${bifat?'✓ Pas bifat':'Bifează pasul'}</button>`:''}
     </div>
     <div class="pm-nav">
-      <a class="pm-b${k?'':' off'}" href="#/pas/${tip}/${id}/${k-1}" aria-label="Pasul anterior">‹</a>
+      <a class="pm-b${k?'':' off'}" href="#/pas/${tip}/${id}/${k-1}" aria-label="Pasul anterior">${PMI.st}</a>
       <span class="pm-w" id="pmW"></span>
-      ${k<pasi.length-1?`<a class="pm-b pri" href="#/pas/${tip}/${id}/${k+1}" aria-label="Pasul următor">›</a>`
+      ${k<pasi.length-1?`<a class="pm-b pri" href="#/pas/${tip}/${id}/${k+1}" aria-label="Pasul următor">${PMI.dr}</a>`
         :`<a class="pm-b pri" href="${inapoi}">Gata</a>`}
     </div></div>`;
   const b=document.getElementById('pmBif');
   if(b)b.onclick=()=>{const p=projById(id),per=activePerson(),st=pState(p,per);
     st.done=st.done.includes(k)?st.done.filter(x=>x!==k):[...st.done,k];save();pasCuPas(tip,id,k)};
   tineAprins(true).then(ok=>{const w=document.getElementById('pmW');
-    if(w)w.textContent=ok?'ecranul rămâne aprins':''});
+    if(w){w.innerHTML=ok?`${PMI.bec}<span>ecran aprins</span>`:'';w.title=ok?'Ecranul rămâne aprins cât ești în acest mod':''}});
 }
 
 /* ================= contorul de rânduri ================= */
@@ -4207,14 +4243,14 @@ const SIC={
  stiut:'<svg viewBox="0 0 24 24"><path d="M12 2.8a6.4 6.4 0 0 1 3.8 11.6c-.7.5-1.1 1.2-1.1 2v.4H9.3v-.4c0-.8-.4-1.5-1.1-2A6.4 6.4 0 0 1 12 2.8z" class="f"/><path d="M9.6 19.4h4.8M10.4 21.4h3.2" class="hole-s"/><path d="M12 8.2v4.4" class="hole-s"/></svg>'
 };
 const MASURI=[
- {k:'bust',l:'Bustul',h:'în partea cea mai plină a pieptului',min:50,max:180,fig:{c:104}},
+ {k:'bust',l:'Bustul',h:'în partea cea mai plină a pieptului',min:50,max:180,fig:{c:96}},
  {k:'talie',l:'Talia',h:'de jur împrejur, unde se îndoaie corpul în lateral',min:40,max:160,fig:{c:128}},
  {k:'sold',l:'Șoldul',h:'în partea cea mai lată, de obicei la 20 cm sub talie',min:50,max:180,fig:{c:160}},
  {k:'talieSold',l:'De la talie la șold',h:'pe lateral, de la talie până la linia cea mai lată',min:12,max:32,fig:{de:128,la:160}},
- {k:'umarTalie',l:'De la umăr la talie',h:'pe față, de la umăr până la talie',min:25,max:55,fig:{de:64,la:128}},
+ {k:'umarTalie',l:'De la umăr la talie',h:'pe față, de la umăr până la talie',min:25,max:55,fig:{de:44,la:128}},
  {k:'lungimeFusta',l:'Lungimea fustei',h:'de la talie până unde vrei să se termine',min:20,max:120,fig:{de:128,la:206,fusta:1}},
- {k:'lungimeRochie',l:'Lungimea rochiei',h:'de la umăr până unde vrei să se termine',min:60,max:160,fig:{de:64,la:206}},
- {k:'lungimeBluza',l:'Lungimea bluzei',h:'de la umăr până unde vrei să se termine',min:40,max:90,fig:{de:64,la:172}},
+ {k:'lungimeRochie',l:'Lungimea rochiei',h:'de la umăr până unde vrei să se termine',min:60,max:160,fig:{de:44,la:206}},
+ {k:'lungimeBluza',l:'Lungimea bluzei',h:'de la umăr până unde vrei să se termine',min:40,max:90,fig:{de:44,la:172}},
  {k:'brat',l:'Circumferința brațului',h:'în partea cea mai groasă a brațului, relaxat',min:15,max:60},
  {k:'lungimePantalon',l:'Lungimea pantalonului',h:'de la talie până la gleznă, pe lateral',min:50,max:130,fig:{de:128,la:214}}
 ];
@@ -4226,6 +4262,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.26',l:['Manechinul de la măsuri are umeri, iar textele stau lângă el, nu peste el. Măsurile „de la umăr” pornesc acum chiar de la umăr, iar la braț apare un braț desenat separat.','Pe pagina cu măsuri, manechinul rămâne sus cât derulezi prin câmpuri, deci vezi linia și la ultimele măsuri.','Mărirea unui desen se deschide pe tot ecranul. Mărești cu + și −, cu două degete sau cu o atingere dublă, iar desenul se mută trăgând de el.','În modul pas cu pas, săgețile sunt mai mari și desenate, iar „ecran aprins” are un bec și încape pe un rând.','Numerele nu se mai despart de unități la capăt de rând, de exemplu „9 mm”.','„Persoane și măsuri” te duce înapoi de unde ai venit, iar scurtăturile de pe iconiță au iconițe.']},
  {v:'7.25',l:['Ecranul de pornire e verde în întregime, cu iconița la mijloc, în locul unui pătrat verde pe fundal alb.']},
  {v:'7.24',l:['La proiecte, sub pașii care folosesc o tehnică apare direct desenul ei, și în modul pas cu pas. Nu mai trebuie să sari la fișă în mijlocul lucrului.','Pagină nouă, „Cum folosești aplicația”, cu trei desene: căutat o tehnică, început un proiect, copiat din poză. O găsești în „Mai mult”, iar la prima deschidere e propusă pe Acasă.','Iconiță nouă pentru aplicația instalată, în stilul desenelor. Ține apăsat pe iconiță și ai scurtături spre Învăț, Fac și copierea din poză.']},
  {v:'7.23',l:['La toate proiectele, desenul cu așezarea pe balot e o animație în patru pași: întinzi materialul, așezi tiparele pe firul drept, le prinzi cu ace, tai pe contur.','La fusta cerc, pasul „Taie cercul” are o animație cu plierea și compasul, separat pentru cerc și pentru semicerc.','La fusta semicerc, textul spunea să pliezi materialul în patru. Corect e o singură dată, iar compasul pornește din capătul de sus al pliului.']},
@@ -4776,18 +4813,46 @@ function settings(){
 
 
 /* ================= mărirea desenelor ================= */
+/* mărirea unui desen (7.26): pe tot ecranul, cu +/− și cu două degete; desenul se mută trăgând de el */
+const ICZ={
+ x:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+ plus:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+ minus:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>'
+};
 function zoomFig(svgHtml,cap){
-  const w=document.createElement('div');w.className='ovl zoom';
-  w.innerHTML=`<div class="zbox" role="dialog" aria-modal="true" aria-label="Desen mărit">
-    <div class="zsvg">${svgHtml}</div><p>${esc(cap||'')}</p>
-    <div class="dlg-b"><button class="btn pri" data-close>Închide</button></div></div>`;
-  document.body.appendChild(w);
-  const close=()=>{document.removeEventListener('keydown',k);w.remove();window.removeEventListener('popstate',pop)};
-  const k=e=>{if(e.key==='Escape'){close();history.back()}};
+  const w=document.createElement('div');w.className='zfull';
+  w.innerHTML=`<div class="zf-top" role="dialog" aria-modal="true" aria-label="Desen mărit">
+      <p class="zf-cap">${esc(cap||'')}</p>
+      <button class="zf-b" data-close aria-label="Închide">${ICZ.x}</button></div>
+    <div class="zf-sc"><div class="zf-in zk1">${svgHtml}</div></div>
+    <div class="zf-bar"><button class="zf-b" data-z="-1" aria-label="Micșorează">${ICZ.minus}</button>
+      <span class="zf-k" aria-live="polite">100%</span>
+      <button class="zf-b" data-z="1" aria-label="Mărește">${ICZ.plus}</button></div>`;
+  document.body.appendChild(w);document.body.classList.add('zf-on');
+  const sc=w.querySelector('.zf-sc'), inn=w.querySelector('.zf-in'), lab=w.querySelector('.zf-k');
+  let k=1;
+  const set=(nk,cx,cy)=>{nk=Math.max(1,Math.min(4,nk));
+    /* păstrează sub deget punctul pe care îl mărești */
+    const r=sc.getBoundingClientRect(), px=(cx??r.width/2), py=(cy??r.height/2);
+    const fx=(sc.scrollLeft+px)/inn.offsetWidth, fy=(sc.scrollTop+py)/inn.offsetHeight;
+    k=nk;inn.style.width=k>1?(k*100)+'%':'';inn.classList.toggle('zk1',k===1);lab.textContent=Math.round(k*100)+'%';
+    sc.scrollLeft=fx*inn.offsetWidth-px;sc.scrollTop=fy*inn.offsetHeight-py};
+  w.querySelectorAll('[data-z]').forEach(b=>b.onclick=()=>set(k*(+b.dataset.z>0?1.5:1/1.5)));
+  /* două degete: distanța dintre ele dă mărirea */
+  let d0=0,k0=1;
+  const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+  sc.addEventListener('touchstart',e=>{if(e.touches.length===2){d0=dist(e.touches);k0=k}},{passive:true});
+  sc.addEventListener('touchmove',e=>{if(e.touches.length===2&&d0){e.preventDefault();
+    const r=sc.getBoundingClientRect();set(k0*dist(e.touches)/d0,(e.touches[0].clientX+e.touches[1].clientX)/2-r.left,(e.touches[0].clientY+e.touches[1].clientY)/2-r.top)}},{passive:false});
+  sc.addEventListener('touchend',()=>{d0=0},{passive:true});
+  /* atingere dublă: comută între întreg și mărit de două ori */
+  let last=0;sc.addEventListener('click',e=>{const t=Date.now();if(t-last<320){const r=sc.getBoundingClientRect();set(k>1?1:2,e.clientX-r.left,e.clientY-r.top)}last=t});
+  const close=()=>{document.removeEventListener('keydown',kd);w.remove();document.body.classList.remove('zf-on');window.removeEventListener('popstate',pop)};
+  const kd=e=>{if(e.key==='Escape'){close();history.back()}else if(e.key==='+'||e.key==='=')set(k*1.5);else if(e.key==='-')set(k/1.5)};
   const pop=()=>close();
-  document.addEventListener('keydown',k);history.pushState({z:1},'');window.addEventListener('popstate',pop,{once:true});
+  document.addEventListener('keydown',kd);history.pushState({z:1},'');window.addEventListener('popstate',pop,{once:true});
   w.querySelector('[data-close]').onclick=()=>{close();history.back()};
-  w.onclick=e=>{if(e.target===w){close();history.back()}};
+  w.querySelector('[data-close]').focus();
 }
 function bindZoom(){
   app.querySelectorAll('figure.fig').forEach(f=>{
@@ -4803,14 +4868,17 @@ function bindZoom(){
 /* ================= persoane ================= */
 function persoane(){
   const per=activePerson();
-  app.innerHTML=`<div class="view"><a class="back" href="#/proiecte">← Proiecte</a>
+  /* legătura de întoarcere urmează drumul pe care ai venit (7.26) */
+  if(!PREV_H.startsWith('#/persoan'))PERS_DIN=PREV_H;
+  const din=/^#\/(p|g)\//.test(PERS_DIN)||PERS_DIN==='#/proiecte'?[PERS_DIN,PERS_DIN==='#/proiecte'?'Fac':'Proiectul']:['#/mai-mult','Mai mult'];
+  app.innerHTML=`<div class="view"><a class="back" href="${din[0]}">← ${din[1]}</a>
    <header class="head"><h1>Persoane și măsuri</h1></header>
    <p class="intro">Măsurile se folosesc la proiecte și rămân doar pe acest telefon. Persoana bifată e cea cu care se calculează.</p>
    ${S.people.length?`<ul class="list pl-people">${S.people.map(x=>`<li class="pers${per&&x.id===per.id?' on':''}">
      <button class="pers-sel" data-sel="${x.id}" aria-pressed="${!!(per&&x.id===per.id)}">
        <b>${esc(x.nume)}</b><span>${MASURI.filter(z=>x.m[z.k]>0).map(z=>esc(z.l.toLowerCase())+' '+cm(x.m[z.k])).join(', ')||'fără măsuri completate'}</span></button>
-     <span class="pers-a"><a class="icb" href="#/persoana/${x.id}" aria-label="Măsurile lui ${esc(x.nume)}">✎</a>
-     <button class="icb dgr" data-del="${x.id}" aria-label="Șterge ${esc(x.nume)}">🗑</button></span></li>`).join('')}</ul>`
+     <span class="pers-a"><a class="icb" href="#/persoana/${x.id}" aria-label="Măsurile lui ${esc(x.nume)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></a>
+     <button class="icb dgr" data-del="${x.id}" aria-label="Șterge ${esc(x.nume)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/></svg></button></span></li>`).join('')}</ul>`
    :ecranGol('manechin','Nicio persoană salvată. Adaugi măsurile o singură dată și se folosesc la toate proiectele.')}
    <div class="seg" style="margin-top:14px"><button class="btn pri" id="addp">Adaugă o persoană</button></div></div>`;
   document.getElementById('addp').onclick=async()=>{
@@ -4858,37 +4926,56 @@ function persoana(id){
 }
 
 /* ================= manechinul pentru măsuri ================= */
-const BODY={
- /* conturul unui manechin de croitorie, jumătate stânga oglindită */
- form:'M150 26 C 140 26, 136 32, 136 40 C 136 48, 128 52, 120 62 C 110 74, 106 88, 108 100'
-     +' C 110 112, 122 118, 124 128 C 126 140, 116 148, 112 160 C 108 172, 110 182, 116 188 L 184 188'
-     +' C 190 182, 192 172, 188 160 C 184 148, 174 140, 176 128 C 178 118, 190 112, 192 100'
-     +' C 194 88, 190 74, 180 62 C 172 52, 164 48, 164 40 C 164 32, 160 26, 150 26 Z',
- talie:128, sold:160, umar:62, tiv:206
-};
+/* manechinul de croitorie, desenat în jurul axei cx (7.26): gât, umeri, bust, talie, șold.
+   Jumătatea dreaptă e descrisă o dată și oglindită. Umărul e la y 44, acolo pornesc măsurile „de la umăr”. */
+function formPath(cx){
+  const R=[[cx+8,22],[cx+8,34],[cx+14,38,cx+34,40,cx+42,46],[cx+47,50,cx+46,58,cx+43,64],
+    [cx+41,74,cx+42,86,cx+41,96],[cx+40,110,cx+28,116,cx+28,128],[cx+28,140,cx+42,148,cx+42,160],[cx+42,174,cx+38,184,cx+36,188]];
+  const m=x=>2*cx-x;
+  let d=`M${cx} 18 Q${cx+8} 18 ${R[0][0]} ${R[0][1]} L${R[1][0]} ${R[1][1]}`;
+  R.slice(2).forEach(c=>d+=` C ${c[0]} ${c[1]}, ${c[2]} ${c[3]}, ${c[4]} ${c[5]}`);
+  d+=` L${m(cx+36)} 188`;
+  R.slice(2).reverse().forEach((c,k,arr)=>{const prev=k+1<arr.length?arr[k+1]:[0,0,0,0,R[1][0],R[1][1]];
+    d+=` C ${m(c[2])} ${c[3]}, ${m(c[0])} ${c[1]}, ${m(prev[4])} ${prev[5]}`});
+  d+=` L${m(R[0][0])} ${R[0][1]} Q${cx-8} 18 ${cx} 18 Z`;
+  return d;
+}
+const BODY={form:formPath(150),cx:214,talie:128,sold:160,bust:96,umar:44,tiv:206};
+/* textul lung se împarte pe rânduri scurte, ca să nu treacă peste manechin */
+function rupe(t,max){const w=String(t).split(' '),r=[];let c='';w.forEach(x=>{if((c+' '+x).trim().length>max&&c){r.push(c);c=x}else c=(c+' '+x).trim()});if(c)r.push(c);return r}
 function bodyFig(active){
-  const B=BODY, mm=MASURI.find(z=>z.k===active), f=mm&&mm.fig;
-  const skirt=`M118 ${B.talie} C 104 ${B.talie+26}, 96 ${B.tiv-16}, 92 ${B.tiv} L 208 ${B.tiv} C 204 ${B.tiv-16}, 196 ${B.talie+26}, 182 ${B.talie} Z`;
-  const lat=y=>{ /* cât de lată e silueta la înălțimea y, aproximativ */
-    if(y<70)return 22; if(y<110)return 44; if(y<140)return 30; if(y<175)return 42; return 46};
-  let o=L(150,188,150,214,'stand')+P('M128 218 L172 218','stand');
+  const B=BODY, cx=B.cx, mm=MASURI.find(z=>z.k===active), f=mm&&mm.fig;
+  const skirt=`M${cx-28} ${B.talie} C ${cx-44} ${B.talie+26}, ${cx-52} ${B.tiv-16}, ${cx-56} ${B.tiv} L ${cx+56} ${B.tiv} C ${cx+52} ${B.tiv-16}, ${cx+44} ${B.talie+26}, ${cx+28} ${B.talie} Z`;
+  const lat=y=>{if(y<60)return 42; if(y<110)return 41; if(y<140)return 28; if(y<175)return 42; return 38};
+  let o=L(cx,188,cx,214,'stand')+P(`M${cx-22} 218 L${cx+22} 218`,'stand');
   if(f&&f.fusta)o+=P(skirt,'fabGhost');
-  o+=P(B.form,'form');
+  o+=P(formPath(cx),'form');
   /* liniile de referință, mereu vizibile discret */
-  [[104,'bust'],[B.talie,'talie'],[B.sold,'sold']].forEach(([y,k])=>{
+  [[B.bust,'bust'],[B.talie,'talie'],[B.sold,'sold']].forEach(([y,k])=>{
     const w=lat(y);
-    o+=P(`M${150-w} ${y} C ${150-w/2} ${y+6}, ${150+w/2} ${y+6}, ${150+w} ${y}`,active===k?'mLine on':'mLine');
+    o+=P(`M${cx-w} ${y} C ${cx-w/2} ${y+6}, ${cx+w/2} ${y+6}, ${cx+w} ${y}`,active===k?'mLine on':'mLine');
   });
+  /* umărul, marcat discret: de aici pornesc lungimile */
+  o+=C(cx+42,B.umar+2,2.4,f&&f.de===B.umar?'dot':'mDot');
   if(f&&f.de!==undefined){
-    o+=L(112,f.de,238,f.de,'tick')+L(112,f.la,238,f.la,'tick')
-      +A(238,f.de,238,f.la,'arrt')+A(238,f.la,238,f.de,'arrt');
+    const ax=cx+62;
+    o+=L(cx-8,f.de,ax,f.de,'tick')+L(cx-8,f.la,ax,f.la,'tick')+A(ax,f.de,ax,f.la,'arrt')+A(ax,f.la,ax,f.de,'arrt');
+  }
+  if(active==='brat'){
+    /* brațul, separat, lângă manechin: inelul roșu e locul măsurii */
+    o+=P(`M${cx+72} 58 C ${cx+84} 56, ${cx+94} 60, ${cx+96} 70 L${cx+100} 150 C ${cx+100} 158, ${cx+84} 160, ${cx+82} 152 L${cx+74} 72 Z`,'form')
+      +P(`M${cx+75} 94 C ${cx+80} 100, ${cx+94} 100, ${cx+98} 92`,'mLine on');
   }
   if(mm){
-    const y=f?(f.c!==undefined?f.c:(f.de+f.la)/2):96;
-    o+=T(18,y-4,mm.l.toLowerCase(),'start')+T(18,y+12,mm.h.split(',')[0],'start','m');
-    if(!f)o+=T(150,176,'măsura asta se ia pe braț, nu pe trunchi','middle','m');
+    const y0=f?(f.c!==undefined?f.c:(f.de+f.la)/2):96;
+    const lines=rupe(mm.h.split(',')[0],19);
+    if(!f)lines.push(...rupe('măsura asta se ia pe braț, nu pe trunchi',19));
+    const y=Math.max(40,Math.min(y0-((lines.length)*14)/2,214-lines.length*14));
+    const tl=rupe(mm.l.toLowerCase(),17);
+    tl.forEach((ln,k)=>o+=T(12,y+k*15,ln,'start'));
+    lines.forEach((ln,k)=>o+=T(12,y+(tl.length-1)*15+16+k*14,ln,'start','m'));
   }
-  o+=T(150,18,mm?'manechin de croitorie':'atinge un câmp de mai jos','middle','m');
+  o+=T(cx,12,mm?'manechin de croitorie':'atinge un câmp de mai jos','middle','m');
   return svg(o,232);
 }
 
@@ -5117,7 +5204,8 @@ function route(){
   bara(PAG_PENTRU(h));
   bindZoom();
 }
-window.addEventListener('hashchange',route);
+let PREV_H='',CUR_H=location.hash||'#/',PERS_DIN='';
+window.addEventListener('hashchange',()=>{PREV_H=CUR_H;CUR_H=location.hash||'#/';route()});
 route();
 PORNIT=true;
 

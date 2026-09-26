@@ -32,17 +32,38 @@
     {
       "name": "Caut o tehnică",
       "short_name": "Învăț",
-      "url": "./#/tehnici"
+      "url": "./#/tehnici",
+      "icons": [
+        {
+          "src": "sc-invat.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "Încep un proiect",
       "short_name": "Fac",
-      "url": "./#/proiecte"
+      "url": "./#/proiecte",
+      "icons": [
+        {
+          "src": "sc-fac.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "Copiez din poză",
       "short_name": "Copiez",
-      "url": "./#/copii"
+      "url": "./#/copii",
+      "icons": [
+        {
+          "src": "sc-copiez.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }
