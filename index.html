@@ -819,6 +819,18 @@ svg.d.fl .aFd,svg.d.fl .aFs{display:none}
 .seg.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,6.2em),1fr))}
 .seg.g2 .btn,.seg.g3 .btn{min-width:0;overflow-wrap:anywhere}
 
+/* copie din poză (7.31): poza nu mai umple tot ecranul, instrucțiunea stă pe poză, pasul următor sub ea */
+.ph{margin-left:auto;margin-right:auto}
+.ph-hint{position:absolute;left:8px;right:8px;top:8px;margin:0;padding:8px 12px;border-radius:10px;background:var(--panel);color:var(--ink);
+  font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.2);z-index:3;pointer-events:none;text-align:center}
+.ph-hint:empty{display:none}
+.next-st{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:10px 0;padding:10px 12px;border-left:4px solid var(--mat);background:var(--panel);border-radius:0 10px 10px 0}
+.next-st p{margin:0;flex:1}
+.next-st .btn{flex:none}
+.mk-ic svg{width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.mk-ic svg .f{fill:var(--muted);fill-opacity:.15}
+.ptc td{vertical-align:middle}
+
 </style>
 </head>
 <body>
@@ -888,7 +900,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.30';
+const APP_VER='7.31';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -3987,14 +3999,17 @@ function copieNoua(){
 
 /* ---------- lista ---------- */
 function copii(){
+  /* copiile începute și lăsate goale (fără poză, reper, măsuri sau nume) nu mai rămân în listă (7.31) */
+  const goale=(S.copii||[]).filter(c=>!c.poza&&!c.ref&&!c.masuri.length&&!c.nume);
+  if(goale.length){S.copii=S.copii.filter(c=>!goale.includes(c));save()}
   const l=S.copii||[];
-  app.innerHTML=`<div class="view"><a class="back" href="#/proiecte">← Proiecte</a>
+  app.innerHTML=`<div class="view"><a class="back" href="#/proiecte">← Fac</a>
    <header class="head"><h1>Copiez ceva ce am deja</h1></header>
    <p class="intro">Faci o poză unei lucrări gata făcute, pui lângă ea o foaie A4 sau un card, iar aplicația îți spune cât măsoară fiecare parte și cât material îți trebuie ca să o refaci.</p>
    <div class="seg"><button class="btn pri" id="nou">Începe o copie</button></div>
    ${l.length?`<ul class="list" style="margin-top:18px">${l.map(c=>`<li><a class="row" href="#/copie/${c.id}">
      <span class="row-t">${esc(c.nume||'Copie fără nume')}<small>${esc(c.data)}, ${c.masuri.length} ${c.masuri.length===1?'măsură':'măsuri'}</small></span>
-     ${c.poza?'<span class="marks" aria-hidden="true">📷</span>':''}</a></li>`).join('')}</ul>`
+     ${c.poza?`<span class="marks mk-ic" aria-hidden="true">${I24.poza}</span>`:''}</a></li>`).join('')}</ul>`
    :ecranGol('foaie','Nicio copie începută. Fotografiezi o lucrare gata făcută, cu o foaie A4 alături, și afli cât măsoară fiecare parte.')}
    <section class="box"><h2>Cum iese exact</h2><ul>
      <li>Așază lucrarea întinsă pe o suprafață plată, fără cute.</li>
@@ -4074,6 +4089,15 @@ function gasesteFoaia(poza,ref){
 }
 
 /* ---------- editorul unei copii ---------- */
+/* ce are de făcut Irina acum, scris sub poză, cu un buton care o duce acolo (7.31) */
+function urmeaza(c,R){
+  const [t,unde]=!c.ref?['Pasul următor: mai jos, alege ce ai pus lângă lucrare, de exemplu foaia A4.','s2']
+    :!R?['Pasul următor: atinge pe poză cele patru colțuri ale reperului, pe rând, de jur împrejur.','ph']
+    :!c.masuri.length?['Pasul următor: apasă „Adaugă o măsură”, apoi atinge pe poză cele două capete ale dimensiunii.','s3']
+    :['Gata. Măsurile și materialul sunt mai jos. Poți adăuga oricâte măsuri.','s3'];
+  return `<div class="next-st"><p>${esc(t)}</p><button class="btn" data-spre="${unde}">Arată-mi</button></div>`;
+}
+const spre=id=>{const e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth',block:id==='ph'?'center':'start'})};
 let TAP=null;      /* {mod:'reper'|'masura', puncte:[]} */
 let DRAG=null;     /* {tip:'reper'|'masura', i, k} */
 function copie(id){
@@ -4092,10 +4116,11 @@ function copie(id){
     const val=m=>R?R.masoara(m.a,m.b):0;
     w.innerHTML=`
      <section class="set"><h2>1. Poza</h2>
-      ${poza?`<div class="ph" id="ph"><img src="${poza.data}" alt="Lucrarea fotografiată" draggable="false">
+      ${poza?`<div class="ph" id="ph" style="max-width:min(100%, calc(58vh * ${(poza.w/poza.h).toFixed(3)}))"><img src="${poza.data}" alt="Lucrarea fotografiată" draggable="false">
+        <p class="ph-hint" id="hint" role="status"></p>
         <svg class="ph-ov" viewBox="0 0 1000 ${Math.round(1000*poza.h/poza.w)}" preserveAspectRatio="none" aria-hidden="true">${overlay(poza,R)}</svg>
         <div class="loupe" id="loupe" hidden></div></div>
-        <p class="hint" id="hint"></p>
+        ${urmeaza(c,R)}
         <div class="seg"><button class="btn" id="schimb">Altă poză</button><button class="btn dgr" id="stergePoza">Șterge poza</button></div>`
       :`<p>Fotografiază lucrarea întinsă, drept de sus, cu foaia A4 alături, în același plan și cât mai aproape de ea.</p>
         <div class="seg"><button class="btn pri" id="fa">Fă o poză</button><button class="btn" id="din">Aleg din galerie</button></div>`}
@@ -4104,7 +4129,7 @@ function copie(id){
       <p class="msg" id="pMsg" role="status"></p>
      </section>
      ${poza?`
-     <section class="set"><h2>2. Reperul</h2>
+     <section class="set" id="s2"><h2>2. Reperul</h2>
       <p>Alege obiectul cunoscut din poză, apoi atinge-i cele patru colțuri, unul după altul, de jur împrejur. Din ele scot și scara, și înclinarea pozei.</p>
       <div class="seg">${REPERE.map(r=>`<button class="btn${c.ref&&c.ref.k===r.k?' pri':''}" data-rep="${r.k}">${esc(r.l)}</button>`).join('')}</div>
       ${c.ref?`<p class="ok-l">Reper ales: ${esc(REPERE.find(r=>r.k===c.ref.k).l)}, ${esc(`${cmExact(c.ref.W)} × ${cmExact(c.ref.H)} cm`)}.
@@ -4114,11 +4139,11 @@ function copie(id){
       <p class="msg" id="cMsg" role="status"></p>
       ${R&&R.oblic>1.25?`<p class="warn">Poza e oblică. Am corectat perspectiva, dar precizia crește mult dacă o refaci ținând telefonul drept deasupra.</p>`:''}
      </section>
-     <section class="set"><h2>3. Măsurile</h2>
+     <section class="set" id="s3"><h2>3. Măsurile</h2>
       ${R?`<p>Atinge două puncte pe poză pentru fiecare dimensiune. Poți muta orice punct pus greșit, trăgând de el.</p>
         <div class="seg"><button class="btn pri" id="addM">Adaugă o măsură</button></div>`
         :`<p class="empty">Întâi reperul, apoi pot calcula măsurile.</p>`}
-      ${c.masuri.length&&R?`<table class="tb"><tbody>${c.masuri.map((m,i)=>`<tr>
+      ${c.masuri.length&&R?`<table class="pt ptc"><tbody>${c.masuri.map((m,i)=>`<tr>
         <td>${esc(m.n)}${m.real?`<small>știut: ${cm(m.real)} cm, diferență ${(Math.abs(val(m)-m.real)/m.real*100).toFixed(0)}%</small>`:''}</td>
         <td><b>${cm(val(m))} cm</b></td>
         <td><button class="icb" data-ver="${i}" aria-label="Verifică ${esc(m.n)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
@@ -4161,7 +4186,8 @@ function copie(id){
     const b=id=>document.getElementById(id);
     const cam=b('fCam'),gal=b('fGal');
     const ia=async f=>{try{const p=await pozaMica(f);await idbPut('copie_'+c.id,p);c.poza=1;
-      c.ref&&(c.ref.pts=[]);c.masuri=[];save();TAP=null;render()}
+      c.ref&&(c.ref.pts=[]);c.masuri=[];save();TAP=null;await render();
+      const m=document.getElementById('pMsg');if(m)m.textContent='Poza e pusă. Acum alege reperul.';setTimeout(()=>spre('s2'),150)}
       catch(e){msg('Nu am putut folosi poza: '+e.message)}};
     cam.onchange=()=>{if(cam.files[0])ia(cam.files[0]);cam.value=''};
     gal.onchange=()=>{if(gal.files[0])ia(gal.files[0]);gal.value=''};
@@ -4181,10 +4207,15 @@ function copie(id){
         const nb=parseFloat(String(bq||'').replace(',','.')); if(!(nb>0))return;
         W=Math.max(na,nb);H=Math.min(na,nb);
       }
-      c.ref={k:r.k,W,H,pts:[]};save();TAP={mod:'reper',puncte:[]};render();
-      hint('Atinge colțurile reperului, unul după altul, de jur împrejur.')});
-    if(b('setRef'))b('setRef').onclick=()=>{c.ref.pts=[];TAP={mod:'reper',puncte:[]};save();render();
-      hint('Atinge colțurile reperului, unul după altul, de jur împrejur.')};
+      c.ref={k:r.k,W,H,pts:[]};save();
+      /* întâi încerc să găsesc singur reperul; dacă nu, o duc la poză să atingă colțurile */
+      const g=await gasesteFoaia(poza,c.ref);
+      if(g&&g.potrivire<0.32){c.ref.pts=g.pts;TAP=null;save();await render();
+        const m2=document.getElementById('cMsg');if(m2){m2.textContent='Am găsit reperul. Verifică cele patru colțuri verzi pe poză și trage de ele dacă nu sunt exact pe muchie.';m2.className='msg'}
+        setTimeout(()=>spre('s3'),150)}
+      else{TAP={mod:'reper',puncte:[]};await render();hint('Atinge colțul 1 din 4 al reperului.');setTimeout(()=>spre('ph'),150)}});
+    if(b('setRef'))b('setRef').onclick=async()=>{c.ref.pts=[];TAP={mod:'reper',puncte:[]};save();await render();
+      hint('Atinge colțul 1 din 4 al reperului.');setTimeout(()=>spre('ph'),150)};
     if(b('cauta'))b('cauta').onclick=async()=>{
       const cm2=b('cMsg');cm2.textContent='Caut…';cm2.className='msg';
       const g=await gasesteFoaia(poza,c.ref);
@@ -4196,7 +4227,8 @@ function copie(id){
       if(m2){m2.textContent=bine?'Gata. Verifică cele patru colțuri pe poză și trage de ele dacă nu sunt exact pe muchie.'
         :'Am găsit o pată deschisă, dar forma nu prea seamănă cu reperul ales. Verifică colțurile cu atenție.';
         m2.className='msg'+(bine?'':' err')}};
-    if(b('addM'))b('addM').onclick=()=>{TAP={mod:'masura',puncte:[]};render();hint('Atinge cele două capete ale dimensiunii.')};
+    if(b('addM'))b('addM').onclick=async()=>{TAP={mod:'masura',puncte:[]};await render();hint('Atinge primul capăt al dimensiunii.');setTimeout(()=>spre('ph'),150)};
+    app.querySelectorAll('[data-spre]').forEach(x=>x.onclick=()=>spre(x.dataset.spre));
     app.querySelectorAll('[data-delm]').forEach(x=>x.onclick=()=>{c.masuri.splice(+x.dataset.delm,1);save();render()});
     app.querySelectorAll('[data-ver]').forEach(x=>x.onclick=async()=>{
       const m=c.masuri[+x.dataset.ver];
@@ -4260,7 +4292,7 @@ function copie(id){
         c.ref.pts=TAP.puncte.slice();
         if(TAP.puncte.length<4){if(ov)ov.innerHTML=overlay(poza,null);
           hint(`Colțul ${TAP.puncte.length+1} din 4.`);return}
-        TAP=null;save();render();return;
+        TAP=null;save();render().then(()=>{const m2=document.getElementById('cMsg');if(m2){m2.textContent='Colțurile sunt puse. Acum poți lua măsurile.';m2.className='msg'}setTimeout(()=>spre('s3'),150)});return;
       }
       if(TAP.puncte.length<2){if(ov)ov.innerHTML=overlay(poza,R);hint('Acum al doilea punct.');return}
       const [a,bb]=TAP.puncte;
@@ -4268,7 +4300,7 @@ function copie(id){
       if(d<8){TAP.puncte=[];hint('Punctele sunt prea apropiate. Mai încearcă.');if(ov)ov.innerHTML=overlay(poza,R);return}
       TAP=null;
       intreaba('Ce ai măsurat?','Numele dimensiunii, de exemplu „'+PUNCTE_SUG[c.masuri.length%PUNCTE_SUG.length]+'”','')
-        .then(n=>{if(n){c.masuri.push({n,a,b:bb});save()}render()});
+        .then(n=>{if(n){c.masuri.push({n,a,b:bb});save()}render().then(()=>setTimeout(()=>spre('s3'),150))});
     });
     ph.addEventListener('pointercancel',()=>{ascunde();DRAG=null});
   }
@@ -4547,6 +4579,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.31',l:['Copierea din poză te duce pas cu pas. Sub poză scrie mereu ce urmează, cu un buton „Arată-mi”.','Când alegi reperul, de exemplu foaia A4, aplicația îl caută singură pe poză. Dacă nu-l găsește, te duce la poză și îți spune pe rând ce colț să atingi.','Poza nu mai umple tot ecranul, deci pașii de dedesubt se văd. Instrucțiunea stă chiar pe poză.','Copiile începute și lăsate goale nu mai rămân în listă.']},
  {v:'7.30',l:['Contorul de rânduri se găsea doar dacă știai adresa lui. Acum e în „Mai mult” și sus în secțiunile Croșetat și Tricotat.','Copia de siguranță include și contoarele de rânduri.','Pe telefoanele mici și cu textul mărit, nimic nu mai iese din ecran: Setări, câmpurile de măsuri, butoanele de la finalul fișelor.','Căutarea găsește și cuvinte scrise pe jumătate, de exemplu „increturi”.','La copiere din poză, foaia A4 apare cu dimensiunile exacte, 29,7 × 21 cm.']},
  {v:'7.29',l:['Animațiile nu mai fug singure. Când ajungi la desen, trec o dată prin pași, câte 3,5 secunde, apoi se opresc pe ultimul.','Sub desen ai butoane: înapoi, înainte, cele patru puncte, pe care le poți atinge ca să sari direct la un pas, și pornire sau pauză. Poți și glisa cu degetul pe desen.','Aceleași butoane apar și când mărești desenul, pornind de la pasul la care erai.']},
  {v:'7.28',l:['Pașii de proiect care nu aveau desen au primit unul: betelia, elasticul prin tunel, toartele pliate în patru, colțurile de geantă, pătratul cu X, răscroielile, clinii, sferturile potrivite și altele. 32 de desene noi, iar acum 153 din cei 162 de pași de proiect au desen.']},
