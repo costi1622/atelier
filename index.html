@@ -785,6 +785,17 @@ a.btn{text-decoration:none}
 }
 
 /* desenele pașilor de proiect (7.28) */
+/* reglajele mașinii (7.37): cheie și valoare pe același rând, explicația dedesubt */
+.reg{list-style:none;margin:var(--s2) 0 0;padding:0}
+.reg li{display:grid;grid-template-columns:1fr auto;gap:2px var(--s3);align-items:baseline;
+  padding:var(--s2) 0;border-bottom:1px dashed var(--line)}
+.reg li:last-child{border-bottom:0}
+.reg-k{font-weight:600}
+.reg-v{text-align:right}
+.reg li.reg-l{grid-template-columns:1fr}
+.reg li.reg-l .reg-v{text-align:left;margin-top:2px}
+.reg li small{grid-column:1/-1;color:var(--muted);line-height:1.45}
+.reg-obs{margin-top:var(--s2);color:var(--muted)}
 .d .fab2{fill:url(#weave2);stroke:var(--ink);stroke-width:1.4;stroke-linejoin:round;filter:url(#soft)}
 .d .fabEO{fill:url(#weave);fill-rule:evenodd;stroke:var(--ink);stroke-width:1.4;filter:url(#soft)}
 .d .el{stroke:var(--hook);stroke-width:5;stroke-linecap:round}
@@ -935,7 +946,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.36';
+const APP_VER='7.37';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -4464,6 +4475,126 @@ PROJ.push(
 }
 );
 
+/* ================= REGLAJELE MAȘINII, pe fiecare proiect (7.37) =================
+   Irina are o Janome 1522GN, deci literele selectorului sunt cele de pe capacul ei.
+   Numerele de pe cadrane (tensiune, lungime, lățime) sunt însă aceleași pe aproape
+   orice mașină casnică, deci blocul rămâne folositor și pe altă mașină.
+
+   Reglajele se calculează, nu se scriu de mână la fiecare proiect:
+   - clasa de material dă acul, tensiunea și lungimea pasului;
+   - tehnicile chiar folosite de pașii proiectului adaugă rândurile speciale.
+   Așa un proiect nou primește blocul singur, iar dacă i se schimbă un pas,
+   reglajele se schimbă odată cu el. */
+
+const MATCL={
+ subtire:{t:'Subțire',ac:'70/10 universal',tens:'3–4',pas:'2–2,5',
+   h:'voal, batist, mătase, pânză subțire',
+   obs:'La materialul subțire, pune o foaie subțire de hârtie sub cusătură la început: nu mai e trasă în placa acului.'},
+ mediu:{t:'Mediu',ac:'80/12 universal',tens:'4',pas:'2,5–3',
+   h:'bumbac, in, poplin, stofă subțire',
+   obs:'Reglajul obișnuit. De aici pornești și la el te întorci dacă ceva nu iese.'},
+ gros:{t:'Gros',ac:'90/14, iar la doc 100/16',tens:'4–5',pas:'3–3,5',
+   h:'doc, dril, tapițerie, mai multe straturi deodată',
+   obs:'Pasul lung nu e o toană: pe material gros, pașii mici se adună unul în altul și cusătura se încrețește.'},
+ tricot:{t:'Tricot',ac:'80/12 jersey, cu vârf rotund',tens:'3–4',pas:'2,5',
+   h:'jerseu, rib, orice se întinde',
+   obs:'Acul cu vârf rotund dă firele la o parte în loc să le taie. Cu ac universal, tricotul scapă ochiuri pe cusătură.'}
+};
+const MATORD=['subtire','mediu','gros','tricot'];
+
+/* clasa obișnuită a fiecărui proiect; „!” înseamnă lucru mărunt, deci pas scurt */
+const PROJ_MAS={
+ 'fusta-cerc':'mediu','fusta-increțita':'mediu','fusta-clini':'mediu','fusta-dreapta':'mediu',
+ 'rochie-elastic':'subtire','rochie-bretele':'subtire','bluza':'subtire','bluza-maneca':'subtire',
+ 'bluza-maneca-lunga':'subtire','pantaloni-casa':'mediu',
+ 'poseta-tote':'gros','geanta-fermoar':'gros','geanta-plaja':'gros','penar':'gros!',
+ 'sac-dormit':'mediu','saculet':'mediu','fusta-copil':'mediu','rochie-copil':'subtire','baveta':'mediu',
+ 'sort':'mediu','fata-perna':'mediu','perna-fermoar':'mediu','husa-perna-canapea':'mediu',
+ 'husa-scaun':'gros','suport-oale':'gros','fata-masa':'mediu','fata-masa-rotunda':'mediu',
+ 'cos-depozitare':'gros','saculeti-cadou':'subtire',
+ 'pisica-agatat':'mediu!'
+};
+const masClasa=id=>(PROJ_MAS[id]||'mediu').replace('!','');
+const masFin=id=>(PROJ_MAS[id]||'').endsWith('!');
+
+/* reglajele speciale, legate de tehnica pe care o cere pasul.
+   Apar doar dacă proiectul chiar folosește tehnica. */
+const REG_TECH={
+ zigzag:['Finisarea marginilor','selectorul pe C, lățimea 4, lungimea 1,5–2'],
+ increturi:['Încrețiturile','lungimea pe 4, tensiunea slăbită la 2, fără întărire la capete: firul trebuie să poată fi tras'],
+ butoniera:['Butoniera','programul 1 STEP din stânga tabelului și piciorușul de butonieră'],
+ 'fermoar-clasic':['Fermoarul','piciorușul de fermoar, lungimea 2,5, selectorul tot pe A'],
+ 'fermoar-invizibil':['Fermoarul invizibil','piciorușul pentru fermoar invizibil, care desface dinții în fața acului'],
+ 'fermoar-clapeta':['Fermoarul cu clapetă','piciorușul de fermoar, mutat de pe o parte pe alta a acului'],
+ 'cusatura-elastica':['Cusătura pe elastic','selectorul pe C, lățimea 3, lungimea 2, cu elasticul întins în timp ce coși'],
+ 'tiv-invizibil':['Tivul invizibil','litera cu simbolul de tiv de pe capac, lățimea 3, și piciorușul de tiv invizibil'],
+ 'tighel-decorativ':['Tighelul decorativ','lungimea 3–3,5 și ață mai groasă doar la acul de sus, nu și în suveică'],
+ pense:['Pensele','lungimea 2,5, iar la vârf nu întărești cu mașina: legi firele cu mâna'],
+ frantuzeasca:['Cusătura franțuzească','lungimea 2–2,5, prima trecere la 7 mm de margine'],
+ 'tiv-rulat':['Tivul îngust rulat','piciorușul de tiv rulat, lungimea 2'],
+ 'colturi-curbe':['Colțurile și curbele','aceeași cusătură, dar cu acul lăsat în material la fiecare pivotare'],
+ intarire:['Întărirea la capete','trei împunsături înapoi la început și la sfârșit, cu butonul de mers înapoi']
+};
+
+/* rândurile de reglaje pentru un proiect, cu opțiunile și materialul alese */
+function reglaje(p,o,m,mat){
+  const cl=MATCL[mat]||MATCL.mediu, fin=masFin(p.id), tricot=mat==='tricot';
+  const pas=fin?'1,8–2':cl.pas;
+  const baza=[
+   ['Tensiunea firului',cl.tens,'Pe cadranul de sus. Dacă firul de sus se vede ca puncte pe dos, tensiunea e prea mare și o cobori. Dacă firul din suveică urcă pe față, e prea mică și o urci.'],
+   ['Lungimea pasului',pas+' mm',fin
+     ?'Pas scurt, pentru că bucățile sunt mici și cusătura trece mult pe curbe. Un pas lung ar lăsa colțuri și s-ar desface la întors.'
+     :'Pe cadranul LENGTH. Mai scurt pe curbe și pe material subțire, mai lung pe material gros.'],
+   ['Selectorul',tricot?'A pe rândul S.S.':'A',tricot
+     ?'Cusătura dreaptă triplă, care se întinde odată cu materialul. Dacă nu o folosești, mergi pe C cu lățimea 1: un zigzag abia vizibil se întinde și el.'
+     :'Cusătura dreaptă, cu acul la mijloc. B e tot dreaptă, dar cu acul mutat spre stânga.'],
+   ['Lățimea',tricot?'1':'0','Pe cadranul WIDTH. La cusătura dreaptă rămâne pe 0, altfel acul se mișcă lateral și se poate lovi de piciorușul obișnuit.'],
+   ['Acul',cl.ac,'Ac nou la fiecare lucrare mai mare. Un ac tocit sare ochiuri și face zgomot sec la fiecare împunsătură.'],
+   ['Ața','poliester universal, aceeași sus și în suveică','Ață diferită sus și jos trage cusătura într-o parte, oricât ai regla tensiunea.'],
+   ['Piciorușul','cel obișnuit, pentru cusătură dreaptă','Se schimbă doar la pașii de mai jos, dacă proiectul are așa ceva.']
+  ];
+  /* tehnicile chiar folosite de pașii acestui proiect, în ordinea pașilor */
+  let st=[];try{st=p.pasi(m,o)}catch(e){st=[]}
+  const vaz=[],extra=[];
+  st.forEach(s=>{if(s.tech&&REG_TECH[s.tech]&&!vaz.includes(s.tech)){vaz.push(s.tech);extra.push(REG_TECH[s.tech])}});
+  return {cl,baza,extra,tricot,fin,
+    sel:tricot?'A (S.S.)':'A', lat:tricot?'1':'0', tens:cl.tens, pas};
+}
+
+/* cele patru cadrane, cu valorile calculate */
+function dCadrane(r){
+  /* un buton rotativ, cu reperul fix deasupra lui și valoarea scrisă dedesubt */
+  const dial=(x,et,val)=>T(x,24,et,'middle','etich')
+    +P(`M${x-4} 32 L${x+4} 32 L${x} 38 Z`,'dot')
+    +C(x,58,19,'buton')+C(x,58,12,'butonInel')+L(x,42,x,48,'marcaj')
+    +T(x,94,val,'middle');
+  return svg(dial(50,'TENSIUNE',r.tens)+dial(128,'SELECTOR',r.sel)
+    +dial(206,'LENGTH',r.pas.split(' ')[0])+dial(282,'WIDTH',r.lat)
+    +T(160,116,'fă întâi o probă pe un petic din materialul tău','middle','m'),128);
+}
+
+/* blocul de pe pagina proiectului */
+function blocReglaje(p,o,m,mat){
+  const r=reglaje(p,o,m,mat);
+  /* valoarea stă pe același rând cu cheia; dacă e lungă, trece pe rândul ei, ca să nu se înghesuie */
+  const rand=([k,v,h])=>`<li${v.length>20?' class="reg-l"':''}><span class="reg-k">${esc(k)}</span><b class="reg-v">${esc(v)}</b><small>${esc(h)}</small></li>`;
+  const randX=([k,v])=>`<li><span class="reg-k">${esc(k)}</span><small>${esc(v)}</small></li>`;
+  return `<details class="fold"><summary><h2>Reglajele mașinii</h2></summary>
+    <p class="mm-l">Materialul din care coși</p>
+    <div class="seg" role="group" aria-label="Materialul din care coși">
+      ${MATORD.map(k=>`<button class="btn${k===mat?' pri':''}" data-mat="${k}">${esc(MATCL[k].t)}</button>`).join('')}</div>
+    <p class="who">${esc(MATCL[mat].h)}</p>
+    <figure class="fig">${dCadrane(r)}<figcaption><b>Cadranele</b>Valorile de pornire pentru acest proiect, pe materialul ales.</figcaption></figure>
+    <ul class="reg">${r.baza.map(rand).join('')}</ul>
+    <p class="reg-obs">${esc(r.cl.obs)}</p>
+    ${r.extra.length?`<h3 class="sub3">Și pentru pașii aceștia</h3>
+      <ul class="reg">${r.extra.map(randX).join('')}</ul>`:''}
+    <h3 class="sub3">Proba, înainte de lucrare</h3>
+    <p>Taie un petic din materialul tău, îndoaie-l în două și coase o palmă de cusătură cu reglajele de mai sus. Uită-te pe amândouă fețele: împunsăturile trebuie să arate la fel sus și jos, iar materialul să nu se strângă. Dacă nu arată bine, schimbă întâi tensiunea, apoi lungimea pasului.</p>
+    <p class="who">Literele selectorului sunt cele de pe <a href="#/t/janome-1522">Janome 1522</a>. Pentru tensiune, vezi <a href="#/t/tensiune">Reglarea tensiunii</a>.</p>
+   </details>`;
+}
+
 /* ================= COPIEZ CEVA CE AM DEJA =================
    Poza stă în IndexedDB, pe telefon. Măsurile se iau de pe poză,
    pornind de la un obiect cu dimensiune cunoscută, pus lângă lucru. */
@@ -5375,6 +5506,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.37',l:['Fiecare proiect are acum o secțiune nouă, „Reglajele mașinii”: tensiunea firului, lungimea pasului, selectorul, lățimea, acul, ața și piciorușul, cu câte o explicație scurtă la fiecare.','Alegi materialul din care coși, subțire, mediu, gros sau tricot, iar valorile se schimbă după el. Fiecare proiect pornește de la materialul lui obișnuit.','Sub cadrane apar și reglajele speciale ale pașilor pe care îi are chiar acel proiect, de exemplu zigzagul pentru margini, încrețiturile sau piciorușul de fermoar.','Un desen arată cele patru cadrane cu valorile puse, iar la final e proba pe petic, înainte de lucrare.']},
  {v:'7.36',l:['La pisicuța de agățat scrie acum, la fiecare pas, cu ce cusătură coși. Un pas nou, „Vezi ce cusături folosești”, le arată pe toate trei într-un desen: cea care închide corpul, tighelul bentiței și cusătura scară de la final.','Alegere nouă: coși corpul la mașină sau de mână. Pașii și desenele se schimbă după ea.','Lăbuțele au desenul lor, în patru pași: bucățica pliată pe lungime, cusută, întoarsă cu bețișorul și așezată cu capătul deschis pe marginea corpului.','Șorțulețul are și el un desen nou, cu șorțul și bentița așezate pe bucata din față, și un text care spune exact cum se îndoaie bentița și unde ajung capetele ei.']},
  {v:'7.35',l:['Un grup nou de proiecte, „Jucării și ornamente”, cu prima lui lucrare: pisicuța de agățat. Două siluete cusute față pe față, întoarse, umplute, cu șorțuleț din imprimeu, față brodată și o buclă de agățat între urechi.','Alegi urechile, de pisică, de ursuleț sau de iepuraș, înălțimea, șorțulețul, lăbuțele și umplutura, iar schema bucăților se redesenează după silueta aleasă.','Pașii au desene proprii: șablonul de carton, fața brodată cât bucata e încă plată, bentița șorțului, bucla și lăbuțele prinse spre interior, întorsul urechilor cu bețișorul și umplutura.']},
  {v:'7.34',l:['Cursuri noi, în Învăț: Reparații prin casă, Finisaje ca la magazin și Haina de la zero. Fiecare e o succesiune de lecții într-o ordine care are sens, cu un proiect la final.','O lecție se bifează singură când apeși „Am exersat” pe fișa ei. Pe fișele din curs apare jos o bară cu lecția următoare.','Cursul început apare și pe Acasă, la „Continuă de unde ai rămas”.']},
@@ -6283,7 +6415,8 @@ function project(id){
         `<p>Calculul include 8% pentru potrivit și 10 cm siguranță. Dacă materialul are model care trebuie potrivit sau fir cu direcție, ia cu 20% mai mult. Bucățile marcate opțional nu sunt socotite.</p>`}
       <h3 class="sub3">Mercerie</h3><ul>${r.mercerie.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
       ${r.note.length?`<h3 class="sub3">De reținut</h3><ul>${r.note.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
-     </details>`;
+     </details>
+     ${blocReglaje(p,st.opts,m,st.mat||masClasa(p.id))}`;
     const steps=p.pasi(m,st.opts);
     pasi.innerHTML=`<details class="fold" open><summary><h2>Pașii</h2></summary>
       <p class="mm-l">Bifează pe măsură ce avansezi. Rămâne salvat.</p>
@@ -6293,6 +6426,7 @@ function project(id){
       <div class="seg"><a class="btn pri" href="#/pas/p/${p.id}/0">Mod pas cu pas</a>
        <button class="btn" id="reset">Șterge bifele</button></div></details>`;
     rez.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{st.W=+b.dataset.w;save();render()});
+    rez.querySelectorAll('[data-mat]').forEach(b=>b.onclick=()=>{st.mat=b.dataset.mat;save();render()});
     bindZoom();
     pasi.querySelectorAll('[data-s]').forEach(c=>c.onchange=()=>{const i=+c.dataset.s;
       st.done=c.checked?[...new Set([...st.done,i])]:st.done.filter(x=>x!==i);save();render()});
