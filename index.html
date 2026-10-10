@@ -935,7 +935,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.35';
+const APP_VER='7.36';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -4324,6 +4324,62 @@ function dIntoarceUmple(tip){
   return svg(a+b+L1.o+T(160,L1.y+4,'deschiderea se închide cu cusătura scară','middle','m'),L1.y+14);
 }
 
+/* 6. cusăturile folosite, într-un singur loc: corpul, tighelul bentiței, închiderea (7.36) */
+function dCusaturi(cum){
+  const mana=cum==='mana';
+  /* 1. cusătura care închide corpul, văzută de sus: la mașină un rând regulat,
+        de mână punctul înapoi, care arată ca o linie continuă pe față */
+  const linie=mana
+    ? L(24,72,100,72,'thr')+[0,1,2,3,4,5].map(k=>C(24+k*15.2,72,2,'dot')).join('')
+    : stH(72,24,100);
+  const a=R(16,46,92,52,'fab')+linie+L(16,56,108,56,'cutS')+nBadge(1,62,114);
+  /* 2. bentița, o fâșie peste material, cusută lângă fiecare muchie a ei */
+  const b=R(120,46,86,52,'fab')+R(120,62,86,20,'fab2')
+    +stH(65,124,202)+stH(79,124,202)+nBadge(2,163,114);
+  /* 3. cusătura scară, în secțiune: firul sare de la o muchie pliată la cealaltă */
+  const c=L(216,62,304,62,'lay')+L(216,82,304,82,'lay')
+    +P('M224 62 L224 82 L242 82 L242 62 L260 62 L260 82 L278 82 L278 62 L296 62','thr')
+    +nBadge(3,260,114);
+  const L1=nLeg([mana?'corpul: punctul înapoia acului':'corpul: cusătură dreaptă, pas de 2 mm',
+    'bentița: tighel la 2 mm de fiecare muchie','închiderea: cusătura scară, de mână'],144);
+  return svg(a+b+c+L1.o
+    +T(160,L1.y+4,mana?'împunsături mici și dese, de 2 mm':'pas scurt: curbele ies netede','middle','m'),L1.y+14);
+}
+
+/* 7. lăbuța: pliată pe lungime, cusută, întoarsă, prinsă în rezerva corpului (7.36) */
+function dLabuta(cum){
+  const mana=cum==='mana';
+  const a=R(16,46,56,72,'rev')+L(44,46,44,118,'olt')+nBadge(1,30,82);
+  const b=R(88,46,30,72,'rev')+L(88,46,88,118,'olt')
+    +L(114,50,114,114,'st')+L(92,114,114,114,'st')+nBadge(2,103,74);
+  const c=R(134,46,30,72,'fab')+L(149,122,149,66,'ndl')+C(149,122,3.4,'pinh')+nBadge(3,149,56);
+  /* colțul corpului, cu rezerva de 7 mm, și lăbuța culcată, cu capătul deschis pe margine */
+  const d=R(188,46,114,52,'fab')+L(286,46,286,98,'seam')
+    +R(236,64,66,18,'fab2')+L(286,64,286,82,'cutS')
+    +T(192,40,'rezerva de 7 mm','start','m')+A(302,110,288,100)
+    +nBadge(4,212,112);
+  const L1=nLeg(['bucățica, pe dos, pliată pe lungime','coși latura lungă și un capăt',
+    'întorci pe față cu bețișorul','capătul deschis ajunge pe marginea corpului'],142);
+  return svg(a+b+c+d+L1.o
+    +T(160,L1.y+4,'cusuta iese lată cât jumătate din bucată','middle','m'),L1.y+14);
+}
+
+/* 8. șorțulețul așezat pe corp, cu bentița peste marginea lui de sus (7.36) */
+function dSortPeCorp(forma,tip){
+  const t=tip||'pisica', x=98,y=26,w=124,h=132;
+  const tal=siluetaTalie(x,y,w,h,t), jos=y+h-10;
+  const sort=forma==='drept'
+    ? `M${x+6} ${tal} L${x+w-6} ${tal} L${x+w-6} ${jos} L${x+6} ${jos} Z`
+    : `M${x+6} ${tal} L${x+w-6} ${tal} L${x+w-6} ${jos-14} Q${x+w/2} ${jos+10} ${x+6} ${jos-14} Z`;
+  const fig=P(siluetaD(x,y,w,h,t),'fab')+P(sort,'fab2')
+    +pin(x+22,tal+16,x+34)+pin(x+w-34,tal+16,x+w-22)
+    +R(x-10,tal-7,w+20,14,'fab2')+stH(tal-4,x-4,x+w+4)+stH(tal+4,x-4,x+w+4)
+    +nBadge(1,x+w/2,tal+28)+nBadge(2,x-2,tal-20);
+  const L1=nLeg(['șorțulețul, prins cu câteva împunsături','bentița, cusută la 2 mm de muchiile ei'],y+h+22);
+  return svg(T(160,y-10,'pe bucata din față, înainte de a coase corpul','middle','m')+fig+L1.o
+    +T(160,L1.y+4,'capetele ies din corp, în cusătura laterală','middle','m'),L1.y+14);
+}
+
 /* ---------------- proiectul ---------------- */
 PROJ.push(
 {id:'pisica-agatat',sec:'',t:'Pisicuță de agățat',lvl:'u',time:'2 ore',
@@ -4331,6 +4387,7 @@ PROJ.push(
  needM:[],
  opts:[{k:'animal',l:'Urechile',v:[['pisica','De pisică, ascuțite'],['ursulet','De ursuleț, rotunde'],['iepuras','De iepuraș, lungi']]},
        {k:'inalt',l:'Înălțimea, cu urechi cu tot',input:1,def:12,min:8,max:18,h:'sub 10 cm întorsul urechilor devine greu'},
+       {k:'cum',l:'Cum coși corpul',v:[['masina','La mașină'],['mana','De mână']],h:'de mână ai mai mult control pe curbele mici'},
        {k:'sort',l:'Șorțulețul din imprimeu',v:[['rotunjit','Rotunjit jos'],['drept','Drept jos'],['fara','Fără șorțuleț']]},
        {k:'labute',l:'Lăbuțe',v:[['da','Da, două'],['nu','Fără']]},
        {k:'umplut',l:'Umplutura',v:[['vata','Doar vată'],['lavanda','Vată și lavandă']]}],
@@ -4363,31 +4420,40 @@ PROJ.push(
  },
  pasi:(m,o)=>{
    const nume=o.animal==='ursulet'?'ursulețul':o.animal==='iepuras'?'iepurașul':'pisicuța';
+   const mana=o.cum==='mana';
+   /* cusătura de bază, numită la fiecare pas unde se coase */
+   const cusCorp=mana?'punctul înapoia acului, cu împunsături de 2 mm':'cusătură dreaptă, cu pasul scurtat la 2 mm';
+   const cusMic=mana?'punctul înapoia acului':'cusătură dreaptă, pas 2 mm';
+   const techCorp=mana?'inapoi':'intarire';
    return [
   {h:'Fă șablonul',p:`Desenează silueta pe carton, la ${cm(o.inalt)} cm înălțime cu urechi cu tot, și taie-l. Însemnează pe el, pe o latură dreaptă de jos, deschiderea de 4 cm prin care vei întoarce.`,
    d:()=>dSablonSiluete(o.animal),c:'Șablonul de carton, cu deschiderea însemnată, și materialul dublu.'},
   {h:'Taie siluetele',p:'Pune materialul dublu, față pe față, așază șablonul deasupra, conturează cu creta și taie cu rezerva de 7 mm de jur împrejur. Ies două bucăți deodată, deci se potrivesc exact.',
    d:()=>dSablonSiluete(o.animal),c:'Șablonul prins pe materialul dublu, față pe față.'},
-  {h:'Brodează fața',p:'Acum, cât bucata e plată. Ochii, botul și mustățile, pe bucata din față. Nodurile rămân pe dos.',tech:'broderie',
+  {h:'Vezi ce cusături folosești',p:`Trei cusături ajung pentru toată jucăria. Corpul se închide cu ${cusCorp}. Bentița șorțului se prinde cu un tighel la 2 mm de muchie. Deschiderea de la final se închide de mână, cu cusătura scară. Broderia feței are punctele ei, în fișa de broderie.`,
+   d:()=>dCusaturi(o.cum),c:'Cele trei cusături ale proiectului, în ordinea în care le folosești.',tech:techCorp},
+  {h:'Brodează fața',p:'Acum, cât bucata e plată. Ochii și botul cu punct plin, mustățile cu punct tulpină, din două fire de mulinè. Pe bucata din față, cu nodurile pe dos.',tech:'broderie',
    d:()=>dFataBrodata(o.animal),c:'Ochii, botul și mustățile, brodate cât bucata e plată.'},
   ...(o.sort!=='fara'?[
-    {h:'Pregătește șorțulețul',p:`Tivește marginea de jos a șorțulețului cu un tiv dublu îngust${o.sort==='rotunjit'?', urmărind curba încet':''}, apoi calc-o.`,tech:'tiv-dublu',
+    {h:'Pregătește șorțulețul',p:`Îndoaie marginea de jos de două ori, câte 5 mm, calc-o și coase-o cu ${cusMic}${o.sort==='rotunjit'?'. Pe curbă mergi încet și distribuie surplusul din îndoitură cu vârful acului, ca să nu facă cute':''}. Laturile și marginea de sus rămân netivite: intră în cusătura corpului și sub bentiță.`,tech:'tiv-dublu',
      d:()=>dSortul(o.sort),c:'Șorțulețul tivit jos și bentița care acoperă marginea de sus.'},
-    {h:'Prinde șorțul și bentița',p:'Așază șorțulețul pe bucata din față, cu marginea de sus la locul taliei, și prinde-l cu câteva împunsături. Pune bentița peste marginea lui de sus și coase-o doar pe față, la 2 mm de muchie. Capetele bentiței rămân libere: intră în cusătura laterală.',
-     d:()=>dSortul(o.sort),c:'Bentița, cusută doar pe față, cu capetele lăsate în cusătura laterală.'}
+    {h:'Prinde șorțul și bentița',p:`Așază șorțulețul pe bucata din față, cu fața în sus și cu marginea lui de sus pe linia taliei, apoi prinde-l cu ace și cu câteva împunsături de însăilare pe margini. Îndoaie bentița pe lungime, 5 mm la fiecare margine lungă, calc-o și pune-o peste marginea de sus a șorțului, acoperind-o. Coase bentița cu ${cusMic}, la 2 mm de fiecare muchie a ei, doar prin bucata din față. Capetele bentiței ies din corp cu 7 mm și rămân nefixate: le prinde cusătura laterală.`,tech:'insailare',
+     d:()=>dSortPeCorp(o.sort,o.animal),c:'Șorțulețul la locul lui, cu bentița peste marginea de sus.'}
   ]:[]),
   ...(o.labute==='da'?[
-    {h:'Fă lăbuțele',p:'Pliază fiecare bucățică în două pe lungime, cu fața înăuntru, coase pe lung și pe un capăt, întoarce pe față cu bețișorul și calcă.'}
+    {h:'Fă lăbuțele',p:`Ia o bucățică, pune-o cu dosul în sus și pliaz-o în două pe lungime, față pe față. Coase cu ${cusMic} latura lungă deschisă și unul dintre capetele scurte, la 5 mm. Taie colțul cusut oblic, întoarce pe față împingând cu capătul bont al bețișorului și calcă plat. Iese un degețel lat cât jumătate din bucată, închis la un capăt și deschis la celălalt. La fel și a doua.`,
+     d:()=>dLabuta(o.cum),c:'Lăbuța: pliată pe lungime, cusută, întoarsă și calcată.'}
   ]:[]),
-  {h:'Prinde bucla și lăbuțele spre interior',p:`Pe bucata din față, cu fața în sus: bucla de șnur între urechi, cu amândouă capetele în rezervă și cu îndoitura spre interior.${o.labute==='da'?' Lăbuțele pe laturi, tot cu capetele în rezervă și cu vârful spre interior.':''} Prinde-le cu ace. Pare invers, dar după întoarcere ies singure în afară.`,
+  {h:'Prinde bucla și lăbuțele spre interior',p:`Pe bucata din față, cu fața în sus: bucla de șnur între urechi, cu amândouă capetele în rezervă și cu îndoitura spre interior.${o.labute==='da'?' Lăbuțele pe laturi, cu capătul deschis în rezerva de 7 mm și cu vârful închis spre interior.':''} Prinde-le cu ace și fixează-le cu câteva împunsături de însăilare în rezervă, ca să nu alunece la coasere. Pare invers, dar după întoarcere ies singure în afară.`,tech:'insailare',
    d:()=>dPrindeInauntru(o.animal),c:'Bucla și lăbuțele privesc spre interior. După întoarcere ies în afară.'},
-  {h:'Coase corpul',p:'Așază cealaltă siluetă deasupra, față pe față, și coase de jur împrejur la 7 mm, cu pas mic. Lasă deschisă doar bucata de 4 cm însemnată pe șablon. Întărește cusătura la începutul și la sfârșitul deschiderii.',tech:'intarire'},
+  {h:'Coase corpul',p:`Așază cealaltă siluetă deasupra, față pe față, și prinde-le cu ace. Coase de jur împrejur la 7 mm, cu ${cusCorp}. Lasă deschisă doar bucata de 4 cm însemnată pe șablon. ${mana?'La începutul și la sfârșitul deschiderii fă două-trei împunsături peste aceeași cusătură, ca să nu se desfacă la întoarcere.':'Întărește cu câteva împunsături înapoi la începutul și la sfârșitul deschiderii, acolo trage cel mai tare la întoarcere.'}`,tech:techCorp,
+   d:()=>dCusaturi(o.cum),c:'Cusătura corpului, la 7 mm, cu pas mic.'},
   {h:'Crestează curbele și colțurile',p:'Crestături drepte în rezerva de pe curbe, din 1 cm în 1 cm, fără să atingi cusătura. În adâncitura dintre urechi, o crestătură până aproape de fir. Vârful fiecărei urechi, tăiat oblic.',tech:'colturi-curbe'},
   {h:'Întoarce pe față',p:'Întoarce încet prin deschidere, apoi scoate urechile cu capătul bont al bețișorului, împingând din interior. Nu cu foarfeca: iese prin vârf.',
    d:()=>dIntoarceUmple(o.animal),c:'Urechile scoase cu bețișorul, apoi umplutura, în bucăți mici.'},
   {h:'Umple',p:`Întâi urechile și colțurile, cu bucăți mici de vată, împinse cu bețișorul. Apoi corpul, puțin câte puțin.${o.umplut==='lavanda'?' Săculețul de lavandă intră la mijloc, spre final.':''} Pipăie des: ${nume} trebuie să rămână moale, nu tare ca o minge.`,
    d:()=>dIntoarceUmple(o.animal),c:'Întâi urechile și colțurile, apoi corpul, puțin câte puțin.'},
-  {h:'Închide deschiderea',p:'Îndoaie rezervele spre interior, prinde-le cu ace și închide cu cusătura scară. Trasă bine, cusătura dispare în muchie.',tech:'cusatura-scara'}
+  {h:'Închide deschiderea',p:'Îndoaie rezervele spre interior, pe linia cusăturii, și prinde-le cu ace. Închide cu cusătura scară: acul intră exact în muchia pliată, trece 4–5 mm prin ea, apoi sare în muchia din față, în dreptul locului din care a ieșit. La fiecare trei-patru împunsături trage de fir și cusătura dispare în muchie.',tech:'cusatura-scara'}
  ]},
  errors:['Fața brodată după coaserea corpului: nu se mai poate, nodurile ar rămâne la vedere și acul nu mai ajunge pe dos.',
   'Bucla prinsă cu îndoitura spre exterior: după întoarcere rămâne închisă înăuntru și nu mai ai de ce agăța.',
@@ -5309,6 +5375,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.36',l:['La pisicuța de agățat scrie acum, la fiecare pas, cu ce cusătură coși. Un pas nou, „Vezi ce cusături folosești”, le arată pe toate trei într-un desen: cea care închide corpul, tighelul bentiței și cusătura scară de la final.','Alegere nouă: coși corpul la mașină sau de mână. Pașii și desenele se schimbă după ea.','Lăbuțele au desenul lor, în patru pași: bucățica pliată pe lungime, cusută, întoarsă cu bețișorul și așezată cu capătul deschis pe marginea corpului.','Șorțulețul are și el un desen nou, cu șorțul și bentița așezate pe bucata din față, și un text care spune exact cum se îndoaie bentița și unde ajung capetele ei.']},
  {v:'7.35',l:['Un grup nou de proiecte, „Jucării și ornamente”, cu prima lui lucrare: pisicuța de agățat. Două siluete cusute față pe față, întoarse, umplute, cu șorțuleț din imprimeu, față brodată și o buclă de agățat între urechi.','Alegi urechile, de pisică, de ursuleț sau de iepuraș, înălțimea, șorțulețul, lăbuțele și umplutura, iar schema bucăților se redesenează după silueta aleasă.','Pașii au desene proprii: șablonul de carton, fața brodată cât bucata e încă plată, bentița șorțului, bucla și lăbuțele prinse spre interior, întorsul urechilor cu bețișorul și umplutura.']},
  {v:'7.34',l:['Cursuri noi, în Învăț: Reparații prin casă, Finisaje ca la magazin și Haina de la zero. Fiecare e o succesiune de lecții într-o ordine care are sens, cu un proiect la final.','O lecție se bifează singură când apeși „Am exersat” pe fișa ei. Pe fișele din curs apare jos o bară cu lecția următoare.','Cursul început apare și pe Acasă, la „Continuă de unde ai rămas”.']},
  {v:'7.33',l:['14 fișe noi de cusut. La mașină: colțuri și curbe, bentița la gât și la răscroieli, tivul îngust rulat, buzunarul în cusătura laterală, pliurile, căptușeala, tighelul decorativ.','De mână: punctul în cruce pentru tivuri, copcile și ochiurile, stopatul, broderia de bază.','Bune de știut: acele pentru mașină, presarea, întăriturile termoadezive.']},
