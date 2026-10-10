@@ -785,6 +785,7 @@ a.btn{text-decoration:none}
 }
 
 /* desenele pașilor de proiect (7.28) */
+.d .fab2{fill:url(#weave2);stroke:var(--ink);stroke-width:1.4;stroke-linejoin:round;filter:url(#soft)}
 .d .fabEO{fill:url(#weave);fill-rule:evenodd;stroke:var(--ink);stroke-width:1.4;filter:url(#soft)}
 .d .el{stroke:var(--hook);stroke-width:5;stroke-linecap:round}
 .d .vat{stroke:var(--line);stroke-width:12;stroke-linecap:round;opacity:.9}
@@ -934,7 +935,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.34';
+const APP_VER='7.35';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -1085,7 +1086,7 @@ TECH.push(
  need:['maneta sau butonul de mers înapoi al mașinii','un rest de material pentru probă'],
  steps:[
   {h:'Pornește la 1 cm de margine',p:'Înțeapă acul la aproximativ 1 cm sub marginea tăiată și coboară piciorușul. Dacă pornești chiar de pe margine, mașina poate trage materialul în placa acului.',
-   d:()=>svg(fab(60,18,200,160)+seamV(160,18,178)+C(160,40,4,'dot')+dimV(92,18,40)+T2(100,35,'1 cm','')+T2(176,80,'acul pornește','de aici')+A(174,76,164,46)+T(160,12,'marginea tăiată','middle','m'),190),
+   d:()=>svg(fab(60,18,200,160)+seamV(160,18,178)+C(160,40,4,'dot')+dimV(92,18,40)+T2(100,35,'1 cm','')+T2(176,80,'acul pornește','de aici')+A(174,76,164,46)+T(160,15,'marginea tăiată','middle','m'),190),
    c:'Piesa văzută de sus, linia punctată e cusătura.'},
   {h:'Coase înapoi până la margine',p:'Ține apăsată maneta de mers înapoi și coase 3–4 împunsături, până aproape de margine.',
    d:()=>svg(fab(60,18,200,160)+seamV(160,18,178)+L(160,40,160,22,'thr')+A(160,40,160,24,'arrt')+T2(176,40,'înapoi','3–4 împunsături')),
@@ -3005,16 +3006,21 @@ function drawPieces(pieces){
     }else if(p.shape==='trapez'){
       const wt=p.wTop*s;
       o+=P(`M${cx-wt/2} ${y} L${cx+wt/2} ${y} L${cx+w/2} ${y+h} L${cx-w/2} ${y+h} Z`,'fab');
+    }else if(p.shape==='silueta'){
+      /* bucata tăiată după șablon: conturul real, înscris în dreptunghiul ei (7.35) */
+      o+=P(siluetaD(x,y,w,h,p.sil),'fab');
     }else{
       o+=R(x,y,w,h,'fab');
     }
     /* firul drept, ca pe balot, ca bucata să se recunoască în ambele scheme (7.19) */
-    if(p.shape!=='donut'&&h>=44&&w>=16){const gx=w>=40?cx+4:cx,g1=y+(w>=30&&h>=30?30:8),g2=y+h-8;if(g2-g1>14)o+=A(gx,g2,gx,g1,'grain')+A(gx,g1,gx,g2,'grain')}
+    if(p.shape!=='donut'&&p.shape!=='silueta'&&h>=44&&w>=16){const gx=w>=40?cx+4:cx,g1=y+(w>=30&&h>=30?30:8),g2=y+h-8;if(g2-g1>14)o+=A(gx,g2,gx,g1,'grain')+A(gx,g1,gx,g2,'grain')}
     /* numărul bucății, într-un cerc, plus câte bucăți sunt */
     /* în colț, în interior, dacă încape; altfel deasupra bucății */
     /* la trapez, numărul stă sus la mijloc, unde latura de sus e dreaptă */
-    const trap=p.shape==='trapez', inauntru=p.shape==='donut'||(trap?p.wTop*s>=30&&h>=30:w>=30&&h>=30);
-    const bx=p.shape==='donut'?dbx:trap?cx:inauntru?x+14:cx, bc=p.shape==='donut'?dby:inauntru?y+15:y-13;
+    const trap=p.shape==='trapez', sil=p.shape==='silueta',
+          inauntru=p.shape==='donut'||sil||(trap?p.wTop*s>=30&&h>=30:w>=30&&h>=30);
+    const bx=p.shape==='donut'?dbx:trap||sil?cx:inauntru?x+14:cx,
+          bc=p.shape==='donut'?dby:sil?y+h*0.72:inauntru?y+15:y-13;
     o+=C(bx,bc,10,'nrbg')+T(bx,bc+4,String(i+1),'middle','nr');
     x+=w+G;
   });
@@ -4196,6 +4202,202 @@ const PSD={
  'Coase exteriorul și căptușeala':{d:()=>dUnaInAlta(),c:'Exteriorul și căptușeala, cu deschiderea în căptușeală.'}
 };
 
+/* ================= PROIECTE, partea a șasea: jucării și ornamente (7.35) =================
+   Pisicuța de agățat: două siluete cusute față pe față, întoarse pe față, umplute.
+   Regula întregului proiect: tot ce se vede (fața brodată, șorțulețul, lăbuțele,
+   agățătoarea) se face pe bucata plată, înainte de a închide corpul.
+   După coasere nu se mai poate ajunge acolo. */
+
+const RCM=0.7;   /* rezerva de cusătură la lucrul mic: 7 mm, nu 15 */
+
+/* --- conturul siluetei, înscris în dreptunghiul (x,y,w,h) ---
+   Coordonatele sunt fracțiuni din dreptunghi, deci silueta se scalează singură
+   și merge la fel în schema bucăților și în desenele pașilor. */
+function siluetaD(x,y,w,h,tip){
+  const u=(a,b)=>`${(x+a*w).toFixed(1)} ${(y+b*h).toFixed(1)}`;
+  const C3=(a1,b1,a2,b2,a3,b3)=>` C${u(a1,b1)}, ${u(a2,b2)}, ${u(a3,b3)}`;
+  const Q2=(a1,b1,a2,b2)=>` Q${u(a1,b1)} ${u(a2,b2)}`;
+  const Ln=(a,b)=>` L${u(a,b)}`;
+  let sh,lx,rx,urechi;
+  if(tip==='iepuras'){
+    sh=.46; lx=.11; rx=.89;
+    urechi=C3(.02,.33,.05,.07,.17,.04)+C3(.27,.02,.31,.21,.35,sh-.08)
+      +C3(.44,sh-.15,.56,sh-.15,.65,sh-.08)
+      +C3(.69,.21,.73,.02,.83,.04)+C3(.95,.07,.98,.33,rx,sh);
+  }else if(tip==='ursulet'){
+    sh=.30; lx=.07; rx=.93;
+    urechi=C3(-.01,.09,.13,.00,.26,.09)+C3(.31,.12,.34,.20,.35,sh-.04)
+      +C3(.44,sh-.10,.56,sh-.10,.65,sh-.04)
+      +C3(.66,.20,.69,.12,.74,.09)+C3(.87,.00,1.01,.09,rx,sh);
+  }else{
+    sh=.30; lx=.05; rx=.95;
+    urechi=Ln(.15,.03)+Ln(.38,sh-.05)+C3(.45,sh-.12,.55,sh-.12,.62,sh-.05)
+      +Ln(.85,.03)+Ln(rx,sh);
+  }
+  return `M${u(lx,sh)}`+urechi
+    +C3(1.0,sh+.24,1.0,.80,.93,.93)+Q2(.89,1.0,.80,1.0)
+    +Ln(.20,1.0)+Q2(.11,1.0,.07,.93)
+    +C3(0,.80,0,sh+.24,lx,sh)+' Z';
+}
+/* linia taliei siluetei: pe unde vine marginea de sus a șorțulețului */
+const siluetaTalie=(x,y,w,h,tip)=>y+h*(tip==='iepuras'?.70:.62);
+
+/* ---------------- desenele pașilor ----------------
+   Aceeași regulă ca la schema bucăților: pe desen stau numerele, iar textul
+   stă în legenda de dedesubt. Așa nicio etichetă nu cade peste desen. */
+
+/* numărul pe desen și un rând de legendă sub el */
+const nBadge=(n,x,y)=>C(x,y,9.5,'nrbg')+T(x,y+4,String(n),'middle','nr');
+function nLeg(randuri,y0){let y=y0,o='';
+  randuri.forEach((r,i)=>{o+=C(20,y-4,8.5,'nrbg')+T(20,y,String(i+1),'middle','nr')+T(34,y,r,'start','lg');y+=18});
+  return {o,y}}
+
+/* 1. șablonul din carton și cele două straturi de material, cu șablonul prins deasupra */
+function dSablonSiluete(tip){
+  const t=tip||'pisica';
+  const sab=P(siluetaD(26,38,92,114,t),'cut')
+    +L(60,146,60,160,'mk')+L(92,146,92,160,'mk')
+    +nBadge(1,72,76);
+  const mat=R(188,44,116,114,'fab')+R(182,38,116,114,'fab')
+    +P(siluetaD(204,48,72,94,t),'cut')
+    +pin(212,64,224)+pin(252,64,264)+pin(212,132,224)+pin(252,132,264)
+    +nBadge(2,240,88);
+  const L1=nLeg(['șablonul, cu deschiderea de 4 cm','material dublu, față pe față'],184);
+  return svg(sab+mat+L1.o+T(160,L1.y+4,'se taie cu rezerva de 7 mm','middle','m'),L1.y+14);
+}
+
+/* 2. fața brodată pe bucata plată, înainte de orice cusătură */
+function dFataBrodata(tip){
+  const t=tip||'pisica';
+  const x=104,y=24,w=112,h=138, cx=x+w/2, oy=y+h*(t==='iepuras'?.60:.46);
+  const ochi=ox=>P(`M${ox-8} ${oy} q8 9 16 0`,'thr');
+  const must=(ox,sg)=>[0,1,2].map(i=>L(ox,oy+12+i*3,ox+sg*22,oy+5+i*10,'thr')).join('');
+  const fig=P(siluetaD(x,y,w,h,t),'fab')
+    +ochi(cx-22)+ochi(cx+22)
+    +P(`M${cx-6} ${oy+16} L${cx+6} ${oy+16} L${cx} ${oy+23} Z`,'thrf')
+    +P(`M${cx} ${oy+23} q-7 8 -13 2`,'thr')+P(`M${cx} ${oy+23} q7 8 13 -2`,'thr')
+    +must(cx-28,-1)+must(cx+28,1)
+    +nBadge(1,cx-40,oy-18)+nBadge(2,cx+4,oy+42)+nBadge(3,cx-44,oy+40);
+  const L1=nLeg(['ochii: două arce, din trei fire','botul: un triunghi plin și două arce','mustățile: fire subțiri, lungi'],y+h+24);
+  return svg(T(160,y-6,'se brodează cât bucata e încă plată','middle','m')+fig+L1.o
+    +T(160,L1.y+4,'nodurile rămân pe dos','middle','m'),L1.y+14);
+}
+
+/* 3. șorțulețul: marginea de jos tivită, apoi bentița peste marginea de sus */
+function dSortul(forma){
+  const rot=forma!=='drept';
+  const jos=rot?'M38 44 L150 44 L150 88 Q94 122 38 88 Z':'M38 44 L150 44 L150 110 L38 110 Z';
+  const sect=L(190,56,300,56,'lay')+L(190,70,300,70,'lay2')+L(300,56,300,70,'lay')+stH(63,198,292);
+  const L1=nLeg(['șorțulețul, cu tiv dublu îngust jos','bentița, cusută doar pe față'],rot?150:168);
+  return svg(P(jos,'fab2')+L(38,50,150,50,'olt')+L(38,56,150,56,'olt')+stH(60,44,144)+nBadge(1,94,72)
+    +sect+nBadge(2,245,92)+L1.o
+    +T(160,L1.y+4,'capetele bentiței intră în cusătura laterală','middle','m'),L1.y+14);
+}
+
+/* 4. agățătoarea și lăbuțele, prinse privind spre interior, între cele două siluete */
+function dPrindeInauntru(tip){
+  const t=tip||'pisica';
+  const x=100,y=30,w=116,h=132, cx=x+w/2, ly=y+h*.50;
+  const fig=P(siluetaD(x,y,w,h,t),'fab')
+    +P(`M${cx-11} ${y+h*.16} C${cx-15} ${y+h*.36}, ${cx+15} ${y+h*.36}, ${cx+11} ${y+h*.16}`,'yarn2')
+    +R(x+5,ly,20,12,'fab2')+R(x+w-25,ly,20,12,'fab2')
+    +A(x-14,ly+6,x+2,ly+6)+A(x+w+14,ly+6,x+w-2,ly+6)
+    +nBadge(1,cx,y+h*.44)+nBadge(2,cx-42,ly+28);
+  const L1=nLeg(['bucla, cu îndoitura spre interior','lăbuțele, cu capetele în rezervă'],y+h+26);
+  return svg(T(160,y-10,'totul privește spre interior','middle','m')+fig+L1.o
+    +T(160,L1.y+4,'după întoarcere ies singure în afară','middle','m'),L1.y+14);
+}
+
+/* 5. întors prin deschidere, urechile scoase cu bețișorul, apoi umplut puțin câte puțin */
+function dIntoarceUmple(tip){
+  const t=tip||'pisica';
+  const ureche=t==='pisica'?[44,60]:t==='ursulet'?[48,64]:[46,62];
+  const a=P(siluetaD(24,30,96,116,t),'fab')
+    +L(54,140,54,152,'mk')+L(86,140,86,152,'mk')
+    +L(70,160,ureche[0],ureche[1],'ndl')+C(70,160,3.6,'pinh')
+    +nBadge(1,96,120);
+  const b=P(siluetaD(196,30,96,116,t),'fab')
+    +L(216,54,216,68,'vat')+L(272,54,272,68,'vat')
+    +L(228,94,262,94,'vat')+L(230,120,258,120,'vat')
+    +nBadge(2,208,136);
+  const L1=nLeg(['întorci și scoți urechile cu bețișorul','umpli, întâi urechile și colțurile'],186);
+  return svg(a+b+L1.o+T(160,L1.y+4,'deschiderea se închide cu cusătura scară','middle','m'),L1.y+14);
+}
+
+/* ---------------- proiectul ---------------- */
+PROJ.push(
+{id:'pisica-agatat',sec:'',t:'Pisicuță de agățat',lvl:'u',time:'2 ore',
+ intro:'Jucărie plată, din două siluete cusute față pe față, cu șorțuleț din imprimeu, față brodată și o buclă de agățat între urechi. Merge din resturi, se face într-o seară și iese la fel de bine cu urechi de ursuleț sau de iepuraș.',
+ needM:[],
+ opts:[{k:'animal',l:'Urechile',v:[['pisica','De pisică, ascuțite'],['ursulet','De ursuleț, rotunde'],['iepuras','De iepuraș, lungi']]},
+       {k:'inalt',l:'Înălțimea, cu urechi cu tot',input:1,def:12,min:8,max:18,h:'sub 10 cm întorsul urechilor devine greu'},
+       {k:'sort',l:'Șorțulețul din imprimeu',v:[['rotunjit','Rotunjit jos'],['drept','Drept jos'],['fara','Fără șorțuleț']]},
+       {k:'labute',l:'Lăbuțe',v:[['da','Da, două'],['nu','Fără']]},
+       {k:'umplut',l:'Umplutura',v:[['vata','Doar vată'],['lavanda','Vată și lavandă']]}],
+ calc(m,o){
+   const H=o.inalt, lat=r05(H*0.76);
+   const piese=[
+     {shape:'silueta',sil:o.animal,name:'corpul',w:r05(lat+2*RCM),h:r05(H+2*RCM),qty:2,
+      note:'se taie după șablon, din material dublu, față pe față'}
+   ];
+   if(o.sort!=='fara'){
+     piese.push({shape:'rect',name:'șorțulețul',w:r05(lat*0.96),h:r05(H*0.40),qty:1,opt:1,
+       note:'din imprimeu, nu din materialul corpului'});
+     piese.push({shape:'rect',name:'bentița șorțului',w:r05(lat+2*RCM+1.5),h:3.4,qty:1,opt:1});
+   }
+   if(o.labute==='da')piese.push({shape:'rect',name:'lăbuța',w:r05(H*0.30),h:r05(H*0.34),qty:2,opt:1,
+     note:'pliată în două pe lungime, deci iese lată cât jumătate'});
+   const vata=Math.max(5,Math.round(H*H*0.09));
+   const mercerie=[`vată siliconică, cam ${vata} g`,
+     'ață de brodat, în două sau trei culori, pentru ochi, bot și mustăți',
+     `șnur subțire sau panglică de 3 mm, ${cm(H*1.1)} cm, pentru buclă`,
+     'un bețișor de lemn, pentru scos urechile'];
+   if(o.umplut==='lavanda')mercerie.push('o lingură de lavandă uscată, într-un săculeț mic de tifon');
+   return {piese,mercerie,
+     note:[`Iese ${cm(lat)} cm lățime și ${cm(H)} cm înălțime, cu urechi cu tot.`,
+       `Rezerva de cusătură e de 7 mm peste tot, nu de 1,5 cm: la o bucată atât de mică, rezerva mare se adună în interiorul curbelor și umflă conturul.`,
+       'Corpul merge din in, din doc sau dintr-un tricot des. Materialul prea subțire lasă vata să se vadă prin el.',
+       o.sort!=='fara'?'Șorțulețul și bentița ies din resturi de imprimeu, deci nu intră în necesarul de material de mai jos.':'Fără șorțuleț, imprimeul poate veni din urechi: taie urechile din alt material.',
+       o.umplut==='lavanda'?'Săculețul de lavandă intră în mijloc, la ultima mână de vată, ca să nu ajungă lipit de o margine.':'',
+       'Prima ieșită e cea de probă. A doua iese vizibil mai bine, pentru că știi deja cât de tare se umple.']};
+ },
+ pasi:(m,o)=>{
+   const nume=o.animal==='ursulet'?'ursulețul':o.animal==='iepuras'?'iepurașul':'pisicuța';
+   return [
+  {h:'Fă șablonul',p:`Desenează silueta pe carton, la ${cm(o.inalt)} cm înălțime cu urechi cu tot, și taie-l. Însemnează pe el, pe o latură dreaptă de jos, deschiderea de 4 cm prin care vei întoarce.`,
+   d:()=>dSablonSiluete(o.animal),c:'Șablonul de carton, cu deschiderea însemnată, și materialul dublu.'},
+  {h:'Taie siluetele',p:'Pune materialul dublu, față pe față, așază șablonul deasupra, conturează cu creta și taie cu rezerva de 7 mm de jur împrejur. Ies două bucăți deodată, deci se potrivesc exact.',
+   d:()=>dSablonSiluete(o.animal),c:'Șablonul prins pe materialul dublu, față pe față.'},
+  {h:'Brodează fața',p:'Acum, cât bucata e plată. Ochii, botul și mustățile, pe bucata din față. Nodurile rămân pe dos.',tech:'broderie',
+   d:()=>dFataBrodata(o.animal),c:'Ochii, botul și mustățile, brodate cât bucata e plată.'},
+  ...(o.sort!=='fara'?[
+    {h:'Pregătește șorțulețul',p:`Tivește marginea de jos a șorțulețului cu un tiv dublu îngust${o.sort==='rotunjit'?', urmărind curba încet':''}, apoi calc-o.`,tech:'tiv-dublu',
+     d:()=>dSortul(o.sort),c:'Șorțulețul tivit jos și bentița care acoperă marginea de sus.'},
+    {h:'Prinde șorțul și bentița',p:'Așază șorțulețul pe bucata din față, cu marginea de sus la locul taliei, și prinde-l cu câteva împunsături. Pune bentița peste marginea lui de sus și coase-o doar pe față, la 2 mm de muchie. Capetele bentiței rămân libere: intră în cusătura laterală.',
+     d:()=>dSortul(o.sort),c:'Bentița, cusută doar pe față, cu capetele lăsate în cusătura laterală.'}
+  ]:[]),
+  ...(o.labute==='da'?[
+    {h:'Fă lăbuțele',p:'Pliază fiecare bucățică în două pe lungime, cu fața înăuntru, coase pe lung și pe un capăt, întoarce pe față cu bețișorul și calcă.'}
+  ]:[]),
+  {h:'Prinde bucla și lăbuțele spre interior',p:`Pe bucata din față, cu fața în sus: bucla de șnur între urechi, cu amândouă capetele în rezervă și cu îndoitura spre interior.${o.labute==='da'?' Lăbuțele pe laturi, tot cu capetele în rezervă și cu vârful spre interior.':''} Prinde-le cu ace. Pare invers, dar după întoarcere ies singure în afară.`,
+   d:()=>dPrindeInauntru(o.animal),c:'Bucla și lăbuțele privesc spre interior. După întoarcere ies în afară.'},
+  {h:'Coase corpul',p:'Așază cealaltă siluetă deasupra, față pe față, și coase de jur împrejur la 7 mm, cu pas mic. Lasă deschisă doar bucata de 4 cm însemnată pe șablon. Întărește cusătura la începutul și la sfârșitul deschiderii.',tech:'intarire'},
+  {h:'Crestează curbele și colțurile',p:'Crestături drepte în rezerva de pe curbe, din 1 cm în 1 cm, fără să atingi cusătura. În adâncitura dintre urechi, o crestătură până aproape de fir. Vârful fiecărei urechi, tăiat oblic.',tech:'colturi-curbe'},
+  {h:'Întoarce pe față',p:'Întoarce încet prin deschidere, apoi scoate urechile cu capătul bont al bețișorului, împingând din interior. Nu cu foarfeca: iese prin vârf.',
+   d:()=>dIntoarceUmple(o.animal),c:'Urechile scoase cu bețișorul, apoi umplutura, în bucăți mici.'},
+  {h:'Umple',p:`Întâi urechile și colțurile, cu bucăți mici de vată, împinse cu bețișorul. Apoi corpul, puțin câte puțin.${o.umplut==='lavanda'?' Săculețul de lavandă intră la mijloc, spre final.':''} Pipăie des: ${nume} trebuie să rămână moale, nu tare ca o minge.`,
+   d:()=>dIntoarceUmple(o.animal),c:'Întâi urechile și colțurile, apoi corpul, puțin câte puțin.'},
+  {h:'Închide deschiderea',p:'Îndoaie rezervele spre interior, prinde-le cu ace și închide cu cusătura scară. Trasă bine, cusătura dispare în muchie.',tech:'cusatura-scara'}
+ ]},
+ errors:['Fața brodată după coaserea corpului: nu se mai poate, nodurile ar rămâne la vedere și acul nu mai ajunge pe dos.',
+  'Bucla prinsă cu îndoitura spre exterior: după întoarcere rămâne închisă înăuntru și nu mai ai de ce agăța.',
+  'Rezerva de 1,5 cm, ca la haine: se adună în interiorul curbelor și umflă conturul, iar urechile ies boante.',
+  'Curbele necrestate: materialul trage și silueta iese strâmbă după întoarcere.',
+  'Umplutură îndesată dintr-o dată: cusăturile se văd prin material și jucăria se face tare.',
+  'Vârful urechii împins cu foarfeca: iese prin material exact la colț.']
+}
+);
+
 /* ================= COPIEZ CEVA CE AM DEJA =================
    Poza stă în IndexedDB, pe telefon. Măsurile se iau de pe poză,
    pornind de la un obiect cu dimensiune cunoscută, pus lângă lucru. */
@@ -5107,6 +5309,7 @@ const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.35',l:['Un grup nou de proiecte, „Jucării și ornamente”, cu prima lui lucrare: pisicuța de agățat. Două siluete cusute față pe față, întoarse, umplute, cu șorțuleț din imprimeu, față brodată și o buclă de agățat între urechi.','Alegi urechile, de pisică, de ursuleț sau de iepuraș, înălțimea, șorțulețul, lăbuțele și umplutura, iar schema bucăților se redesenează după silueta aleasă.','Pașii au desene proprii: șablonul de carton, fața brodată cât bucata e încă plată, bentița șorțului, bucla și lăbuțele prinse spre interior, întorsul urechilor cu bețișorul și umplutura.']},
  {v:'7.34',l:['Cursuri noi, în Învăț: Reparații prin casă, Finisaje ca la magazin și Haina de la zero. Fiecare e o succesiune de lecții într-o ordine care are sens, cu un proiect la final.','O lecție se bifează singură când apeși „Am exersat” pe fișa ei. Pe fișele din curs apare jos o bară cu lecția următoare.','Cursul început apare și pe Acasă, la „Continuă de unde ai rămas”.']},
  {v:'7.33',l:['14 fișe noi de cusut. La mașină: colțuri și curbe, bentița la gât și la răscroieli, tivul îngust rulat, buzunarul în cusătura laterală, pliurile, căptușeala, tighelul decorativ.','De mână: punctul în cruce pentru tivuri, copcile și ochiurile, stopatul, broderia de bază.','Bune de știut: acele pentru mașină, presarea, întăriturile termoadezive.']},
  {v:'7.32',l:['„Copiez ceva ce am deja” e mult mai simplu: alegi ce copiezi, de exemplu un săculeț, o poșetă sau o față de pernă, îl măsori cu metrul pe un desen care îți arată unde, și primești bucățile de tăiat, așezarea pe material, cât material îți trebuie și pașii de bifat, cu desene.','Poți adăuga o poză a lucrării originale, ca să te uiți la detalii cât coși.','Măsuratul din poză, cu foaia A4, a rămas pentru când nu ai obiectul la îndemână, jos pe pagina copiilor.']},
@@ -5465,6 +5668,7 @@ const GIC={
  purtat:'<svg viewBox="0 0 24 24"><path d="M8.6 3.8 3.8 6.6l1.9 4.1 2.1-1.1V20.4h8.4V9.6l2.1 1.1 1.9-4.1-4.8-2.8c-.6 1.6-1.9 2.5-3.4 2.5s-2.8-.9-3.4-2.5z" class="f"/></svg>',
  genti:'<svg viewBox="0 0 24 24"><path d="M4.8 8.6h14.4l-1.3 11a1 1 0 0 1-1 .9H7.1a1 1 0 0 1-1-.9z" class="f"/><path d="M9 8.6V7a3 3 0 0 1 6 0v1.6"/></svg>',
  copii:'<svg viewBox="0 0 24 24"><path d="M8.2 3.6h7.6l3.4 3.2-2.1 2.6-1.3-1V14l-1.6 6.4h-4.4L8.2 14V8.4l-1.3 1-2.1-2.6z" class="f"/><path d="M9.8 3.6a2.2 2.2 0 0 0 4.4 0"/><circle cx="12" cy="11" r=".7" class="hole-s"/><circle cx="12" cy="13.6" r=".7" class="hole-s"/></svg>',
+ jucarii:'<svg viewBox="0 0 24 24"><path d="M7.4 8.4 8.8 3.2l2.4 3.2q.8.4 1.6 0l2.4-3.2 1.4 5.2c1.2 2.6 1.2 9.2-.2 11.2q-.6 1-2 1H9.6q-1.4 0-2-1c-1.4-2-1.4-8.6-.2-11.2z" class="f"/><path d="M10.9 5.4a1.3 1.3 0 0 1 2.2 0"/><circle cx="10.2" cy="11.4" r=".8" class="hole-s"/><circle cx="13.8" cy="11.4" r=".8" class="hole-s"/><path d="M7.1 15.4c2.6 1.1 7.2 1.1 9.8 0" class="f2"/></svg>',
  casa:'<svg viewBox="0 0 24 24"><path d="M4.6 6.2c2.4-1.2 12.4-1.2 14.8 0 1.2 2.4 1.2 9.2 0 11.6-2.4 1.2-12.4 1.2-14.8 0-1.2-2.4-1.2-9.2 0-11.6z" class="f"/><circle cx="12" cy="12" r="1.3"/><path d="M4.6 6.2 8 9.4M19.4 6.2 16 9.4M4.6 17.8 8 14.6M19.4 17.8 16 14.6" class="f2"/></svg>'
 };
 const PGRP=[
@@ -5472,6 +5676,7 @@ const PGRP=[
  {id:'purtat',t:'De purtat',ids:['rochie-elastic','rochie-bretele','bluza','bluza-maneca','bluza-maneca-lunga','pantaloni-casa']},
  {id:'genti',t:'Genți și accesorii',ids:['poseta-tote','geanta-fermoar','geanta-plaja','penar']},
  {id:'copii',t:'Pentru copii',ids:['sac-dormit','saculet','fusta-copil','rochie-copil','baveta']},
+ {id:'jucarii',t:'Jucării și ornamente',ids:['pisica-agatat']},
  {id:'casa',t:'Pentru casă',ids:['sort','fata-perna','perna-fermoar','husa-perna-canapea','husa-scaun','suport-oale','fata-masa','fata-masa-rotunda','cos-depozitare','saculeti-cadou']}
 ];
 function projects(){
@@ -5913,7 +6118,7 @@ function bodyFig(active){
     tl.forEach((ln,k)=>o+=T(12,y+k*15,ln,'start'));
     lines.forEach((ln,k)=>o+=T(12,y+(tl.length-1)*15+16+k*14,ln,'start','m'));
   }
-  o+=T(cx,12,mm?'manechin de croitorie':'atinge un câmp de mai jos','middle','m');
+  o+=T(cx,15,mm?'manechin de croitorie':'atinge un câmp de mai jos','middle','m');
   return svg(o,232);
 }
 
