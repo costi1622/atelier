@@ -807,12 +807,14 @@ svg.d.fl .aF{animation:none;opacity:1;display:none}
 svg.d.fl .aF.on{display:inline}
 svg.d.fl .aFc{display:inline}
 svg.d.fl .aFd,svg.d.fl .aFs{display:none}
-.flc{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 8px 10px;background:var(--panel);border-top:1px solid var(--line)}
+.flc{display:flex;align-items:center;justify-content:center;gap:10px;row-gap:8px;flex-wrap:wrap;padding:8px 8px 10px;background:var(--panel);border-top:1px solid var(--line)}
 .flb{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line-f,var(--line));background:var(--paper);color:var(--ink);display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer}
 .flb:disabled{opacity:.35;cursor:default}
 .flb svg{width:22px;height:22px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .flb svg .pf{fill:currentColor;stroke-width:1.6}
 .flp{margin-left:6px}
+/* pe ecran îngust cu text mărit, rândul de butoane încape doar dacă punctele se pot strânge */
+.fld{min-width:0;flex-shrink:1}
 .fld{display:flex;gap:4px}
 .fldot{width:30px;height:44px;border:0;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
 .fldot::before{content:'';width:12px;height:12px;border-radius:50%;border:1.8px solid var(--muted);box-sizing:border-box}
@@ -847,7 +849,7 @@ svg.d.fl .aFd,svg.d.fl .aFs{display:none}
 .tipuri{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:8px}
 .tipb{width:100%;min-height:72px;text-align:left;padding:10px 12px;border:1.5px solid var(--line-f,var(--line));border-radius:12px;background:var(--panel);color:var(--ink);cursor:pointer;font:inherit}
 .tipb b{display:block}.tipb span{display:block;color:var(--muted);font-size:calc(14px*var(--fs));margin-top:2px}
-.lnk{border:0;background:none;padding:0;color:var(--mat);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
+.lnk{border:0;background:none;padding:10px 0;margin:-10px 0;color:var(--mat);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer}
 .cop-img{display:block;max-width:100%;max-height:40vh;margin:8px auto;border-radius:8px;border:1.5px solid var(--ink)}
 
 /* broderie și straturi, pentru tehnicile noi (7.33) */
@@ -870,8 +872,9 @@ svg.d.fl .aFd,svg.d.fl .aFs{display:none}
 .lct-t a b{display:block}
 .lct-t>span{display:block;color:var(--muted);font-size:calc(14.5px*var(--fs));margin-top:2px}
 .lct-t small{display:block;color:var(--muted);margin-top:4px}
-.lct-b{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:calc(14.5px*var(--fs))}
-.lct-b input{width:22px;height:22px}
+/* bifa lecției: eticheta întreagă e suprafața de atins, nu doar pătrățelul (7.38) */
+.lct-b{display:flex;align-items:center;gap:8px;margin-top:6px;min-height:44px;padding:2px 0;font-size:calc(14.5px*var(--fs));cursor:pointer}
+.lct-b input{width:24px;height:24px;flex:none}
 .crs-bar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:22px;padding:10px;border:1.5px solid var(--mat);border-radius:12px;background:var(--panel)}
 .crs-bar a{display:block;text-decoration:none;color:var(--ink);overflow-wrap:anywhere}
 .crs-bar a span{display:block;font-size:calc(13px*var(--fs));color:var(--mat);font-weight:600}
@@ -946,7 +949,7 @@ var PORNIT=false;
 <div id="updbar" role="status"><span>Există o versiune nouă a Atelierului.</span><button id="updgo">Actualizează</button></div>
 <script>
 "use strict";
-const APP_VER='7.37';
+const APP_VER='7.38';
 const KEY='atelier_v1';
 const TECH=[];
 /*@@CONTENT_START@@*/
@@ -5500,12 +5503,16 @@ const MASURI=[
 ];
 const persById=id=>S.people.find(p=>p.id===id);
 function activePerson(){return persById(S.settings.pers)||S.people[0]||null}
-function addPerson(nume){const id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);S.people.push({id,nume,m:{}});S.settings.pers=id;save();return id}
+function addPerson(nume){const id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  /* un nume numai din spații ar lăsa un rând gol în listă (7.38) */
+  const n=String(nume==null?'':nume).trim().slice(0,60)||'Fără nume';
+  S.people.push({id,nume:n,m:{}});S.settings.pers=id;save();return id}
 const byId=id=>TECH.find(t=>t.id===id);
 const inSec=s=>ORDER[s].map(byId);
 
 /* ================= ce e nou ================= */
 const NOUTATI=[
+ {v:'7.38',l:['Verificare mare înainte de folosire pe telefon. Pe ecran îngust cu textul mărit, butoanele de la animații ieșeau din ecran, iar bifa lecției și butonul „Măsor din poză” erau prea mici pentru deget. Reparate.','Datele salvate sunt verificate la pornire: o copie de siguranță dintr-o altă versiune, sau editată, nu mai poate lăsa o pagină goală și nici nu mai poate da bucăți cu dimensiuni negative.','O persoană adăugată fără nume nu mai lasă un rând gol în listă.']},
  {v:'7.37',l:['Fiecare proiect are acum o secțiune nouă, „Reglajele mașinii”: tensiunea firului, lungimea pasului, selectorul, lățimea, acul, ața și piciorușul, cu câte o explicație scurtă la fiecare.','Alegi materialul din care coși, subțire, mediu, gros sau tricot, iar valorile se schimbă după el. Fiecare proiect pornește de la materialul lui obișnuit.','Sub cadrane apar și reglajele speciale ale pașilor pe care îi are chiar acel proiect, de exemplu zigzagul pentru margini, încrețiturile sau piciorușul de fermoar.','Un desen arată cele patru cadrane cu valorile puse, iar la final e proba pe petic, înainte de lucrare.']},
  {v:'7.36',l:['La pisicuța de agățat scrie acum, la fiecare pas, cu ce cusătură coși. Un pas nou, „Vezi ce cusături folosești”, le arată pe toate trei într-un desen: cea care închide corpul, tighelul bentiței și cusătura scară de la final.','Alegere nouă: coși corpul la mașină sau de mână. Pașii și desenele se schimbă după ea.','Lăbuțele au desenul lor, în patru pași: bucățica pliată pe lungime, cusută, întoarsă cu bețișorul și așezată cu capătul deschis pe marginea corpului.','Șorțulețul are și el un desen nou, cu șorțul și bentița așezate pe bucata din față, și un text care spune exact cum se îndoaie bentița și unde ajung capetele ei.']},
  {v:'7.35',l:['Un grup nou de proiecte, „Jucării și ornamente”, cu prima lui lucrare: pisicuța de agățat. Două siluete cusute față pe față, întoarse, umplute, cu șorțuleț din imprimeu, față brodată și o buclă de agățat între urechi.','Alegi urechile, de pisică, de ursuleț sau de iepuraș, înălțimea, șorțulețul, lăbuțele și umplutura, iar schema bucăților se redesenează după silueta aleasă.','Pașii au desene proprii: șablonul de carton, fața brodată cât bucata e încă plată, bentița șorțului, bucla și lăbuțele prinse spre interior, întorsul urechilor cu bețișorul și umplutura.']},
@@ -5573,7 +5580,66 @@ let FIRST_RUN=true;
 try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);FIRST_RUN=false;
   S={fav:o.fav||{},done:o.done||{},notes:o.notes||{},people:o.people||[],proj:o.proj||{},copii:o.copii||[],recent:o.recent||{},contoare:o.contoare||[],curs:o.curs||{},
      settings:Object.assign({fs:1,theme:'auto',lastVer:'',pers:'',motion:'da'},o.settings||{})}}}catch(e){}
+/* Normalizarea stării (7.38).
+   Starea poate veni dintr-o versiune mai veche, dintr-o copie de siguranță editată de mână
+   sau dintr-un import pe jumătate. Orice câmp care nu are forma așteptată e reparat sau scos aici,
+   o singură dată, ca restul aplicației să nu mai verifice la fiecare folosire.
+   Regula: nu se aruncă nimic ce se poate salva. O persoană fără măsuri primește măsuri goale,
+   nu dispare. */
+const NUM_OK=(v,min,max)=>{const n=typeof v==='number'?v:parseFloat(String(v).replace(',','.'));
+  return isFinite(n)&&n>=min&&n<=max?n:null};
+const OBJ=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{};
+const BALOTURI=[90,110,140,150];
+function normStare(S){
+  S.fav=OBJ(S.fav);S.done=OBJ(S.done);S.notes=OBJ(S.notes);S.proj=OBJ(S.proj);
+  S.recent=OBJ(S.recent);S.curs=OBJ(S.curs);S.settings=OBJ(S.settings);
+  Object.keys(S.notes).forEach(k=>{if(typeof S.notes[k]!=='string')delete S.notes[k]});
+  /* persoanele: fără id nu se poate face nimic, restul se repară */
+  S.people=(Array.isArray(S.people)?S.people:[]).filter(p=>p&&typeof p==='object'&&p.id);
+  S.people.forEach(p=>{
+    p.nume=typeof p.nume==='string'&&p.nume.trim()?p.nume:'Fără nume';
+    const m=OBJ(p.m),curat={};
+    MASURI.forEach(z=>{const v=NUM_OK(m[z.k],z.min,z.max);if(v!==null)curat[z.k]=v});
+    p.m=curat;});
+  /* proiectele începute */
+  Object.keys(S.proj).forEach(k=>{const v=S.proj[k];
+    if(!v||typeof v!=='object'){delete S.proj[k];return}
+    v.opts=OBJ(v.opts);
+    v.done=Array.isArray(v.done)?[...new Set(v.done.filter(n=>Number.isInteger(n)&&n>=0&&n<200))]:[];
+    if(!BALOTURI.includes(v.W))v.W=140;
+    if(typeof MATCL!=='undefined'&&v.mat&&!MATCL[v.mat])delete v.mat;
+    /* o opțiune în afara limitelor ei dă bucăți cu cote negative, fără ca nimic să pară stricat.
+       Dintr-o copie de siguranță editată, asta e singurul loc unde se poate prinde. */
+    const pr=typeof PROJ!=='undefined'?PROJ.find(x=>x.id===k.split('|')[0]):null;
+    if(pr)pr.opts.forEach(o=>{const cur=v.opts[o.k];
+      if(cur===undefined)return;
+      if(o.input){const n=NUM_OK(cur,o.min,o.max);if(n===null)delete v.opts[o.k];else v.opts[o.k]=n}
+      else if(!o.v.some(([val])=>String(val)===String(cur)))delete v.opts[o.k];});});
+  /* contoarele și copiile: intrările fără id nu se pot afișa */
+  S.contoare=(Array.isArray(S.contoare)?S.contoare:[]).filter(c=>c&&typeof c==='object'&&c.id);
+  S.contoare.forEach(c=>{c.nume=typeof c.nume==='string'&&c.nume.trim()?c.nume:'Contor';
+    c.n=NUM_OK(c.n,0,1e6)||0; const t=NUM_OK(c.tinta,1,1e6); if(t===null)delete c.tinta; else c.tinta=t;});
+  S.copii=(Array.isArray(S.copii)?S.copii:[]).filter(x=>x&&typeof x==='object'&&x.id);
+  S.copii.forEach(c=>{
+    /* pagina copiei citește c.m[...] direct, deci o copie fără măsuri ar opri pagina */
+    c.m=OBJ(c.m); c.done=Array.isArray(c.done)?c.done.filter(n=>Number.isInteger(n)&&n>=0&&n<200):[];
+    if(c.nume!=null&&typeof c.nume!=='string')delete c.nume;
+    if(typeof COPIE_T!=='undefined'&&c.tip&&!COPIE_T.some(t=>t.k===c.tip))c.tip='';
+    if(c.tip){const T=typeof copTip!=='undefined'?copTip(c.tip):null;
+      if(T)T.dims.forEach(([k,,mi,ma])=>{const v=NUM_OK(c.m[k],mi,ma);if(v===null)delete c.m[k];else c.m[k]=v})}});
+  /* setările */
+  const st=S.settings;
+  st.fs=NUM_OK(st.fs,0.8,1.6)||1;
+  if(!['auto','light','dark'].includes(st.theme))st.theme='auto';
+  if(!['da','nu'].includes(st.motion))st.motion='da';
+  if(typeof st.lastVer!=='string')st.lastVer='';
+  if(typeof st.pers!=='string')st.pers='';
+  if(st.pers&&!S.people.some(p=>p.id===st.pers))st.pers=S.people.length?S.people[0].id:'';
+  return S;
+}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));return true}catch(e){return false}}
+/* se cheamă aici, după definițiile de mai sus, nu lângă citirea din localStorage: altfel OBJ și NUM_OK încă nu există */
+normStare(S);
 function applySettings(){const r=document.documentElement;r.style.setProperty('--fs',S.settings.fs);
   if(S.settings.theme==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',S.settings.theme)}
 applySettings();
@@ -6036,6 +6102,8 @@ function importData(file,msg){
       if(o.curs&&o.curs.bif){S.curs=S.curs||{};S.curs.bif=Object.assign({},o.curs.bif,S.curs.bif||{})}
       /* contoarele de rânduri (7.30): se adaugă cele care lipsesc, iar la cele comune rămâne numărul mai mare */
       (o.contoare||[]).forEach(c=>{if(!c||!c.id)return;const x=(S.contoare=S.contoare||[]).find(y=>y.id===c.id);if(!x)S.contoare.push(c);else if((c.n||0)>(x.n||0))x.n=c.n});
+      /* ce vine din fișier trece prin aceeași normalizare ca starea de pe disc (7.38) */
+      normStare(S);
       const ok=save();
       msg(ok?(n?`Am adăugat notițe la ${n} ${n===1?'fișă':'fișe'}. Nimic din ce aveai nu s-a șters.`:'Copia nu conține notițe noi. Favoritele și exersatele au fost unite.'):'Nu am putut salva. Memoria browserului e plină sau blocată.',!ok)}
     catch(e){msg('Fișierul nu e o copie Atelier. Alege un fișier Atelier_notite_….json.',1)}};
